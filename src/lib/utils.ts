@@ -225,6 +225,8 @@ export function formatGuest(guest: any) {
     id: guest.id,
     code,
     name: guest.fullName,
+    title: guest.title?.name || null,
+    country: guest.country || null,
     phone: guest.phone || null,
     cluster: clusterName,
     role: roleName || "Delegate",

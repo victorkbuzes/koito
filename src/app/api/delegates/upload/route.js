@@ -5,6 +5,57 @@ import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
+function normalizeTitle(raw) {
+  if (!raw) return "";
+  const cleaned = String(raw).trim().replace(/\.$/, "").toLowerCase();
+  const titleMap = {
+    mr: "Mr.",
+    mrs: "Mrs.",
+    ms: "Ms.",
+    miss: "Miss",
+    dr: "Dr.",
+    doctor: "Dr.",
+    hon: "Hon.",
+    honorable: "Hon.",
+    honourable: "Hon.",
+    prof: "Prof.",
+    professor: "Prof.",
+    eng: "Eng.",
+    engineer: "Eng.",
+    rev: "Rev.",
+    reverend: "Rev.",
+    pst: "Pastor",
+    pastor: "Pastor",
+    amb: "Amb.",
+    ambassador: "Amb.",
+    he: "H.E.",
+    gen: "Gen.",
+    general: "Gen.",
+    capt: "Capt.",
+    captain: "Capt.",
+    col: "Col.",
+    colonel: "Col.",
+    chief: "Chief",
+    elder: "Elder",
+  };
+  if (titleMap[cleaned]) return titleMap[cleaned];
+  return String(raw).trim().charAt(0).toUpperCase() + String(raw).trim().slice(1);
+}
+
+function normalizeCountyCountry(raw) {
+  if (!raw) return "";
+  const cleaned = String(raw).trim();
+  if (!cleaned) return "";
+  return cleaned
+    .split(/\s+/)
+    .map((word) => {
+      const u = word.toUpperCase();
+      if (u === "UK" || u === "US" || u === "USA" || u === "UAE") return u;
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ");
+}
+
 export async function POST(request) {
   try {
     const formData = await request.formData();
@@ -106,7 +157,9 @@ export async function POST(request) {
       }
 
       const rawPhone = getVal(["phone", "phone number", "mobile", "telephone", "contact"]);
-      const role = getVal(["role", "title", "category"]);
+      const role = getVal(["role", "category"]);
+      const rawTitle = getVal(["title", "salutation", "honorific", "prefix"]);
+      const rawCountry = getVal(["country", "county", "location", "residence", "region", "state", "city", "origin"]);
       const rawCluster = getVal(["cluster", "cluster name", "cluster_name", "delegation", "group"]);
       const specifiedTableName = getVal(["table", "table name", "assigned table", "seating", "table_name", "dining table", "table #"]);
       const rawSeat = getVal(["seat", "seat number", "seat_number", "chair"]);
@@ -115,6 +168,18 @@ export async function POST(request) {
         skippedCount++;
         console.warn(`⚠️ [EXCEL IMPORT] Row ${index + 1} skipped because no valid name column was matched. Keys in row:`, Object.keys(row));
         continue;
+      }
+
+      const title = normalizeTitle(rawTitle);
+      const country = normalizeCountyCountry(rawCountry);
+
+      let titleRecord = null;
+      if (title) {
+        titleRecord = await prisma.title.upsert({
+          where: { name: title },
+          update: {},
+          create: { name: title },
+        });
       }
 
       const customCode = getVal(["code", "pin", "passcode", "qr code"]);
@@ -186,6 +251,8 @@ export async function POST(request) {
         const updateData = {};
         if (name) updateData.fullName = name;
         if (targetClusterId) updateData.clusterId = targetClusterId;
+        if (titleRecord) updateData.titleId = titleRecord.id;
+        if (country) updateData.country = country;
 
         await prisma.guest.update({
           where: { id: existingGuest.id },
@@ -218,6 +285,8 @@ export async function POST(request) {
               fullName: name,
               phone: phone || null,
               clusterId: targetClusterId,
+              titleId: titleRecord ? titleRecord.id : null,
+              country: country || null,
               pin: code,
               pinHash: code,
               pinFingerprint: code,

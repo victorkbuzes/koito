@@ -4383,6 +4383,8 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
       ? dbGuests.map((d) => ({
         pin: d.code,
         name: d.name,
+        title: d.title || null,
+        country: d.country || null,
         cluster: d.cluster || "Guests",
         role: d.role || "Delegate",
         relation: d.cluster || "Guests",
@@ -5778,13 +5780,18 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                         className="text-sm text-primary-foreground truncate"
                         style={{ fontFamily: "Playfair Display,serif" }}
                       >
+                        {(g as any).title ? <span className="text-accent font-semibold mr-1">{(g as any).title}</span> : null}
                         {g.name}
                       </p>
                       <p
                         className="text-[9px] text-primary-foreground/40 mt-0.5"
                         style={{ fontFamily: "Lato,sans-serif" }}
                       >
-                        Cluster: <span className="text-accent font-semibold">{g.cluster || "Guests"}</span> · {g.table}
+                        Cluster: <span className="text-accent font-semibold">{g.cluster || "Guests"}</span>
+                        {(g as any).country && (
+                          <span> · County/Country: <span className="text-primary-foreground/80 font-medium">{(g as any).country}</span></span>
+                        )}
+                        <span> · {g.table}</span>
                       </p>
                     </div>
 
