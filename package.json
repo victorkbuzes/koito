@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run certs:generate 2>/dev/null || true; kill -9 $(lsof -t -i:3000) 2>/dev/null || true; docker compose up -d nginx 2>/dev/null || true; next dev --experimental-https --experimental-https-key nginx/certs/localhost.key --experimental-https-cert nginx/certs/localhost.crt",
+    "certs:generate": "[ -f nginx/certs/localhost.crt ] || (mkdir -p nginx/certs && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/certs/localhost.key -out nginx/certs/localhost.crt -subj '/C=US/ST=State/L=City/O=Dev/OU=Dev/CN=localhost' -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1')",
+    "dev:next": "next dev",
+    "dev:nginx": "docker compose up -d nginx && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
