@@ -2922,19 +2922,7 @@ function InvitationScreen({
                     className="mt-4 w-full py-2.5 px-3 text-[10px] tracking-[0.25em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
                     style={{ fontFamily: "Lato,sans-serif" }}
                   >
-<<<<<<< HEAD
                     <Gift size={13} /> Send Gift
-=======
-                    {copiedBank === "Sidian Bank" ? (
-                      <>
-                        <Check size={13} className="text-accent" /> Copied Details!
-                      </>
-                    ) : (
-                      <>
-                        <Gift size={13} /> Send Gift 
-                      </>
-                    )}
->>>>>>> c83415ac216b61e5dca45ba61a40e9b9ac55e97a
                   </button>
                 </div>
 
@@ -2995,9 +2983,6 @@ function InvitationScreen({
                     className="mt-4 w-full py-2.5 px-3 text-[10px] tracking-[0.25em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
                     style={{ fontFamily: "Lato,sans-serif" }}
                   >
-<<<<<<< HEAD
-                    <Gift size={13} /> Send Gift
-=======
                     {copiedBank === "Cooperative Bank" ? (
                       <>
                         <Check size={13} className="text-accent" /> Copied Details!
@@ -3007,7 +2992,6 @@ function InvitationScreen({
                         <Gift size={13} /> Send Gift 
                       </>
                     )}
->>>>>>> c83415ac216b61e5dca45ba61a40e9b9ac55e97a
                   </button>
                 </div>
               </div>
