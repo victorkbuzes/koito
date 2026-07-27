@@ -1015,10 +1015,9 @@ function AccommodationTabsSection() {
       ],
       airbnbs: [
         {
-          name: "Kisii Luxury Hilltop Airbnb (Sample Link)",
-          desc: "Furnished private apartment in Kisii. Click the name above to view or book on Airbnb.",
-          rates: "$35 – $65 / night",
-          link: "https://www.airbnb.com",
+          name: "Kisii Airbnbs & Private Stays",
+          desc: "Explore private homes, self-catering apartments, and guest suites available on Airbnb in Kisii.",
+          link: "https://www.airbnb.com/s/Kisii--Kisii-County/homes?date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&place_id=ChIJYUFfsuw7KxgRsS2Lx5BqUUQ&location_bb=vym490ILLpm%2FMqEJQgsJ0g%3D%3D&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&search_type=autocomplete_click",
         },
       ],
     },
@@ -1044,10 +1043,9 @@ function AccommodationTabsSection() {
       ],
       airbnbs: [
         {
-          name: "Bomet Modern Airbnb Suite (Sample Link)",
-          desc: "Private self-catering suite in Bomet town. Click the name to view the Airbnb listing.",
-          rates: "$30 – $55 / night",
-          link: "https://www.airbnb.com",
+          name: "Bomet Airbnbs & Private Stays",
+          desc: "Browse house rentals, apartments, and guest homes available on Airbnb in Bomet.",
+          link: "https://www.airbnb.com/s/BOMET/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
       ],
     },
@@ -1085,10 +1083,9 @@ function AccommodationTabsSection() {
       ],
       airbnbs: [
         {
-          name: "Migori Town Airbnb Residency (Sample Link)",
-          desc: "Comfortable home rental in Migori. Click the title to open the Airbnb link.",
-          rates: "$25 – $50 / night",
-          link: "https://www.airbnb.com",
+          name: "Migori Airbnbs & Private Stays",
+          desc: "Discover self-catering apartments, local homes, and private rooms available on Airbnb in Migori.",
+          link: "https://www.airbnb.com/s/MIGORI/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
       ],
     },
@@ -1112,10 +1109,9 @@ function AccommodationTabsSection() {
       ],
       airbnbs: [
         {
-          name: "Nyamira Countryside Airbnb (Sample Link)",
-          desc: "Private cottage and homestay in Nyamira. Click title to open link.",
-          rates: "$25 – $45 / night",
-          link: "https://www.airbnb.com",
+          name: "Nyamira Airbnbs & Private Stays",
+          desc: "Browse Airbnb rentals, homestays, and private cottages in Nyamira County.",
+          link: "https://www.airbnb.com/s/NYAMIRA/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
       ],
     },
@@ -1124,6 +1120,13 @@ function AccommodationTabsSection() {
       summary:
         "43 km to Intona Heritage Farm (~1 hr 32 mins by road — murram route). Curated luxury safari lodges and tented camps.",
       isMara: true,
+      airbnbs: [
+        {
+          name: "Narok & Maasai Mara Airbnbs",
+          desc: "Explore safari villas, private homestays, and house rentals available on Airbnb in Narok & Maasai Mara region.",
+          link: "https://www.airbnb.com/s/NAROK/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
+        },
+      ],
     },
   };
 
@@ -1313,6 +1316,55 @@ function AccommodationTabsSection() {
                 </div>
               ))}
             </div>
+
+            {current.airbnbs && current.airbnbs.length > 0 && (
+              <div className="pt-4 border-t border-border/40">
+                <p
+                  className="text-[10px] tracking-[0.25em] text-accent uppercase font-bold mb-3"
+                  style={{ fontFamily: "Lato,sans-serif" }}
+                >
+                  Narok & Maasai Mara Airbnbs
+                </p>
+                <div className="space-y-3">
+                  {current.airbnbs.map(({ name, desc, link }: any) => (
+                    <div
+                      key={name}
+                      className="p-4 sm:p-5 bg-card border border-accent/30 hover:border-accent/70 transition-colors rounded-sm sm:rounded-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
+                    >
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <a
+                          href={link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-sm font-semibold text-accent hover:text-accent/80 underline underline-offset-4 transition-colors inline-flex items-center gap-1.5"
+                          style={{ fontFamily: "Playfair Display,serif" }}
+                        >
+                          <span>{name}</span>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                        <p
+                          className="text-xs text-muted-foreground leading-5"
+                          style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
+                        >
+                          {desc}
+                        </p>
+                      </div>
+
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[10px] text-accent font-bold px-3 py-1.5 bg-accent/15 border border-accent/50 hover:bg-accent/30 transition-colors rounded-sm inline-flex items-center gap-1.5 flex-shrink-0"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        View on Airbnb
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="space-y-6">
@@ -5241,31 +5293,31 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                   return isChecked ? (
                     <div
                       key={d.id || d.pin || d.code}
-                      className="p-2.5 px-3.5 border border-rose-500/80 bg-rose-950/50 rounded flex items-center justify-between text-rose-300 text-xs shadow-sm"
+                      className="p-2.5 px-3.5 border border-emerald-500/60 bg-emerald-950/40 rounded flex items-center justify-between text-emerald-300 text-xs shadow-sm"
                     >
                       <div className="flex items-center gap-2">
-                        <AlertTriangle
+                        <CheckCircle
                           size={15}
-                          className="text-rose-400 flex-shrink-0"
+                          className="text-emerald-400 flex-shrink-0"
                         />
                         <span
-                          className="font-bold uppercase tracking-wider text-rose-200"
+                          className="font-bold uppercase tracking-wider text-emerald-200"
                           style={{ fontFamily: "Lato,sans-serif" }}
                         >
-                          ALREADY CHECKED IN — {d.name} (#{d.code || d.pin})
+                          CONFIRMED — {d.name} (#{d.code || d.pin})
                         </span>
                         <span
-                          className="text-[10px] text-rose-400/80 hidden sm:inline"
+                          className="text-[10px] text-emerald-400/80 hidden sm:inline"
                           style={{ fontFamily: "Lato,sans-serif" }}
                         >
                           · Cluster: {d.cluster || "General"}
                         </span>
                       </div>
                       <span
-                        className="text-[9px] tracking-widest uppercase px-2 py-0.5 bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold flex-shrink-0"
+                        className="text-[9px] tracking-widest uppercase px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold flex-shrink-0"
                         style={{ fontFamily: "Lato,sans-serif" }}
                       >
-                        ✓ CHECKED IN
+                        ✓ CONFIRMED
                       </span>
                     </div>
                   ) : (

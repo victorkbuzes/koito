@@ -90,8 +90,12 @@ body {
 }
 
 /* Hide Next.js dev indicator badge */
+nextjs-portal,
 [data-nextjs-toast],
 [data-nextjs-dialog-overlay],
+[data-nextjs-dev-overlay],
+[data-next-badge],
+#next-logo-badge,
 next-route-announcer {
   display: none !important;
 }
