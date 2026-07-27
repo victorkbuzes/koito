@@ -44,17 +44,7 @@ function getAllowedDevOrigins(): string[] {
 }
 
 const nextConfig: NextConfig = {
-<<<<<<< HEAD
   allowedDevOrigins: getAllowedDevOrigins(),
-=======
-  allowedDevOrigins: [
-    "172.16.20.176",
-    "192.168.234.68",
-    "192.168.1.215",
-    "192.168.*.*",
-    "172.16.*.*",
-  ],
->>>>>>> efbee49bc3f54c9973babd1c2ea523f48633f048
   devIndicators: false,
 };
 
