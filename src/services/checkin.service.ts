@@ -279,10 +279,10 @@ export async function revokeCheckIn(input: CheckInInput) {
       {
         actorType: "ADMIN",
         actorId: guest.id,
-        action: "CHECK_IN_REVOKED",
+        action: "REMOVE",
         entityType: "CHECK_IN",
         entityId: guest.id,
-        metadata: { code, guestName: guest.fullName },
+        metadata: { actionDetail: "CHECK_IN_REVOKED", code, guestName: guest.fullName },
       },
       tx
     );

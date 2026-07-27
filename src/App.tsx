@@ -1015,9 +1015,29 @@ function AccommodationTabsSection() {
       ],
       airbnbs: [
         {
-          name: "Kisii Airbnbs & Private Stays",
+          name: "Kisii Airbnbs ",
           desc: "Explore private homes, self-catering apartments, and guest suites available on Airbnb in Kisii.",
           link: "https://www.airbnb.com/s/Kisii--Kisii-County/homes?date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&place_id=ChIJYUFfsuw7KxgRsS2Lx5BqUUQ&location_bb=vym490ILLpm%2FMqEJQgsJ0g%3D%3D&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&search_type=autocomplete_click",
+        },
+        {
+          name: "Bomet Airbnbs",
+          desc: "Browse house rentals, apartments, and guest homes available on Airbnb in Bomet.",
+          link: "https://www.airbnb.com/s/BOMET/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
+        },
+        {
+          name: "Nyamira Airbnbs",
+          desc: "Browse Airbnb rentals, homestays, and private cottages available in Nyamira County.",
+          link: "https://www.airbnb.com/s/NYAMIRA/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
+        },
+        {
+          name: "Migori Airbnbs ",
+          desc: "Explore private homes, self-catering apartments, and guest suites available on Airbnb in Migori.",
+          link: "https://www.airbnb.com/s/MIGORI/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
+        },
+        {
+          name: "Narok Airbnbs",
+          desc: "Explore safari villas, private homestays, and house rentals available on Airbnb in Narok.",
+          link: "https://www.airbnb.com/s/NAROK/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
       ],
     },
@@ -1450,12 +1470,7 @@ function AccommodationTabsSection() {
                     Airbnbs & Private Stays
                   </p>
 
-                  <span
-                    className="text-[9px] text-accent/80 tracking-wider uppercase bg-accent/10 px-2 py-0.5 border border-accent/20 rounded-xs"
-                    style={{ fontFamily: "Lato,sans-serif" }}
-                  >
-                    Hyperlinks
-                  </span>
+               
                 </div>
                 <div className="space-y-3">
                   {current.airbnbs.map(({ name, desc, rates, link, phone, email }: any) => (
@@ -1485,12 +1500,14 @@ function AccommodationTabsSection() {
                                 {name}
                               </p>
                             )}
-                            <span
-                              className="inline-block sm:hidden text-[10px] text-accent font-bold px-2.5 py-1 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
-                              style={{ fontFamily: "Lato,sans-serif" }}
-                            >
-                              {rates}
-                            </span>
+                            {rates && (
+                              <span
+                                className="inline-block sm:hidden text-[10px] text-accent font-bold px-2.5 py-1 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
+                                style={{ fontFamily: "Lato,sans-serif" }}
+                              >
+                                {rates}
+                              </span>
+                            )}
                           </div>
                           <p
                             className="text-xs text-muted-foreground leading-5"
@@ -1531,12 +1548,14 @@ function AccommodationTabsSection() {
                             )}
                           </div>
                         </div>
-                        <span
-                          className="hidden sm:inline-block text-xs text-accent font-semibold px-3 py-1.5 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
-                          style={{ fontFamily: "Lato,sans-serif" }}
-                        >
-                          {rates}
-                        </span>
+                        {rates && (
+                          <span
+                            className="hidden sm:inline-block text-xs text-accent font-semibold px-3 py-1.5 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
+                            style={{ fontFamily: "Lato,sans-serif" }}
+                          >
+                            {rates}
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -2903,7 +2922,19 @@ function InvitationScreen({
                     className="mt-4 w-full py-2.5 px-3 text-[10px] tracking-[0.25em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
                     style={{ fontFamily: "Lato,sans-serif" }}
                   >
+<<<<<<< HEAD
                     <Gift size={13} /> Send Gift
+=======
+                    {copiedBank === "Sidian Bank" ? (
+                      <>
+                        <Check size={13} className="text-accent" /> Copied Details!
+                      </>
+                    ) : (
+                      <>
+                        <Gift size={13} /> Send Gift 
+                      </>
+                    )}
+>>>>>>> c83415ac216b61e5dca45ba61a40e9b9ac55e97a
                   </button>
                 </div>
 
@@ -2964,7 +2995,19 @@ function InvitationScreen({
                     className="mt-4 w-full py-2.5 px-3 text-[10px] tracking-[0.25em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
                     style={{ fontFamily: "Lato,sans-serif" }}
                   >
+<<<<<<< HEAD
                     <Gift size={13} /> Send Gift
+=======
+                    {copiedBank === "Cooperative Bank" ? (
+                      <>
+                        <Check size={13} className="text-accent" /> Copied Details!
+                      </>
+                    ) : (
+                      <>
+                        <Gift size={13} /> Send Gift 
+                      </>
+                    )}
+>>>>>>> c83415ac216b61e5dca45ba61a40e9b9ac55e97a
                   </button>
                 </div>
               </div>
