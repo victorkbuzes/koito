@@ -11,7 +11,7 @@ import {
 
 export async function renderPage2(pdfDoc, fonts, event, guest) {
   const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  drawPageFrame(page);
+  await drawPageFrame(page, pdfDoc, 2);
 
   // Load Flourish Image if available
   let flourishImage = null;

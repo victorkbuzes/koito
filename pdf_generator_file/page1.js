@@ -2,24 +2,15 @@ import fs from "fs";
 import path from "path";
 import { PDFDocument } from "pdf-lib";
 import { PAGE_WIDTH, PAGE_HEIGHT, colors } from "./styles.js";
-import { drawCenteredText, drawPageFrame, drawCalendarIcon, drawPinIcon, drawClockIcon } from "./helpers.js";
+import {
+  drawPageFrame,
+  drawOrnamentalDivider,
+  drawCalendarIcon,
+  drawPinIcon,
+  drawClockIcon,
+  drawCurtainPlaceholder,
+} from "./helpers.js";
 
-/**
- * Page 1 background: the source design has a photographic green silk
- * curtain with a metal clasp running down the right edge. That is a
- * raster/photographic asset, not something vector shapes can reproduce
- * faithfully — it must come from an image.
- *
- * Preferred path: supply a full-bleed background PDF page at
- *   public/ticket-template.pdf   (page 1 = the curtain artwork, no text)
- * We copy that page in as-is and draw the dynamic text on top, which is
- * what the original pdf-generator.js already did and is the most
- * reliable route to pixel fidelity.
- *
- * Fallback: if that template is missing, we draw a plain vector
- * cream/gold-frame page so the document still generates, clearly
- * lower-fidelity than the photographic original.
- */
 export async function renderPage1(pdfDoc, fonts, event, guest) {
   const templatePath = path.join(process.cwd(), "public", "ticket-template.pdf");
   let page = null;
@@ -40,54 +31,183 @@ export async function renderPage1(pdfDoc, fonts, event, guest) {
 
   if (!page) {
     page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-    drawPageFrame(page);
+    await drawPageFrame(page, pdfDoc, 1);
+  }
+
+  // Draw Curtain Image (or vector curtain placeholder) over the border design on the right side
+  const curtainCandidates = [
+    path.join(process.cwd(), "public", "elements", "curtain.png"),
+    path.join(process.cwd(), "public", "elements", "curtain-full.png"),
+    path.join(process.cwd(), "public", "curtain.png"),
+    path.join(process.cwd(), "public", "elements", "curtain.jpg"),
+  ];
+  let curtainEmbedded = false;
+  if (pdfDoc) {
+    for (const p of curtainCandidates) {
+      if (fs.existsSync(p)) {
+        try {
+          const bytes = fs.readFileSync(p);
+          const curtainImg = p.endsWith(".jpg") || p.endsWith(".jpeg")
+            ? await pdfDoc.embedJpg(bytes)
+            : await pdfDoc.embedPng(bytes);
+
+          const curtainWidth = 235;
+          const curtainX = PAGE_WIDTH - curtainWidth; // x = 360.28
+          page.drawImage(curtainImg, {
+            x: curtainX,
+            y: 0,
+            width: curtainWidth,
+            height: PAGE_HEIGHT,
+          });
+          curtainEmbedded = true;
+          break;
+        } catch (err) {
+          console.warn(`Could not embed curtain image from ${p}:`, err);
+        }
+      }
+    }
+  }
+  if (!curtainEmbedded) {
+    drawCurtainPlaceholder(page);
+  }
+
+  // Load Flourish Image if available
+  let flourishImage = null;
+  const flourishCandidates = [
+    path.join(process.cwd(), "public", "elements", "flourish.png"),
+    path.join(process.cwd(), "public", "elements", "ornament.png"),
+    path.join(process.cwd(), "public", "flourish.png"),
+  ];
+  for (const p of flourishCandidates) {
+    if (fs.existsSync(p)) {
+      try {
+        const bytes = fs.readFileSync(p);
+        flourishImage = await pdfDoc.embedPng(bytes);
+        break;
+      } catch (err) {
+        console.warn(`Could not embed flourish image from ${p}:`, err);
+      }
+    }
   }
 
   const { serifRegular, serifBold, serifItalic, script } = fonts;
-  // Text column is narrower than the full page width because the real
-  // artwork's curtain occupies the right ~35% of the page.
-  const textColumnWidth = 470;
-  const centerX = (textColumnWidth) / 2 + 20;
+
+  // Center axis of printable text column (x = 35 to x = 360)
+  const columnLeft = 35;
+  const columnRight = 360;
+  const centerX = (columnLeft + columnRight) / 2; // = 197.5 pt
+
   const drawInColumn = (text, y, font, size, color = colors.text) => {
     const w = font.widthOfTextAtSize(text, size);
     page.drawText(text, { x: centerX - w / 2, y, size, font, color });
   };
 
-  drawInColumn(event.hostFamilyIntro ?? "We The Family Of", 760, serifRegular, 14);
-  drawInColumn(event.hostNames ?? "{{hostNames}}", 725, serifBold, 20);
-  drawInColumn("warmly invite", 650, serifItalic, 15);
+  // Top Ornamental Flourish
+  drawOrnamentalDivider(page, 770, { left: centerX - 65, right: centerX + 65, flourishImage });
 
-  const guestName = (guest?.name || "{{guestName}}").toUpperCase();
-  drawInColumn(guestName, 570, serifBold, 24);
+  // Host Intro & Host Names
+  drawInColumn(event.hostFamilyIntro ?? "We The Family Of", 742, serifRegular, 13);
+  drawInColumn(event.hostNames ?? "Dr. William Samoei Ruto", 714, serifBold, 18.5);
+  drawInColumn("&", 692, serifRegular, 14.5);
+  drawInColumn(event.hostNames2 ?? "Mrs. Rachel Chebet Ruto", 670, serifBold, 18.5);
 
-  drawInColumn("to the", 500, serifRegular, 13);
-  drawInColumn(event.eventTitle ?? "{{eventTitle}}", 440, script, 42, colors.text);
-  if (event.eventSubtitle) {
-    drawInColumn(event.eventSubtitle, 405, serifBold, 11, colors.darkGold ?? colors.gold);
-  }
-  drawInColumn("of their daughter", 375, serifRegular, 13);
-  drawInColumn(event.honoreeName ?? "{{honoreeName}}", 345, serifBold, 20);
+  // Ornamental Flourish
+  drawOrnamentalDivider(page, 642, { left: centerX - 65, right: centerX + 65, flourishImage });
 
-  // Date / venue / time block with small icons, left-aligned within the column.
-  const blockLeft = 60;
-  let iconY = 300;
-  drawCalendarIcon(page, blockLeft, iconY - 4, 14);
-  page.drawText(event.date ?? "{{eventDate}}", { x: blockLeft + 24, y: iconY, size: 12, font: serifBold, color: colors.text });
+  // Warmly Invite & Guest Name
+  drawInColumn("warmly invite", 614, serifItalic, 14);
 
-  iconY -= 30;
-  drawPinIcon(page, blockLeft, iconY - 4, 14);
-  const venueLines = event.venueLines ?? ["{{venueLine1}}", "{{venueLine2}}", "{{venueLine3}}"];
-  venueLines.forEach((line, i) => {
-    page.drawText(line, { x: blockLeft + 24, y: iconY - i * 14, size: 10.5, font: serifBold, color: colors.text });
+  const guestName = (guest?.name || "Jane Doe").trim();
+  drawInColumn(guestName, 566, serifBold, 23);
+
+  // Centered Horizontal Rule under guest name
+  page.drawLine({
+    start: { x: centerX - 125, y: 546 },
+    end: { x: centerX + 125, y: 546 },
+    thickness: 0.8,
+    color: colors.gold,
   });
 
-  iconY -= 14 * venueLines.length + 16;
-  drawClockIcon(page, blockLeft, iconY - 4, 14);
-  page.drawText(event.time ?? "{{eventTime}}", { x: blockLeft + 24, y: iconY, size: 12, font: serifBold, color: colors.text });
+  // Event Title Stack
+  drawInColumn("to the", 520, serifRegular, 13);
+  drawInColumn(event.eventTitle ?? "Koito ak Chaik", 462, script, 44, colors.text);
 
+  const subtitle = event.eventSubtitle || "(ENGAGEMENT AND FAREWELL)";
+  drawInColumn(subtitle, 434, serifBold, 10, colors.darkGold);
+
+  drawInColumn("of their daughter", 404, serifRegular, 13);
+  drawInColumn(event.honoreeName ?? "Charlene Chelagat Ruto", 374, serifBold, 18.5);
+
+  // Ornamental Flourish
+  drawOrnamentalDivider(page, 344, { left: centerX - 65, right: centerX + 65, flourishImage });
+
+  // Date / Venue / Time Block — Centered at centerX (197.5 pt)
+  const iconTextOffset = 23;
+  const dateText = event.date ?? "8TH AUGUST 2026";
+  const venueLines = event.venueLines ?? [
+    "INTONA HERITAGE FARM (INTONA RANCH),",
+    "KILGORIS TOWN, NASERIAN VILLAGE",
+    "NAROK COUNTY, KENYA",
+  ];
+  const timeText = event.time ?? "10.00 A.M";
+
+  const dateWidth = iconTextOffset + serifBold.widthOfTextAtSize(dateText, 10.5);
+  const maxVenueWidth = Math.max(...venueLines.map((l) => iconTextOffset + serifBold.widthOfTextAtSize(l, 9)));
+  const timeWidth = iconTextOffset + serifBold.widthOfTextAtSize(timeText, 10.5);
+  const maxBlockWidth = Math.max(dateWidth, maxVenueWidth, timeWidth);
+
+  // Exact left coordinate so the entire date/venue/time block is centered at centerX
+  const blockLeft = centerX - maxBlockWidth / 2;
+
+  let iconY = 300;
+  drawCalendarIcon(page, blockLeft, iconY - 3, 14);
+  page.drawText(dateText, {
+    x: blockLeft + iconTextOffset,
+    y: iconY,
+    size: 10.5,
+    font: serifBold,
+    color: colors.text,
+  });
+
+  iconY -= 32;
+  drawPinIcon(page, blockLeft, iconY - 3, 14);
+  venueLines.forEach((line, i) => {
+    page.drawText(line, {
+      x: blockLeft + iconTextOffset,
+      y: iconY - i * 13,
+      size: 9,
+      font: serifBold,
+      color: colors.text,
+    });
+  });
+
+  iconY -= 13 * venueLines.length + 12;
+  drawClockIcon(page, blockLeft, iconY - 3, 14);
+  page.drawText(timeText, {
+    x: blockLeft + iconTextOffset,
+    y: iconY,
+    size: 10.5,
+    font: serifBold,
+    color: colors.text,
+  });
+
+  // Scripture Quote at Bottom (Centered at centerX)
   if (event.scripture) {
-    drawInColumn(event.scripture.quote ?? "{{scriptureQuote}}", 140, serifItalic, 11.5);
-    drawInColumn(event.scripture.reference ?? "{{scriptureReference}}", 122, serifItalic, 11.5);
+    drawInColumn(
+      event.scripture.quote ?? "For He will command His angels concerning you",
+      138,
+      serifItalic,
+      10
+    );
+    if (event.scripture.quoteLine2) {
+      drawInColumn(event.scripture.quoteLine2, 124, serifItalic, 10);
+    }
+    drawInColumn(
+      event.scripture.reference ?? "Psalms 91:11 (NIV)",
+      108,
+      serifBold,
+      10.5
+    );
   }
 
   return page;

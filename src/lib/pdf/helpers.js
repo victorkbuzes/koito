@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import QRCode from "qrcode";
 import { rgb } from "pdf-lib";
 import { PAGE_WIDTH, PAGE_HEIGHT, colors, frame } from "./styles.js";
@@ -30,29 +32,105 @@ export function drawWrappedCenteredText(page, text, startY, font, size, color, m
   return y;
 }
 
-/** Draws the double-rule border and four corner brackets shared by both pages. */
-export function drawPageFrame(page) {
+/**
+ * Draws the page background and border design.
+ * Checks for a border design image asset (e.g. public/elements/border-design.png).
+ * If found, embeds and renders it at full page size.
+ * Otherwise, draws the vector double-rule border and corner brackets placeholder.
+ */
+export async function drawPageFrame(page, pdfDoc = null, pageNumber = 1) {
+  // Fill background with cream tone
   page.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: page.getHeight(), color: colors.cream });
-  page.drawRectangle({
-    x: frame.outer.x, y: frame.outer.y, width: frame.outer.width, height: frame.outer.height,
-    borderColor: colors.gold, borderWidth: frame.outer.borderWidth,
-  });
-  page.drawRectangle({
-    x: frame.inner.x, y: frame.inner.y, width: frame.inner.width, height: frame.inner.height,
-    borderColor: colors.gold, borderWidth: frame.inner.borderWidth,
-  });
 
-  const s = frame.cornerSize;
-  const h = page.getHeight();
-  const corners = [
-    { x: frame.outer.x, y: h - frame.outer.y - s },
-    { x: PAGE_WIDTH - frame.outer.x - s, y: h - frame.outer.y - s },
-    { x: frame.outer.x, y: frame.outer.y },
-    { x: PAGE_WIDTH - frame.outer.x - s, y: frame.outer.y },
-  ];
-  corners.forEach((c) => {
-    page.drawRectangle({ x: c.x, y: c.y, width: s, height: s, borderColor: colors.gold, borderWidth: frame.cornerBorderWidth });
-  });
+  let borderEmbedded = false;
+
+  if (pdfDoc) {
+    const candidates = [
+      path.join(process.cwd(), "public", "elements", "border-design.png"),
+      path.join(process.cwd(), "public", "elements", `border-design-page${pageNumber}.png`),
+      path.join(process.cwd(), "public", "elements", "border.png"),
+      path.join(process.cwd(), "public", "border-design.png"),
+      path.join(process.cwd(), "public", "border.png"),
+    ];
+
+    for (const p of candidates) {
+      if (fs.existsSync(p)) {
+        try {
+          const bytes = fs.readFileSync(p);
+          const borderImage = p.endsWith(".jpg") || p.endsWith(".jpeg")
+            ? await pdfDoc.embedJpg(bytes)
+            : await pdfDoc.embedPng(bytes);
+
+          // Border design size reduced by 20% (scaled to 80% width and height, centered)
+          const targetW = PAGE_WIDTH * 0.95;
+          const targetH = page.getHeight() * 0.95;
+          const targetX = (PAGE_WIDTH - targetW) / 2;
+          const targetY = (page.getHeight() - targetH) / 2;
+
+          page.drawImage(borderImage, {
+            x: targetX,
+            y: targetY,
+            width: targetW,
+            height: targetH,
+          });
+          borderEmbedded = true;
+          break;
+        } catch (err) {
+          console.warn(`Could not embed border design image from ${p}:`, err);
+        }
+      }
+    }
+  }
+
+  // Vector placeholder fallback for border design if no image file is found (reduced by 20%)
+  if (!borderEmbedded) {
+    const scale = 0.95;
+    const outerW = (PAGE_WIDTH - 40) * scale;
+    const outerH = (page.getHeight() - 40) * scale;
+    const outerX = (PAGE_WIDTH - outerW) / 2;
+    const outerY = (page.getHeight() - outerH) / 2;
+
+    page.drawRectangle({
+      x: outerX,
+      y: outerY,
+      width: outerW,
+      height: outerH,
+      borderColor: colors.gold,
+      borderWidth: frame.outer.borderWidth,
+    });
+
+    const innerW = (PAGE_WIDTH - 56) * scale;
+    const innerH = (page.getHeight() - 56) * scale;
+    const innerX = (PAGE_WIDTH - innerW) / 2;
+    const innerY = (page.getHeight() - innerH) / 2;
+
+    page.drawRectangle({
+      x: innerX,
+      y: innerY,
+      width: innerW,
+      height: innerH,
+      borderColor: colors.gold,
+      borderWidth: frame.inner.borderWidth,
+    });
+
+    const s = frame.cornerSize * scale;
+    const corners = [
+      { x: outerX, y: outerY + outerH - s },
+      { x: outerX + outerW - s, y: outerY + outerH - s },
+      { x: outerX, y: outerY },
+      { x: outerX + outerW - s, y: outerY },
+    ];
+    corners.forEach((c) => {
+      page.drawRectangle({
+        x: c.x,
+        y: c.y,
+        width: s,
+        height: s,
+        borderColor: colors.gold,
+        borderWidth: frame.cornerBorderWidth,
+      });
+    });
+  }
 }
 
 /**
@@ -133,7 +211,7 @@ export function drawCurtainPlaceholder(page) {
   const deepGreen = rgb(0.04, 0.28, 0.14);
   const goldBrooch = rgb(0.78, 0.62, 0.28);
   const startX = 360;
-  
+
   page.drawRectangle({
     x: startX,
     y: 0,

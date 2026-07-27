@@ -3,7 +3,7 @@ import { drawCenteredText, drawPageFrame, drawOrnamentalDivider, embedQrCode } f
 
 export async function renderPage2(pdfDoc, fonts, event, guest) {
   const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  drawPageFrame(page);
+  await drawPageFrame(page, pdfDoc, 2);
 
   const { serifRegular, serifBold, sansRegular } = fonts;
 
