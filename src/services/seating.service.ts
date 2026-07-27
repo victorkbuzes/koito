@@ -67,6 +67,110 @@ export async function getTablesWithSeating() {
   });
 }
 
+export interface AssignGuestInput {
+  guestId: string;
+  tableId: string | null;
+  seatNumber?: number | null;
+}
+
+/**
+ * Assign a guest to a table (first available seat, or specific seat number).
+ * Pass tableId=null to unassign.
+ */
+export async function assignGuestToTable(input: AssignGuestInput) {
+  const { guestId, tableId, seatNumber } = input;
+
+  const guest = await prisma.guest.findUnique({
+    where: { id: guestId },
+    include: {
+      seatingAssignment: true,
+    },
+  });
+
+  if (!guest) {
+    throw new Error("GUEST_NOT_FOUND");
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    if (guest.seatingAssignment) {
+      await tx.seatingAssignment.delete({
+        where: { id: guest.seatingAssignment.id },
+      });
+    }
+
+    if (!tableId) {
+      return { guestId, tableId: null, tableName: "Unassigned" };
+    }
+
+    const targetTable = await tx.diningTable.findUnique({
+      where: { id: String(tableId) },
+      include: { seats: { include: { seatingAssignment: true } } },
+    });
+
+    if (!targetTable) {
+      throw new Error("TABLE_NOT_FOUND");
+    }
+
+    let availableSeat = null;
+    if (seatNumber) {
+      availableSeat = targetTable.seats.find(
+        (s) => s.seatNumber === parseInt(String(seatNumber)),
+      );
+      if (availableSeat?.seatingAssignment) {
+        throw new Error(`TABLE_FULL:${targetTable.name}:${targetTable.seats.length}`);
+      }
+    }
+    if (!availableSeat) {
+      availableSeat = targetTable.seats.find((s) => !s.seatingAssignment);
+    }
+
+    if (!availableSeat) {
+      throw new Error(`TABLE_FULL:${targetTable.name}:${targetTable.seats.length}`);
+    }
+
+    await tx.seatingAssignment.create({
+      data: {
+        guestId: guest.id,
+        seatId: availableSeat.id,
+      },
+    });
+
+    await createAuditLog(
+      {
+        actorType: "ADMIN",
+        actorId: "admin",
+        action: "ASSIGN",
+        entityType: "SEATING_ASSIGNMENT",
+        entityId: guest.id,
+        metadata: {
+          guestName: guest.fullName,
+          tableName: targetTable.name,
+          seatNumber: availableSeat.seatNumber,
+        },
+      },
+      tx,
+    );
+
+    return {
+      guestId: guest.id,
+      tableId: targetTable.id,
+      tableName: targetTable.name,
+      seatNumber: availableSeat.seatNumber,
+    };
+  });
+}
+
+/**
+ * Bulk-assign multiple guests to tables in one request.
+ */
+export async function assignGuestsToTables(assignments: AssignGuestInput[]) {
+  const results = [];
+  for (const assignment of assignments) {
+    results.push(await assignGuestToTable(assignment));
+  }
+  return results;
+}
+
 /**
  * Service function to atomically create a Dining Table and its Seats in a single transaction.
  */

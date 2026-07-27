@@ -14,6 +14,8 @@ export interface CreateGuestParams {
   name: string;
   phone?: string | null;
   role?: string;
+  cluster?: string;
+  clusterId?: string;
   tableId?: string;
   notes?: string;
   code?: string;
@@ -146,7 +148,7 @@ export async function getDelegates(params: GetDelegatesParams) {
  * Service function to create a Guest with PIN, QRCode, Seating, GuestRole, and AuditLog.
  */
 export async function createGuest(params: CreateGuestParams) {
-  const { name, phone: rawPhone, role, tableId, notes, code: inputCode } = params;
+  const { name, phone: rawPhone, role, cluster, clusterId, tableId, notes, code: inputCode } = params;
 
   if (!name) {
     throw new Error("NAME_REQUIRED");
@@ -163,6 +165,25 @@ export async function createGuest(params: CreateGuestParams) {
     if (existing) {
       throw new Error(`DUPLICATE_PHONE:${phone}:${existing.fullName}:${existing.qrCode?.code || "N/A"}`);
     }
+  }
+
+  let targetClusterId: string | null = clusterId || null;
+  if (!targetClusterId && cluster) {
+    const matched = await prisma.cluster.findFirst({
+      where: {
+        eventId: event.id,
+        name: { equals: cluster.trim(), mode: "insensitive" },
+      },
+    });
+    if (matched) {
+      targetClusterId = matched.id;
+    }
+  }
+  if (!targetClusterId) {
+    const defaultCls = await prisma.cluster.findFirst({
+      where: { eventId: event.id, name: { equals: "Guests", mode: "insensitive" } },
+    }) || await prisma.cluster.findFirst({ where: { eventId: event.id } });
+    if (defaultCls) targetClusterId = defaultCls.id;
   }
 
   let targetSeatId: string | null = null;
@@ -203,6 +224,7 @@ export async function createGuest(params: CreateGuestParams) {
         eventId: event.id,
         fullName: name,
         phone,
+        clusterId: targetClusterId,
         notes: notes || null,
         pin: code,
         pinHash: code,
