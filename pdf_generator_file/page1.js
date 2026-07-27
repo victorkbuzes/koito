@@ -145,7 +145,7 @@ export async function renderPage1(pdfDoc, fonts, event, guest) {
   const iconTextOffset = 23;
   const dateText = event.date ?? "8TH AUGUST 2026";
   const venueLines = event.venueLines ?? [
-    "INTONA HERITAGE FARM (INTONA RANCH),",
+    "INTONNA HERITAGE FARM ,",
     "KILGORIS TOWN, NASERIAN VILLAGE",
     "NAROK COUNTY, KENYA",
   ];

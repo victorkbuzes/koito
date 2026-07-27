@@ -17,6 +17,7 @@ import {
   X,
   Gift,
   Check,
+  Phone,
   FileSpreadsheet,
 } from "lucide-react";
 // const paletteImg = "/imports/WhatsApp_Image_2026-07-03_at_02.04.28.jpeg";
@@ -582,7 +583,7 @@ function PinGate({
         </h1>
 
         {/* Event pill */}
-        <div className="flex items-center gap-3 mb-1">
+        {/* <div className="flex items-center gap-3 mb-1">
           <div
             className="h-px w-10"
             style={{ background: "rgba(201,168,76,0.55)" }}
@@ -600,16 +601,8 @@ function PinGate({
             className="h-px w-10"
             style={{ background: "rgba(201,168,76,0.55)" }}
           />
-        </div>
-        <p
-          className="text-[11px] tracking-[0.22em] uppercase mb-6"
-          style={{
-            fontFamily: "Lato,sans-serif",
-            color: "rgba(255,255,255,0.72)",
-          }}
-        >
-          Saturday, 8 August 2026
-        </p>
+        </div> */}
+
 
         {/* ── PIN Entry ── */}
         <AnimatePresence>
@@ -620,14 +613,14 @@ function PinGate({
               className="flex flex-col items-center gap-5 w-full max-w-xs"
             >
               <p
-                className="text-xs tracking-[0.25em] uppercase text-center"
+                className="text-xs tracking-[0.25em] uppercase text-center mt-5"
                 style={{
                   fontFamily: "Lato,sans-serif",
                   color: "rgba(255,255,255,0.78)",
                   fontWeight: 300,
                 }}
               >
-                Enter the PIN from your invitation card
+                Enter Your PIN
               </p>
 
               {/* PIN boxes */}
@@ -949,8 +942,9 @@ function GuestSelector({
 
 function AccommodationTabsSection() {
   const [activeTab, setActiveTab] = useState<
-    "kisii" | "bomet" | "migori" | "nyamira" | "mara"
-  >("kisii");
+    "mara" | "kisii" | "migori" | "nyamira" | "bomet"
+  >("mara");
+  const [subCategory, setSubCategory] = useState<"hotels" | "airbnbs">("hotels");
 
   const countyData: Record<
     string,
@@ -964,13 +958,24 @@ function AccommodationTabsSection() {
         email?: string;
         phone?: string;
       }>;
+      airbnbs?: Array<{
+        name: string;
+        desc: string;
+        link: string;
+      }>;
       isMara?: boolean;
     }
   > = {
+    mara: {
+      name: "Maasai Mara Triangle",
+      summary:
+        "43 km to Intonna Heritage Farm (1 hr 32 mins by road — murram route). Curated luxury safari lodges and tented camps.",
+      isMara: true,
+    },
     kisii: {
       name: "Kisii County",
       summary:
-        "Neighbouring county · 65 km to Intona Heritage Farm (~1 hr 23 mins by road)",
+        "Neighbouring county · 65 km to Intonna Heritage Farm (1 hr 23 mins by road)",
       hotels: [
         {
           name: "1. Karmel Park Hotel",
@@ -1015,64 +1020,16 @@ function AccommodationTabsSection() {
       ],
       airbnbs: [
         {
-          name: "Kisii Airbnbs ",
+          name: "Kisii Airbnbs & Private Stays",
           desc: "Explore private homes, self-catering apartments, and guest suites available on Airbnb in Kisii.",
           link: "https://www.airbnb.com/s/Kisii--Kisii-County/homes?date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&place_id=ChIJYUFfsuw7KxgRsS2Lx5BqUUQ&location_bb=vym490ILLpm%2FMqEJQgsJ0g%3D%3D&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&search_type=autocomplete_click",
-        },
-        {
-          name: "Bomet Airbnbs",
-          desc: "Browse house rentals, apartments, and guest homes available on Airbnb in Bomet.",
-          link: "https://www.airbnb.com/s/BOMET/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
-        },
-        {
-          name: "Nyamira Airbnbs",
-          desc: "Browse Airbnb rentals, homestays, and private cottages available in Nyamira County.",
-          link: "https://www.airbnb.com/s/NYAMIRA/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
-        },
-        {
-          name: "Migori Airbnbs ",
-          desc: "Explore private homes, self-catering apartments, and guest suites available on Airbnb in Migori.",
-          link: "https://www.airbnb.com/s/MIGORI/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
-        },
-        {
-          name: "Narok Airbnbs",
-          desc: "Explore safari villas, private homestays, and house rentals available on Airbnb in Narok.",
-          link: "https://www.airbnb.com/s/NAROK/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
-        },
-      ],
-    },
-    bomet: {
-      name: "Bomet County",
-      summary:
-        "Neighbouring county · 109 km to Intona Heritage Farm (~2 hrs 19 mins by road)",
-      hotels: [
-        {
-          name: "1. Willis Hotel",
-          desc: "A 4-star accommodation located just off the Bomet-Silibwet Road (Near Sotik-Tenwek Junction) in Bomet, Kenya. Features free Wi-Fi, restaurant, bar, children's playground, and tranquil gardens.",
-          rates: "$45 – $80",
-          email: "hotelthewillis@gmail.com",
-          phone: "+254 758 000 010",
-        },
-        {
-          name: "2. Famous Gate Hotel",
-          desc: "A premier hospitality destination and the largest hotel facility in the South Rift region. Situated in Kyogong along the Bomet–Narok Highway (~3 km from Bomet town center).",
-          rates: "$45 – $95",
-          email: "famousgatesbmt@gmail.com",
-          phone: "+254 706 782 828",
-        },
-      ],
-      airbnbs: [
-        {
-          name: "Bomet Airbnbs & Private Stays",
-          desc: "Browse house rentals, apartments, and guest homes available on Airbnb in Bomet.",
-          link: "https://www.airbnb.com/s/BOMET/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
       ],
     },
     migori: {
       name: "Migori County",
       summary:
-        "Neighbouring county · 62 km to Intona Heritage Farm (~1 hr 36 mins by road — major part is murram, travel time may vary depending on weather and road conditions)",
+        "Neighbouring county · 62 km to Intonna Heritage Farm (1 hr 36 mins by road — major part is murram, travel time may vary depending on weather and road conditions)",
       hotels: [
         {
           name: "1. Hotel Vannah",
@@ -1112,7 +1069,7 @@ function AccommodationTabsSection() {
     nyamira: {
       name: "Nyamira County",
       summary:
-        "Neighbouring county · 93 km to Intona Heritage Farm (~2 hrs 4 mins by road)",
+        "Neighbouring county · 93 km to Intonna Heritage Farm (2 hrs 4 mins by road)",
       hotels: [
         {
           name: "1. Nyamira Height Suites",
@@ -1135,16 +1092,31 @@ function AccommodationTabsSection() {
         },
       ],
     },
-    mara: {
-      name: "Maasai Mara Lodges & Camps",
+    bomet: {
+      name: "Bomet County",
       summary:
-        "43 km to Intona Heritage Farm (~1 hr 32 mins by road — murram route). Curated luxury safari lodges and tented camps.",
-      isMara: true,
+        "Neighbouring county · 109 km to Intonna Heritage Farm (2 hrs 19 mins by road)",
+      hotels: [
+        {
+          name: "1. Willis Hotel",
+          desc: "A 4-star accommodation located just off the Bomet-Silibwet Road (Near Sotik-Tenwek Junction) in Bomet, Kenya. Features free Wi-Fi, restaurant, bar, children's playground, and tranquil gardens.",
+          rates: "$45 – $80",
+          email: "hotelthewillis@gmail.com",
+          phone: "+254 758 000 010",
+        },
+        {
+          name: "2. Famous Gate Hotel",
+          desc: "A premier hospitality destination and the largest hotel facility in the South Rift region. Situated in Kyogong along the Bomet–Narok Highway (3 km from Bomet town center).",
+          rates: "$45 – $95",
+          email: "famousgatesbmt@gmail.com",
+          phone: "+254 706 782 828",
+        },
+      ],
       airbnbs: [
         {
-          name: "Narok & Maasai Mara Airbnbs",
-          desc: "Explore safari villas, private homestays, and house rentals available on Airbnb in Narok & Maasai Mara region.",
-          link: "https://www.airbnb.com/s/NAROK/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
+          name: "Bomet Airbnbs & Private Stays",
+          desc: "Browse house rentals, apartments, and guest homes available on Airbnb in Bomet.",
+          link: "https://www.airbnb.com/s/BOMET/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
       ],
     },
@@ -1185,28 +1157,28 @@ function AccommodationTabsSection() {
           className="w-full bg-background border border-accent/50 text-foreground px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider focus:outline-none focus:border-accent rounded-sm shadow-sm"
           style={{ fontFamily: "Lato,sans-serif" }}
         >
-          <option value="kisii">1. Kisii County (65 km)</option>
-          <option value="bomet">2. Bomet County (109 km)</option>
+          <option value="mara">1. Maasai Mara Lodges (43 km)</option>
+          <option value="kisii">2. Kisii County (65 km)</option>
           <option value="migori">3. Migori County (62 km)</option>
           <option value="nyamira">4. Nyamira County (93 km)</option>
-          <option value="mara">5. Maasai Mara Lodges (43 km)</option>
+          <option value="bomet">5. Bomet County (109 km)</option>
         </select>
       </div>
 
       {/* Navigation Tabs (Desktop & Tablet) */}
-      <div className="hidden sm:flex border-b border-border overflow-x-auto scrollbar-none bg-card/40">
+      <div className="hidden sm:flex border-b border-border overflow-x-auto scrollbar-none bg-card/40 w-full justify-between">
         {[
+          { key: "mara", label: "Maasai Mara" },
           { key: "kisii", label: "Kisii County" },
-          { key: "bomet", label: "Bomet County" },
           { key: "migori", label: "Migori County" },
           { key: "nyamira", label: "Nyamira County" },
-          { key: "mara", label: "Maasai Mara Lodges" },
+          { key: "bomet", label: "Bomet County" },
         ].map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setActiveTab(key as any)}
-            className={`px-3 md:px-5 lg:px-6 py-3.5 md:py-4 text-[9px] md:text-[10px] tracking-[0.1em] md:tracking-[0.18em] uppercase border-b-2 whitespace-nowrap transition-all duration-300 cursor-pointer flex-shrink-0 ${activeTab === key
-              ? "border-accent text-accent font-semibold bg-accent/10"
+            className={`flex-1 min-w-0 text-center px-1.5 sm:px-2 md:px-3 py-3 sm:py-3.5 text-[8.5px] sm:text-[9.5px] md:text-[10px] tracking-[0.05em] sm:tracking-[0.1em] md:tracking-[0.15em] uppercase border-b-2 whitespace-nowrap transition-all duration-300 cursor-pointer ${activeTab === key
+              ? "border-accent text-accent font-bold bg-accent/10"
               : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
               }`}
             style={{ fontFamily: "Lato,sans-serif" }}
@@ -1235,161 +1207,150 @@ function AccommodationTabsSection() {
           </div>
         </div>
 
+        {/* Category Sub-Filter Navigation Buttons (For counties with Hotels & Airbnbs) */}
+        {!current.isMara && (
+          <div className="flex items-center gap-2 mb-6 flex-wrap border-b border-border/40 pb-3">
+            <button
+              type="button"
+              onClick={() => setSubCategory("hotels")}
+              className={`px-4 py-2 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${
+                subCategory === "hotels"
+                  ? "bg-accent text-accent-foreground shadow-sm"
+                  : "bg-card text-muted-foreground hover:text-foreground border border-border"
+              }`}
+              style={{ fontFamily: "Lato,sans-serif" }}
+            >
+              Hotels & Resorts
+            </button>
+            <button
+              type="button"
+              onClick={() => setSubCategory("airbnbs")}
+              className={`px-4 py-2 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${
+                subCategory === "airbnbs"
+                  ? "bg-accent text-accent-foreground shadow-sm"
+                  : "bg-card text-muted-foreground hover:text-foreground border border-border"
+              }`}
+              style={{ fontFamily: "Lato,sans-serif" }}
+            >
+              Airbnbs & Private Stays
+            </button>
+          </div>
+        )}
+
         {current.isMara ? (
           <div>
-            <p
-              className="text-xs sm:text-sm text-muted-foreground mb-4 leading-5 sm:leading-6"
-              style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
-            >
-              Recommended safari lodges and tented camps in the Maasai Mara (~43 km / ~1 hr 32 mins by road from Intona Heritage Farm). Click TripAdvisor or Booking.com links below to explore reviews and reserve your stay.
-            </p>
+            <div className="mb-8">
+              <p
+                className="text-[10px] tracking-[0.25em] text-accent uppercase font-bold mb-3"
+                style={{ fontFamily: "Lato,sans-serif" }}
+              >
+                Hotels, Tented Camps & Safari Lodges
+              </p>
+              <p
+                className="text-xs sm:text-sm text-muted-foreground mb-4 leading-5 sm:leading-6"
+                style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
+              >
+                Recommended safari lodges and tented camps in the Maasai Mara (43 km / 1 hr 32 mins by road from Intonna Heritage Farm). Click TripAdvisor or Booking.com links below to explore reviews and reserve your stay.
+              </p>
 
-            <div className="space-y-3 mb-6">
-              {[
-                {
-                  name: "Angama Mara",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d8426025-Reviews-Angama_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
-                },
-                {
-                  name: "Mara Elatia",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g1026010-d25280925-Reviews-Mara_Elatia_Camp-Narok_Rift_Valley_Province.html",
-                  booking: "https://www.booking.com/hotel/ke/mara-elatia-camp-masai-mara.en-gb.html",
-                },
-                {
-                  name: "Sanctuary Olonana",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g23379736-d569566-Reviews-Olonana_Lodge_An_A_k_Sanctuary-Mara_Rianta_Rift_Valley_Province.html",
-                },
-                {
-                  name: "Saruni Mara",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g9807487-d600516-Reviews-Saruni_Mara-Mara_North_Conservancy_Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
-                  booking: "https://www.booking.com/hotel/ke/saruni-mara-narok.en-gb.html",
-                },
-                {
-                  name: "Karen Blixen Camp",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g9807487-d1051579-Reviews-Karen_Blixen_Camp-Mara_North_Conservancy_Maasai_Mara_National_Reserve_Rift_Valley_Pro.html",
-                },
-                {
-                  name: "Mara Serena Safari Lodge",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d305101-Reviews-Mara_Serena_Safari_Lodge-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
-                  booking: "https://www.booking.com/hotel/ke/mara-serena-safari-lodge.en-gb.html",
-                },
-                {
-                  name: "Kilima Camp Masai Mara",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d638879-Reviews-Kilima_Camp_Masai_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
-                },
-                {
-                  name: "Pearl Mara",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g23379736-d33982169-Reviews-Pearl_Mara-Mara_Rianta_Rift_Valley_Province.html",
-                  booking: "https://www.booking.com/hotel/ke/pearl-mara-expedition-53-tours-ltd.en-gb.html",
-                },
-                {
-                  name: "Basecamp Maasai Mara",
-                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d472057-Reviews-Basecamp_Masai_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
-                  booking: "https://www.booking.com/hotel/ke/basecamp-masai-mara.en-gb.html",
-                },
-              ].map(({ name, tripAdvisor, booking }) => (
-                <div
-                  key={name}
-                  className="p-4 sm:p-5 bg-card border border-border hover:border-accent/40 transition-colors rounded-sm sm:rounded-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className="text-sm font-semibold text-foreground"
-                      style={{ fontFamily: "Playfair Display,serif" }}
-                    >
-                      {name}
-                    </p>
-                    <p
-                      className="text-xs text-muted-foreground mt-0.5"
-                      style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
-                    >
-                      Maasai Mara National Reserve & Conservancies
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
-                    {tripAdvisor && (
-                      <a
-                        href={tripAdvisor}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[10px] text-accent font-bold px-3 py-1.5 bg-accent/10 border border-accent/30 hover:bg-accent/20 transition-colors rounded-sm inline-flex items-center gap-1.5"
-                        style={{ fontFamily: "Lato,sans-serif" }}
+              <div className="space-y-3 mb-6">
+                {[
+                  {
+                    name: "Angama Mara",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d8426025-Reviews-Angama_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
+                  },
+                  {
+                    name: "Mara Elatia",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g1026010-d25280925-Reviews-Mara_Elatia_Camp-Narok_Rift_Valley_Province.html",
+                    booking: "https://www.booking.com/hotel/ke/mara-elatia-camp-masai-mara.en-gb.html",
+                  },
+                  {
+                    name: "Sanctuary Olonana",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g23379736-d569566-Reviews-Olonana_Lodge_An_A_k_Sanctuary-Mara_Rianta_Rift_Valley_Province.html",
+                  },
+                  {
+                    name: "Saruni Mara",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g9807487-d600516-Reviews-Saruni_Mara-Mara_North_Conservancy_Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
+                    booking: "https://www.booking.com/hotel/ke/saruni-mara-narok.en-gb.html",
+                  },
+                  {
+                    name: "Karen Blixen Camp",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g9807487-d1051579-Reviews-Karen_Blixen_Camp-Mara_North_Conservancy_Maasai_Mara_National_Reserve_Rift_Valley_Pro.html",
+                  },
+                  {
+                    name: "Mara Serena Safari Lodge",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d305101-Reviews-Mara_Serena_Safari_Lodge-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
+                    booking: "https://www.booking.com/hotel/ke/mara-serena-safari-lodge.en-gb.html",
+                  },
+                  {
+                    name: "Kilima Camp Masai Mara",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d638879-Reviews-Kilima_Camp_Masai_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
+                  },
+                  {
+                    name: "Pearl Mara",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g23379736-d33982169-Reviews-Pearl_Mara-Mara_Rianta_Rift_Valley_Province.html",
+                    booking: "https://www.booking.com/hotel/ke/pearl-mara-expedition-53-tours-ltd.en-gb.html",
+                  },
+                  {
+                    name: "Basecamp Maasai Mara",
+                    tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d472057-Reviews-Basecamp_Masai_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
+                    booking: "https://www.booking.com/hotel/ke/basecamp-masai-mara.en-gb.html",
+                  },
+                ].map(({ name, tripAdvisor, booking }) => (
+                  <div
+                    key={name}
+                    className="p-4 sm:p-5 bg-card border border-border hover:border-accent/40 transition-colors rounded-sm sm:rounded-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className="text-sm font-semibold text-foreground"
+                        style={{ fontFamily: "Playfair Display,serif" }}
                       >
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-                        TripAdvisor
-                      </a>
-                    )}
-                    {booking && (
-                      <a
-                        href={booking}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[10px] text-accent/90 font-bold px-3 py-1.5 bg-card border border-border hover:border-accent/50 hover:text-accent transition-colors rounded-sm inline-flex items-center gap-1.5"
-                        style={{ fontFamily: "Lato,sans-serif" }}
+                        {name}
+                      </p>
+                      <p
+                        className="text-xs text-muted-foreground mt-0.5"
+                        style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
                       >
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-                        Booking.com
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+                        Maasai Mara National Reserve & Conservancies
+                      </p>
+                    </div>
 
-            {current.airbnbs && current.airbnbs.length > 0 && (
-              <div className="pt-4 border-t border-border/40">
-                <p
-                  className="text-[10px] tracking-[0.25em] text-accent uppercase font-bold mb-3"
-                  style={{ fontFamily: "Lato,sans-serif" }}
-                >
-                  Narok & Maasai Mara Airbnbs
-                </p>
-                <div className="space-y-3">
-                  {current.airbnbs.map(({ name, desc, link }: any) => (
-                    <div
-                      key={name}
-                      className="p-4 sm:p-5 bg-card border border-accent/30 hover:border-accent/70 transition-colors rounded-sm sm:rounded-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
-                    >
-                      <div className="space-y-1 flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
+                      {tripAdvisor && (
                         <a
-                          href={link}
+                          href={tripAdvisor}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-sm font-semibold text-accent hover:text-accent/80 underline underline-offset-4 transition-colors inline-flex items-center gap-1.5"
-                          style={{ fontFamily: "Playfair Display,serif" }}
+                          className="text-[10px] text-accent font-bold px-3 py-1.5 bg-accent/10 border border-accent/30 hover:bg-accent/20 transition-colors rounded-sm inline-flex items-center gap-1.5"
+                          style={{ fontFamily: "Lato,sans-serif" }}
                         >
-                          <span>{name}</span>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
+                          TripAdvisor
                         </a>
-                        <p
-                          className="text-xs text-muted-foreground leading-5"
-                          style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
+                      )}
+                      {booking && (
+                        <a
+                          href={booking}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[10px] text-accent/90 font-bold px-3 py-1.5 bg-card border border-border hover:border-accent/50 hover:text-accent transition-colors rounded-sm inline-flex items-center gap-1.5"
+                          style={{ fontFamily: "Lato,sans-serif" }}
                         >
-                          {desc}
-                        </p>
-                      </div>
-
-                      <a
-                        href={link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[10px] text-accent font-bold px-3 py-1.5 bg-accent/15 border border-accent/50 hover:bg-accent/30 transition-colors rounded-sm inline-flex items-center gap-1.5 flex-shrink-0"
-                        style={{ fontFamily: "Lato,sans-serif" }}
-                      >
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        View on Airbnb
-                      </a>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
+                          Booking.com
+                        </a>
+                      )}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
           </div>
         ) : (
           <div className="space-y-6">
             {/* Hotels Section */}
-            {current.hotels && current.hotels.length > 0 && (
+            {subCategory === "hotels" && current.hotels && current.hotels.length > 0 && (
               <div>
                 <p
                   className="text-[10px] tracking-[0.25em] text-accent uppercase font-bold mb-3"
@@ -1460,8 +1421,8 @@ function AccommodationTabsSection() {
             )}
 
             {/* Airbnbs Section */}
-            {current.airbnbs && current.airbnbs.length > 0 && (
-              <div className="pt-2 border-t border-border/40">
+            {subCategory === "airbnbs" && current.airbnbs && current.airbnbs.length > 0 && (
+              <div>
                 <div className="flex items-center justify-between mb-3">
                   <p
                     className="text-[10px] tracking-[0.25em] text-accent uppercase font-bold"
@@ -1469,8 +1430,6 @@ function AccommodationTabsSection() {
                   >
                     Airbnbs & Private Stays
                   </p>
-
-               
                 </div>
                 <div className="space-y-3">
                   {current.airbnbs.map(({ name, desc, rates, link, phone, email }: any) => (
@@ -1645,6 +1604,17 @@ function InvitationScreen({
       setInlineSubmitting(false);
       setShowRsvpModal(false);
     }
+  };
+
+  const handleSaveTheDate = () => {
+    const title = encodeURIComponent("Koito ak Chaik - Charlene Chelagat Ruto");
+    const details = encodeURIComponent(
+      "Koito ak Chaik (Engagement & Farewell) of Charlene Chelagat Ruto.\n\nDate: Saturday, 8th August 2026\nTime: 10:00 A.M.\nLocation: Intonna Heritage Farm, Kilgoris, Narok County"
+    );
+    const location = encodeURIComponent("Intonna Heritage Farm, Kilgoris, Narok County");
+    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20260808T070000Z/20260808T150000Z&details=${details}&location=${location}`;
+    
+    window.open(googleUrl, "_blank");
   };
 
   const stagger = (i: number) => ({
@@ -2224,49 +2194,105 @@ function InvitationScreen({
             {/* ── Confirm Attendance card ── */}
             <div
               id="rsvp"
-              className="w-full mt-6 border px-7 py-6 relative scroll-mt-24 z-20"
+              className="w-full mt-6 border px-7 py-6 relative scroll-mt-24 z-20 transition-all duration-500"
               style={{
-                borderColor: "rgba(201,168,76,0.3)",
-                background: "rgba(4,12,6,0.85)",
+                borderColor: rsvpRecord
+                  ? rsvpRecord.attending === "yes"
+                    ? "rgba(16, 185, 129, 0.45)"
+                    : "rgba(244, 63, 94, 0.45)"
+                  : "rgba(201,168,76,0.3)",
+                background: rsvpRecord
+                  ? rsvpRecord.attending === "yes"
+                    ? "rgba(4, 20, 12, 0.9)"
+                    : "rgba(24, 6, 10, 0.9)"
+                  : "rgba(4,12,6,0.85)",
               }}
             >
-              <p
-                className="text-xs tracking-[0.4em] uppercase mb-2 text-center font-bold"
-                style={{
-                  fontFamily: "Lato,sans-serif",
-                  color: "rgba(201,168,76,0.95)",
-                }}
-              >
-                Confirm Attendance
-              </p>
+              {!rsvpRecord && (
+                <p
+                  className="text-xs tracking-[0.4em] uppercase mb-2 text-center font-bold"
+                  style={{
+                    fontFamily: "Lato,sans-serif",
+                    color: "rgba(201,168,76,0.95)",
+                  }}
+                >
+                  Kindly RSVP
+                </p>
+              )}
 
               {rsvpRecord ? (
                 <div className="flex flex-col items-center gap-3 text-center py-2">
-                  <div className="flex items-center gap-2 px-4 py-2 border border-accent/40 bg-accent/10">
-                    <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-                      <circle
-                        cx="9"
-                        cy="9"
-                        r="8"
-                        stroke="#C9A84C"
-                        strokeWidth="1"
-                      />
-                      <polyline
-                        points="5,9 8,12 13,6"
-                        stroke="#C9A84C"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        fill="none"
-                      />
-                    </svg>
+                  <div
+                    className={`flex flex-col items-center justify-center gap-1 px-5 py-3 border transition-colors ${
+                      rsvpRecord.attending === "yes"
+                        ? "border-emerald-500/60 bg-emerald-950/50 text-emerald-300"
+                        : "border-rose-500/60 bg-rose-950/50 text-rose-300"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {rsvpRecord.attending === "yes" ? (
+                        <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                          <circle
+                            cx="9"
+                            cy="9"
+                            r="8"
+                            stroke="#34D399"
+                            strokeWidth="1.2"
+                          />
+                          <polyline
+                            points="5,9 8,12 13,6"
+                            stroke="#34D399"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            fill="none"
+                          />
+                        </svg>
+                      ) : (
+                        <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                          <circle
+                            cx="9"
+                            cy="9"
+                            r="8"
+                            stroke="#F87171"
+                            strokeWidth="1.2"
+                          />
+                          <line
+                            x1="6"
+                            y1="6"
+                            x2="12"
+                            y2="12"
+                            stroke="#F87171"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                          />
+                          <line
+                            x1="12"
+                            y1="6"
+                            x2="6"
+                            y2="12"
+                            stroke="#F87171"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      )}
+                      <span
+                        className="text-xs tracking-[0.2em] uppercase font-bold"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        {rsvpRecord.attending === "yes"
+                          ? "RSVP Confirmed"
+                          : "RSVP Recorded"}
+                      </span>
+                    </div>
                     <span
-                      className="text-xs tracking-widest uppercase text-accent font-semibold"
+                      className="text-xs tracking-widest uppercase font-semibold opacity-90"
                       style={{ fontFamily: "Lato,sans-serif" }}
                     >
                       {rsvpRecord.attending === "yes"
-                        ? "RSVP Confirmed — Joyfully Accepts"
-                        : "RSVP Recorded — Regretfully Declines"}
+                        ? "Joyfully Accepted"
+                        : "Regretfully Declined"}
                     </span>
                   </div>
                   <p
@@ -2274,16 +2300,32 @@ function InvitationScreen({
                     style={{
                       fontFamily: "Playfair Display,serif",
                       fontStyle: "italic",
-                      color: "rgba(255,255,255,0.88)",
+                      color:
+                        rsvpRecord.attending === "yes"
+                          ? "rgba(209, 250, 229, 0.95)"
+                          : "rgba(254, 226, 226, 0.95)",
                     }}
                   >
                     {rsvpRecord.attending === "yes"
                       ? "Thank you! Your attendance is confirmed. We look forward to celebrating with you on 8th August 2026."
-                      : "Thank you for letting us know. Your response has been saved."}
+                      : "Thank you for letting us know. Your response has been received."}
                   </p>
+                  {rsvpRecord.attending === "yes" && (
+                    <p
+                      className="text-xs text-center text-emerald-300/90 tracking-wider font-medium mt-1"
+                      style={{ fontFamily: "Lato,sans-serif" }}
+                    >
+                      Please note: Your table will be assigned 24 hours to the event.
+                    </p>
+                  )}
+               
                   {rsvpRecord.guestName && (
                     <p
-                      className="text-[10px] text-accent/80 tracking-wider"
+                      className={`text-[10px] tracking-wider ${
+                        rsvpRecord.attending === "yes"
+                          ? "text-emerald-300/80"
+                          : "text-rose-300/80"
+                      }`}
                       style={{ fontFamily: "Lato,sans-serif" }}
                     >
                       Plus-One: {rsvpRecord.guestName}
@@ -2291,12 +2333,24 @@ function InvitationScreen({
                   )}
                   {rsvpRecord.dietary && (
                     <p
-                      className="text-[10px] text-accent/80 tracking-wider"
+                      className={`text-[10px] tracking-wider ${
+                        rsvpRecord.attending === "yes"
+                          ? "text-emerald-300/80"
+                          : "text-rose-300/80"
+                      }`}
                       style={{ fontFamily: "Lato,sans-serif" }}
                     >
                       Dietary: {rsvpRecord.dietary}
                     </p>
                   )}
+                  <button
+                    type="button"
+                    onClick={() => setRsvpRecord(null)}
+                    className="mt-3 text-[11px] tracking-widest uppercase font-semibold text-accent/80 hover:text-accent border-b border-accent/40 hover:border-accent transition-all duration-300 cursor-pointer pt-1"
+                    style={{ fontFamily: "Lato,sans-serif" }}
+                  >
+                    Change / Update Response
+                  </button>
                 </div>
               ) : (
                 <>
@@ -2308,7 +2362,7 @@ function InvitationScreen({
                       color: "rgba(255,255,255,0.88)",
                     }}
                   >
-                    Kindly confirm your attendance by{" "}
+                    Kindly RSVP  by{" "}
                     <span
                       style={{
                         color: "#D4AF37",
@@ -2329,16 +2383,30 @@ function InvitationScreen({
                     Your response helps us prepare for you
                   </p>
 
-                  <button
-                    onClick={() => setShowRsvpModal(true)}
-                    className="w-full py-3.5 text-xs tracking-[0.35em] uppercase font-bold transition-all duration-300 border border-accent/70 text-accent hover:bg-accent/20 cursor-pointer shadow-md"
-                    style={{
-                      fontFamily: "Lato,sans-serif",
-                      background: "rgba(26,61,40,0.6)",
-                    }}
-                  >
-                    Confirm Attendance
-                  </button>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                    <button
+                      type="button"
+                      disabled={inlineSubmitting}
+                      onClick={() => handleQuickRsvpChoice("yes")}
+                      className="py-3.5 px-4 text-xs tracking-wider uppercase border border-emerald-500/60 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60 transition-all duration-300 font-bold flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+                      style={{ fontFamily: "Lato,sans-serif" }}
+                    >
+                      {inlineSubmitting && modalAttending === "yes"
+                        ? "Saving…"
+                        : "✓ Joyfully Accepts"}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={inlineSubmitting}
+                      onClick={() => handleQuickRsvpChoice("no")}
+                      className="py-3.5 px-4 text-xs tracking-wider uppercase border border-rose-500/60 bg-rose-950/40 text-rose-300 hover:bg-rose-900/60 transition-all duration-300 font-bold flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+                      style={{ fontFamily: "Lato,sans-serif" }}
+                    >
+                      {inlineSubmitting && modalAttending === "no"
+                        ? "Saving…"
+                        : "✕ Regretfully Declines"}
+                    </button>
+                  </div>
                 </>
               )}
             </div>
@@ -2463,7 +2531,7 @@ function InvitationScreen({
                 color: "rgba(255,255,255,0.92)",
               }}
             >
-              The{" "}
+              {" "}
               <strong
                 style={{
                   fontFamily: "Playfair Display,serif",
@@ -2476,7 +2544,7 @@ function InvitationScreen({
               means "to give to." It is the traditional Kalenjin pre-marriage
               negotiation ceremony between the families of the bride and groom,
               where both families formally meet to discuss and agree on the
-              union before marriage. The{" "}
+              union before marriage. {" "}
               <strong
                 style={{
                   fontFamily: "Playfair Display,serif",
@@ -2587,12 +2655,30 @@ function InvitationScreen({
                       >
                         {value}
                       </p>
-                      <p
-                        className="text-[18px] text-black mt-1"
-                        style={{ fontFamily: "Lato,sans-serif", fontWeight: 400 }}
-                      >
-                        {sub}
-                      </p>
+                      {label === "Date" ? (
+                        <div className="mt-3">
+                          <button
+                            type="button"
+                            onClick={handleSaveTheDate}
+                            className="py-2 px-4 text-xs tracking-[0.2em] uppercase font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm focus:outline-none"
+                            style={{
+                              fontFamily: "Lato,sans-serif",
+                              color: "#8B6914",
+                              border: "1px solid rgba(139, 105, 20, 0.45)",
+                              background: "rgba(201, 168, 76, 0.14)",
+                            }}
+                          >
+                            <Calendar size={13} style={{ color: "#8B6914" }} /> Save the Date
+                          </button>
+                        </div>
+                      ) : (
+                        <p
+                          className="text-[18px] text-black mt-1"
+                          style={{ fontFamily: "Lato,sans-serif", fontWeight: 400 }}
+                        >
+                          {sub}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -2618,9 +2704,9 @@ function InvitationScreen({
                     className="text-lg text-foreground"
                     style={{ fontFamily: "Playfair Display,serif", fontWeight: 600 }}
                   >
-                    Intona Heritage Farm{" "}
+                    Intonna Heritage Farm{" "}
                     <span className="block text-base font-normal text-muted-foreground mt-0.5">
-                      (Intona Ranch)
+                      
                     </span>
                   </p>
                   <p
@@ -2630,7 +2716,7 @@ function InvitationScreen({
                     Naserian Village, Kilgoris Town, Narok County, Kenya
                   </p>
                   <a
-                    href="https://maps.google.com/?q=Intona+Heritage+Farm+Kilgoris+Kenya"
+                    href="https://maps.google.com/?q=Intonna+Heritage+Farm+Kilgoris+Kenya"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 mt-3 text-[9px] tracking-[0.2em] text-accent uppercase border-b border-accent/30 hover:border-accent transition-colors"
@@ -2654,34 +2740,103 @@ function InvitationScreen({
               </div>
 
               {/* By Road */}
-              <div className="p-4 sm:p-6 border-b border-border">
+              <div className="p-4 sm:p-6 border-b border-border space-y-6">
                 <p
-                  className="text-xs tracking-[0.25em] text-accent/90 uppercase mb-2 font-bold text-center"
+                  className="text-xs tracking-[0.25em] text-accent/90 uppercase mb-4 font-bold text-center"
                   style={{ fontFamily: "Lato,sans-serif", fontWeight: 700 }}
                 >
-                  By Road — From Nairobi
+                  By Road — Directions
                 </p>
-                <p
-                  className="text-xs sm:text-sm text-foreground leading-6"
-                  style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
-                >
-                  Take the{" "}
-                  <span className="text-accent font-medium">B3 Road</span>:
-                  Mai-Mahiu → Narok → Bomet → Sotik → Keroka
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-muted-foreground leading-6 mt-1"
-                  style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
-                >
-                  At Keroka turn left → Nyacheki → Nyangusu (T-junction, turn
-                  left) → Kilgoris Town → proceed straight to the farm.
-                </p>
-                <p
-                  className="text-[11px] sm:text-xs text-accent mt-2 font-semibold"
-                  style={{ fontFamily: "Lato,sans-serif" }}
-                >
-                  Kilgoris Town to the farm: 20–25 minutes
-                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    {
+                      title: "From Nairobi",
+                      distTime: "340 km · 6 hr 30 min",
+                      mapsUrl: "https://www.google.com/maps/dir/Nairobi/Intonna+Heritage+Farm",
+                      route: "Take the B3 Road: Mai-Mahiu → Narok → Bomet → Sotik → Keroka.",
+                      turn: "At Keroka turn left → Nyacheki → Nyangusu (T-junction, turn left) → Kilgoris Town → proceed straight to the farm.",
+                      farmTime: "Kilgoris Town to the farm: 20–25 minutes",
+                    },
+                    {
+                      title: "From Nakuru",
+                      distTime: "220 km ·  4 hr 30 min",
+                      mapsUrl: "https://www.google.com/maps/dir/Nakuru/Intonna+Heritage+Farm",
+                      route: "Mau Summit → Kericho → Litein → Sotik → Keroka.",
+                      turn: "At Keroka turn left → Nyacheki → Nyangusu (T-junction, turn left) → Kilgoris Town → proceed straight to the farm.",
+                      farmTime: "Kilgoris Town to the farm: 20–25 minutes",
+                    },
+                    {
+                      title: "From Eldoret",
+                      distTime: "210 km · 4 hr 15 min",
+                      mapsUrl: "https://www.google.com/maps/dir/Eldoret/Intonna+Heritage+Farm",
+                      route: "Kapsabet → Nandi Hills → Ahero → Sondu → Keroka.",
+                      turn: "At Keroka turn left → Nyacheki → Nyangusu (T-junction, turn left) → Kilgoris Town → proceed straight to the farm.",
+                      farmTime: "Kilgoris Town to the farm: 20–25 minutes",
+                    },
+                    {
+                      title: "From Kisumu",
+                      distTime: "140 km · 2 hr 45 min",
+                      mapsUrl: "https://www.google.com/maps/dir/Kisumu/Intonna+Heritage+Farm",
+                      route: "Kisumu → Ahero → Sondu → Kisii → Keroka.",
+                      turn: "At Keroka turn left → Nyacheki → Nyangusu (T-junction, turn left) → Kilgoris Town → proceed straight to the farm.",
+                      farmTime: "Kilgoris Town to the farm: 20–25 minutes",
+                    },
+                    {
+                      title: "From Mwanza, Tanzania",
+                      distTime: "310 km · 6 hr 15 min",
+                      mapsUrl: "https://www.google.com/maps/dir/Mwanza,+Tanzania/Intonna+Heritage+Farm",
+                      route: "Mwanza → Musoma → Sirari Border → Migori → Nyangusu → Kilgoris Town.",
+                      turn: "At Nyangusu T-junction turn left → Kilgoris Town → proceed straight to the farm.",
+                      farmTime: "Kilgoris Town to the farm: 20–25 minutes",
+                    },
+                  ].map(({ title, distTime, mapsUrl, route, turn, farmTime }) => (
+                    <div key={title} className="p-4 bg-card border border-border rounded-sm hover:border-accent/40 transition-colors">
+                      <div className="flex items-center justify-between mb-2 flex-wrap gap-1">
+                        <a
+                          href={mapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs tracking-wider uppercase font-bold text-accent hover:underline inline-flex items-center gap-1.5"
+                          style={{ fontFamily: "Lato,sans-serif" }}
+                        >
+                          <MapPin size={12} className="text-accent flex-shrink-0" />
+                          <span>{title}</span>
+                        </a>
+                        <a
+                          href={mapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[9.5px] text-accent/90 hover:underline font-semibold"
+                          style={{ fontFamily: "Lato,sans-serif" }}
+                        >
+                          {distTime}
+                        </a>
+                      </div>
+                      <p
+                        className="text-xs text-foreground leading-5"
+                        style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
+                      >
+                        {route}
+                      </p>
+                      <p
+                        className="text-xs text-muted-foreground leading-5 mt-1.5"
+                        style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
+                      >
+                        {turn}
+                      </p>
+                      <a
+                        href={mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] text-accent mt-2 font-semibold hover:underline inline-block"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        {farmTime} (20–25 mins)
+                      </a>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* By Air */}
@@ -2696,18 +2851,25 @@ function InvitationScreen({
                 {/* Kichwa Tembo */}
                 <div className="mb-5">
                   <div className="flex items-baseline justify-between mb-2">
-                    <p
-                      className="text-xs sm:text-sm text-foreground font-semibold"
+                    <a
+                      href="https://www.google.com/maps/dir/Kichwa+Tembo+Airstrip/Intonna+Heritage+Farm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs sm:text-sm text-foreground font-semibold hover:text-accent hover:underline inline-flex items-center gap-1.5"
                       style={{ fontFamily: "Playfair Display,serif" }}
                     >
-                      Kichwa Tembo Airstrip
-                    </p>
-                    <p
-                      className="text-[9px] text-muted-foreground"
+                      <MapPin size={12} className="text-accent flex-shrink-0" />
+                      <span>Kichwa Tembo Airstrip</span>
+                    </a>
+                    <a
+                      href="https://www.google.com/maps/dir/Kichwa+Tembo+Airstrip/Intonna+Heritage+Farm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[9px] text-accent/90 hover:underline font-semibold"
                       style={{ fontFamily: "Lato,sans-serif" }}
                     >
-                      40 km · ~1 hr 8 min to venue
-                    </p>
+                      40 km · 1 hr 8 min to venue
+                    </a>
                   </div>
                   <div className="space-y-px">
                     {[
@@ -2769,18 +2931,25 @@ function InvitationScreen({
                 {/* Migori */}
                 <div>
                   <div className="flex items-baseline justify-between mb-2">
-                    <p
-                      className="text-xs sm:text-sm text-foreground font-semibold"
+                    <a
+                      href="https://www.google.com/maps/dir/Migori+Airstrip/Intonna+Heritage+Farm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs sm:text-sm text-foreground font-semibold hover:text-accent hover:underline inline-flex items-center gap-1.5"
                       style={{ fontFamily: "Playfair Display,serif" }}
                     >
-                      Migori Airstrip
-                    </p>
-                    <p
-                      className="text-[9px] text-muted-foreground"
+                      <MapPin size={12} className="text-accent flex-shrink-0" />
+                      <span>Migori Airstrip</span>
+                    </a>
+                    <a
+                      href="https://www.google.com/maps/dir/Migori+Airstrip/Intonna+Heritage+Farm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[9px] text-accent/90 hover:underline font-semibold"
                       style={{ fontFamily: "Lato,sans-serif" }}
                     >
-                      54 km · ~1 hr 30 min to venue
-                    </p>
+                      54 km · 1 hr 30 min to venue
+                    </a>
                   </div>
                   <div className="space-y-px">
                     {[
@@ -2859,253 +3028,131 @@ function InvitationScreen({
                 Should you wish to bless Charlene further, we prefer enveloped
                 gifts.
                 <br />
-                For those who wish to send a monetary blessing, kindly use the
-                details below.
+                For any inquiries, kindly reach out to our contacts below:
               </p>
 
-              {/* Bank details */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {/* Sidian Bank */}
-                <div
-                  className="flex-1 border p-6 text-left"
-                  style={{
-                    borderColor: "rgba(201,168,76,0.30)",
-                    background: "rgba(201,168,76,0.04)",
-                  }}
-                >
-                  <p
-                    className="text-[10px] tracking-[0.4em] uppercase mb-4 font-bold"
-                    style={{
-                      fontFamily: "Lato,sans-serif",
-                      color: "rgba(201,168,76,0.95)",
-                      fontWeight: 800,
-                    }}
-                  >
-                    Sidian Bank
-                  </p>
-                  {[
-                    ["Paybill", "111999"],
-                    ["Account No.", "080826"],
-                  ].map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="flex justify-between items-center py-2 border-b last:border-0"
-                      style={{ borderColor: "rgba(201,168,76,0.12)" }}
-                    >
-                      <span
-                        className="text-xs text-muted-foreground font-bold"
-                        style={{ fontFamily: "Lato,sans-serif", fontWeight: 700 }}
-                      >
-                        {label}
-                      </span>
-                      <span
-                        className="text-sm font-bold"
-                        style={{
-                          fontFamily: "Helvetica, Arial, sans-serif",
-                          color: "#3B1F0E",
-                          letterSpacing: "0.08em",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {value}
-                      </span>
-                    </div>
-                  ))}
-                  <button
-                    onClick={() => {
-                      setGiftBank("Sidian Bank");
-                      setGiftPhone("");
-                      setGiftAmount("");
-                      setGiftSuccessMsg(null);
-                      setShowGiftModal(true);
-                    }}
-                    className="mt-4 w-full py-2.5 px-3 text-[10px] tracking-[0.25em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
-                    style={{ fontFamily: "Lato,sans-serif" }}
-                  >
-<<<<<<< HEAD
-                    <Gift size={13} /> Send Gift
-=======
-                    {copiedBank === "Sidian Bank" ? (
-                      <>
-                        <Check size={13} className="text-accent" /> Copied Details!
-                      </>
-                    ) : (
-                      <>
-                        <Gift size={13} /> Send Gift 
-                      </>
-                    )}
->>>>>>> c83415ac216b61e5dca45ba61a40e9b9ac55e97a
-                  </button>
-                </div>
-
-                {/* Cooperative Bank */}
-                <div
-                  className="flex-1 border p-6 text-left"
-                  style={{
-                    borderColor: "rgba(201,168,76,0.30)",
-                    background: "rgba(201,168,76,0.04)",
-                  }}
-                >
-                  <p
-                    className="text-[10px] tracking-[0.4em] uppercase mb-4 font-bold"
-                    style={{
-                      fontFamily: "Lato,sans-serif",
-                      color: "rgba(201,168,76,0.95)",
-                      fontWeight: 800,
-                    }}
-                  >
-                    Cooperative Bank
-                  </p>
-                  {[
-                    ["Paybill", "400200"],
-                    ["Account No.", "08082026"],
-                  ].map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="flex justify-between items-center py-2 border-b last:border-0"
-                      style={{ borderColor: "rgba(201,168,76,0.12)" }}
-                    >
-                      <span
-                        className="text-xs text-muted-foreground font-bold"
-                        style={{ fontFamily: "Lato,sans-serif", fontWeight: 700 }}
-                      >
-                        {label}
-                      </span>
-                      <span
-                        className="text-sm font-bold"
-                        style={{
-                          fontFamily: "Helvetica, Arial, sans-serif",
-                          color: "#3B1F0E",
-                          letterSpacing: "0.08em",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {value}
-                      </span>
-                    </div>
-                  ))}
-                  <button
-                    onClick={() => {
-                      setGiftBank("Cooperative Bank");
-                      setGiftPhone("");
-                      setGiftAmount("");
-                      setGiftSuccessMsg(null);
-                      setShowGiftModal(true);
-                    }}
-                    className="mt-4 w-full py-2.5 px-3 text-[10px] tracking-[0.25em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
-                    style={{ fontFamily: "Lato,sans-serif" }}
-                  >
-<<<<<<< HEAD
-                    <Gift size={13} /> Send Gift
-=======
-                    {copiedBank === "Cooperative Bank" ? (
-                      <>
-                        <Check size={13} className="text-accent" /> Copied Details!
-                      </>
-                    ) : (
-                      <>
-                        <Gift size={13} /> Send Gift 
-                      </>
-                    )}
->>>>>>> c83415ac216b61e5dca45ba61a40e9b9ac55e97a
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Guest Colour Palette */}
-            <div
-              className="border border-border mb-px p-8"
-              style={{ background: "#F5EFE4" }}
-            >
-              <p
-                className="text-[8px] tracking-[0.45em] mb-1 text-center"
-                style={{ fontFamily: "Lato,sans-serif", color: "#3D2B1A" }}
-              >
-                ALL GUESTS
-              </p>
-              <p
-                className="text-[8px] tracking-[0.35em] text-center mb-7"
-                style={{ fontFamily: "Lato,sans-serif", color: "#B47A4A" }}
-              >
-                COLOR PALETTE
-              </p>
-              <div className="grid grid-cols-4 gap-2.5 sm:gap-4">
+              {/* RSVP / Gift Contacts */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
                 {[
-                  { hex: "#6B4E3A", name: "Mocha Brown" },
-                  { hex: "#8A5E3C", name: "Chocolate Brown" },
-                  { hex: "#B47A4A", name: "Caramel Brown" },
-                  { hex: "#D4AF37", name: "Gold" },
-                ].map(({ hex, name }) => (
-                  <div key={hex} className="flex flex-col">
-                    <div
-                      className="w-full aspect-square rounded-none border border-border/20 shadow-sm"
-                      style={{ backgroundColor: hex }}
-                    />
-                    <div className="pt-3 text-center flex-1 flex flex-col justify-between">
-                      <div>
-                        <p
-                          className="text-[8px] tracking-[0.15em] uppercase font-semibold h-7 flex items-center justify-center leading-tight"
-                          style={{
-                            fontFamily: "Lato,sans-serif",
-                            color: "#3D2B1A",
-                          }}
-                        >
-                          {name}
-                        </p>
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-center gap-1.5 mt-1.5">
-                          <div
-                            className="h-px w-4"
-                            style={{ background: "#B47A4A" }}
-                          />
-                          <div
-                            className="w-1.5 h-1.5 rotate-45 border"
-                            style={{ borderColor: "#B47A4A" }}
-                          />
-                          <div
-                            className="h-px w-4"
-                            style={{ background: "#B47A4A" }}
-                          />
-                        </div>
-                        <p
-                          className="text-[8px] mt-1.5 tracking-wider"
-                          style={{
-                            fontFamily: "Lato,sans-serif",
-                            color: "#8A5E3C",
-                            fontWeight: 300,
-                          }}
-                        >
-                          HEX {hex}
-                        </p>
-                      </div>
+                  { name: "Deborah", phone: "+254 714 591 747", rawPhone: "+254714591747", waPhone: "254714591747" },
+                  { name: "Maureen", phone: "+254 719 701 335", rawPhone: "+254719701335", waPhone: "254719701335" },
+                ].map(({ name, phone, rawPhone, waPhone }) => (
+                  <div
+                    key={name}
+                    className="flex-1 border p-6 text-center"
+                    style={{
+                      borderColor: "rgba(201,168,76,0.30)",
+                      background: "rgba(201,168,76,0.04)",
+                    }}
+                  >
+                    <p
+                      className="text-xs tracking-[0.3em] uppercase mb-2 font-bold"
+                      style={{
+                        fontFamily: "Lato,sans-serif",
+                        color: "rgba(201,168,76,0.95)",
+                        fontWeight: 800,
+                      }}
+                    >
+                      {name}
+                    </p>
+                    <a
+                      href={`tel:${rawPhone}`}
+                      className="text-base font-bold text-foreground hover:text-accent transition-colors block my-2"
+                      style={{
+                        fontFamily: "Playfair Display,serif",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      {phone}
+                    </a>
+
+                    <div className="mt-3 flex items-center justify-center gap-2">
+                      <a
+                        href={`tel:${rawPhone}`}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-2.5 text-[9px] sm:text-[10px] tracking-[0.15em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 rounded-sm cursor-pointer"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        <Phone size={11} /> Call
+                      </a>
+                      <a
+                        href={`https://wa.me/${waPhone}?text=${encodeURIComponent(`Hello ${name}, I am reaching out regarding Charlene's Koito event.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-2.5 text-[9px] sm:text-[10px] tracking-[0.15em] uppercase font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] transition-all duration-300 rounded-sm cursor-pointer shadow-sm border border-[#25D366]"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="#ffffff"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg> WhatsApp
+                      </a>
                     </div>
                   </div>
                 ))}
               </div>
-              <div
-                className="flex items-center justify-center gap-4 mt-6 pt-5 border-t"
-                style={{ borderColor: "rgba(180,122,74,0.3)" }}
+            </div>
+
+            {/* Guest Dress Code & Color Palette */}
+            <div
+              className="border border-border mb-px p-6 sm:p-10 text-center"
+              style={{ background: "#F5EFE4" }}
+            >
+          
+
+              {/* Title */}
+              <h3
+                className="text-sm sm:text-xl font-bold tracking-[0.15em] uppercase text-foreground mb-2"
+                style={{ fontFamily: "Playfair Display,serif", color: "#2B1A0E" }}
               >
-                {["WARM", "NATURAL", "SOPHISTICATED", "TIMELESS"].map(
-                  (w, i) => (
-                    <span key={w} className="flex items-center gap-4">
-                      <span
-                        className="text-[7px] tracking-[0.3em]"
-                        style={{
-                          fontFamily: "Lato,sans-serif",
-                          color: "#8A5E3C",
-                        }}
-                      >
-                        {w}
-                      </span>
-                      {i < 3 && (
-                        <span style={{ color: "#B47A4A", fontSize: 8 }}>•</span>
-                      )}
-                    </span>
-                  ),
-                )}
+                DRESS CODE
+              </h3>
+
+              {/* Subtitle */}
+              <p
+                className="text-sm sm:text-base italic mb-2"
+                style={{ fontFamily: "Playfair Display,serif", color: "#3D2B1A" }}
+              >
+                Smart, Cultural Elegantce
+              </p>
+
+              {/* Color Palette Heading */}
+              <p
+                className="text-[10px] sm:text-xs tracking-[0.3em]  font-bold mb-7"
+                style={{ fontFamily: "Lato,sans-serif", color: "#B47A4A" }}
+              >
+                All Guests Color Palette
+              </p>
+
+              {/* Color Swatches Grid */}
+              <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-md mx-auto mb-4">
+                {[
+                  { hex: "#6B4E3A", name: "MOCHA", tag: "WARM" },
+                  { hex: "#8A5E3C", name: "CHOCOLATE", tag: "NATURAL" },
+                  { hex: "#B47A4A", name: "CARAMEL", tag: "SOPHISTICATED" },
+                  { hex: "#D4AF37", name: "GOLD", tag: "TIMELESS" },
+                ].map(({ hex, name, tag }) => (
+                  <div key={name} className="flex flex-col items-center text-center">
+                    <div
+                      className="w-full aspect-square border border-black/10 shadow-sm rounded-none"
+                      style={{ backgroundColor: hex }}
+                    />
+                    <p
+                      className="text-[9px] sm:text-[11px] tracking-[0.15em] uppercase font-bold mt-2.5"
+                      style={{
+                        fontFamily: "Lato,sans-serif",
+                        color: "#3D2B1A",
+                      }}
+                    >
+                      {name}
+                    </p>
+                    <p
+                      className="text-[7.5px] sm:text-[9.5px] tracking-[0.15em] uppercase font-semibold mt-1"
+                      style={{
+                        fontFamily: "Lato,sans-serif",
+                        color: "#B47A4A",
+                      }}
+                    >
+                      {tag}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -3129,10 +3176,9 @@ function InvitationScreen({
                     ? (guest.table.toLowerCase().includes("table")
                       ? guest.table
                       : `Table ${guest.table}`)
-                    : "Table 6"}
+                    : "Will be available 24 hours to the event"}
                 </p>
               </div>
-              <DiamondOrnament size={10} opacity={0.4} />
               <div className="text-right">
                 <p
                   className="text-[9px] tracking-[0.35em] text-muted-foreground uppercase mb-1"
@@ -3910,11 +3956,11 @@ function InvitationScreen({
             <CornerOrnament flip />
           </div>
 
-          <div className="max-w-xl mx-auto text-center relative z-10">
-            <OrnamentalRule className="mx-auto mb-10" wide />
+          <div className="max-w-xl mx-auto text-center relative z-10 py-4">
+            <OrnamentalRule className="mx-auto mb-8" wide />
 
             <blockquote
-              className="text-lg text-foreground/80 leading-9 mb-4"
+              className="text-lg sm:text-xl md:text-2xl text-foreground font-semibold leading-relaxed mb-4 px-4"
               style={{
                 fontFamily: "Playfair Display,serif",
                 fontStyle: "italic",
@@ -3924,49 +3970,13 @@ function InvitationScreen({
               your ways"
             </blockquote>
             <p
-              className="text-[9px] tracking-[0.4em] text-accent uppercase mb-14"
+              className="text-[11px] sm:text-xs tracking-[0.35em] text-accent uppercase font-bold"
               style={{ fontFamily: "Lato,sans-serif" }}
             >
               Psalms 91:11 (NIV)
             </p>
 
-            <button
-              onClick={async () => {
-                const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-                const imagePath = isMobile
-                  ? "/Potrait Orientation Save The date.png"
-                  : "/save_the_date_landscape (1).png";
-                const fileName = isMobile
-                  ? "Save_The_Date_Portrait.png"
-                  : "Save_The_Date_Landscape.png";
-
-                try {
-                  const res = await fetch(imagePath);
-                  const blob = await res.blob();
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = fileName;
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(url);
-                } catch {
-                  const a = document.createElement("a");
-                  a.href = imagePath;
-                  a.download = fileName;
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                }
-              }}
-              className="flex items-center gap-2 text-[10px] text-muted-foreground hover:text-accent transition-colors mx-auto justify-center tracking-wider uppercase cursor-pointer"
-              style={{ fontFamily: "Lato,sans-serif" }}
-            >
-              <Download size={12} /> Save Details
-            </button>
-
-            <div className="mt-16 flex justify-center">
+            <div className="mt-10 flex justify-center">
               <DiamondOrnament size={10} opacity={0.35} />
             </div>
           </div>
@@ -4109,7 +4119,7 @@ function RSVPForm({
             className="text-xs text-muted-foreground mt-4"
             style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
           >
-            8th August 2026 · Intona Heritage Farm
+            8th August 2026 · Intonna Heritage Farm
           </p>
         </div>
 
@@ -4327,7 +4337,7 @@ function ConfirmedScreen({
           {[
             ["Date", "Saturday, 8th August 2026"],
             ["Time", "11:00 A.M."],
-            ["Venue", "Intona Heritage Farm, Kilgoris"],
+            ["Venue", "Intonna Heritage Farm, Kilgoris"],
             ["Reserved", guest.table],
           ].map(([l, v]) => (
             <div
