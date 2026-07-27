@@ -62,6 +62,7 @@ interface RSVPRecord {
   dietary: string;
   message: string;
   timestamp: string;
+  table?: string | null;
 }
 
 // Composite key used for revoke: "pin::name"
@@ -1452,6 +1453,59 @@ function InvitationScreen({
   const [modalGuestName, setModalGuestName] = useState("");
   const [modalMessage, setModalMessage] = useState("");
 
+  // On mount, check if this guest has already RSVP'd in the database.
+  // If the guest object already carries rsvpStatus from formatGuest, use it directly.
+  // Otherwise fall back to a fresh fetch from the scan endpoint.
+  useEffect(() => {
+    const guestAny = guest as any;
+    const pin = guest.pin || guestAny.code || "";
+    const existingRsvpStatus: string | undefined = guestAny.rsvpStatus;
+
+    // If formatGuest already gave us a resolved RSVP status, use it
+    if (existingRsvpStatus && existingRsvpStatus !== "PENDING" && existingRsvpStatus !== "NOT_RESPONDING") {
+      const attending = existingRsvpStatus === "ATTENDING" ? "yes" : "no";
+      setRsvpRecord({
+        id: guestAny.id || Date.now().toString(),
+        pin,
+        name: guest.name,
+        attending,
+        guestName: guestAny.guestName || "",
+        dietary: guestAny.dietary || "",
+        message: "",
+        timestamp: guestAny.respondedAt || guestAny.updatedAt || new Date().toISOString(),
+        table: guestAny.tableName || (guestAny.table && typeof guestAny.table === "object" ? guestAny.table.name : guestAny.table) || null,
+      });
+      setCardStatus(attending);
+      return;
+    }
+
+    // Otherwise fetch the latest guest record from the DB to check RSVP
+    if (!pin) return;
+    fetch(`/api/delegates/scan/${encodeURIComponent(pin)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        const delegate = data.delegate;
+        if (!delegate) return;
+        const status: string = delegate.rsvpStatus || "";
+        if (!status || status === "PENDING" || status === "NOT_RESPONDING") return;
+        const attending = status === "ATTENDING" ? "yes" : "no";
+        setRsvpRecord({
+          id: delegate.id || Date.now().toString(),
+          pin,
+          name: delegate.name || guest.name,
+          attending,
+          guestName: delegate.guestName || "",
+          dietary: delegate.dietary || "",
+          message: "",
+          timestamp: delegate.respondedAt || delegate.updatedAt || new Date().toISOString(),
+          table: delegate.tableName || (delegate.table && typeof delegate.table === "object" ? delegate.table.name : delegate.table) || null,
+        });
+        setCardStatus(attending);
+      })
+      .catch(() => {/* silently ignore – will show default button */});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleQuickRsvpChoice = async (attendingChoice: "yes" | "no") => {
     setInlineSubmitting(true);
     setModalAttending(attendingChoice);
@@ -2110,6 +2164,22 @@ function InvitationScreen({
                       ? "Thank you! Your attendance is confirmed. We look forward to celebrating with you on 8th August 2026."
                       : "Thank you for letting us know. Your response has been saved."}
                   </p>
+                  {rsvpRecord.table && rsvpRecord.table.toLowerCase() !== "unassigned" && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 border border-accent/30 bg-accent/5 mt-1">
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                        <rect x="1" y="5" width="14" height="8" rx="1" stroke="#C9A84C" strokeWidth="1.2"/>
+                        <line x1="8" y1="1" x2="8" y2="5" stroke="#C9A84C" strokeWidth="1.2" strokeLinecap="round"/>
+                        <line x1="4" y1="13" x2="4" y2="16" stroke="#C9A84C" strokeWidth="1.2" strokeLinecap="round"/>
+                        <line x1="12" y1="13" x2="12" y2="16" stroke="#C9A84C" strokeWidth="1.2" strokeLinecap="round"/>
+                      </svg>
+                      <span
+                        className="text-[10px] tracking-widest uppercase text-accent/90 font-semibold"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        Seated at {rsvpRecord.table}
+                      </span>
+                    </div>
+                  )}
                   {rsvpRecord.guestName && (
                     <p
                       className="text-[10px] text-accent/80 tracking-wider"
@@ -2126,6 +2196,13 @@ function InvitationScreen({
                       Dietary: {rsvpRecord.dietary}
                     </p>
                   )}
+                  <button
+                    onClick={() => { setRsvpRecord(null); setCardStatus("unanswered"); setShowRsvpModal(true); }}
+                    className="mt-1 text-[9px] tracking-[0.2em] uppercase opacity-40 hover:opacity-70 transition-opacity cursor-pointer"
+                    style={{ fontFamily: "Lato,sans-serif", color: "white" }}
+                  >
+                    Change RSVP response
+                  </button>
                 </div>
               ) : (
                 <>
@@ -4026,22 +4103,39 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
   const [dbGuests, setDbGuests] = useState<any[]>([]);
   const displayGuests = useMemo(() => {
     return dbGuests.length > 0
-      ? dbGuests.map((d) => ({
-        pin: d.code,
-        name: d.name,
-        cluster: d.cluster || "Guests",
-        role: d.role || "Delegate",
-        relation: d.cluster || "Guests",
-        table:
-          d.table && typeof d.table === "object"
+      ? dbGuests.map((d) => {
+        const isObj = Boolean(d.table && typeof d.table === "object");
+        return {
+          ...d,
+          pin: d.code || d.pin,
+          name: d.name || d.fullName,
+          cluster: d.cluster || "Guests",
+          role: d.role || "Delegate",
+          relation: d.cluster || "Guests",
+          tableId: d.tableId || (isObj ? d.table.id : null),
+          seatNumber: d.seatNumber || null,
+          table: d.table,
+          tableName: isObj
             ? d.table.name
-            : d.table || "Unassigned",
-        revoked: d.status === "CANCELLED",
-        status: d.status,
-        id: d.id,
-      }))
+            : typeof d.table === "string"
+            ? d.table
+            : "Unassigned",
+          revoked: d.status === "CANCELLED",
+          status: d.status,
+          id: d.id,
+        };
+      })
       : guests;
   }, [dbGuests, guests]);
+
+  const isSeatedAtTable = (d: any, t: any) => {
+    if (!d || !t) return false;
+    if (d.tableId && String(d.tableId) === String(t.id)) return true;
+    if (d.table && typeof d.table === "object" && String(d.table.id) === String(t.id)) return true;
+    const gTableName = d.table && typeof d.table === "object" ? d.table.name : (typeof d.table === "string" ? d.table : d.tableName);
+    if (gTableName && t.name && String(gTableName).toLowerCase().trim() === String(t.name).toLowerCase().trim() && String(gTableName).toLowerCase().trim() !== "unassigned") return true;
+    return false;
+  };
   const [dbStats, setDbStats] = useState({
     total: 0,
     checkedIn: 0,
@@ -4167,9 +4261,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
       const assigned =
         tbl.delegates && Array.isArray(tbl.delegates)
           ? tbl.delegates.length
-          : dbGuests.filter(
-            (d: any) => d.tableId === tbl.id || d.table?.id === tbl.id,
-          ).length;
+          : dbGuests.filter((d: any) => isSeatedAtTable(d, tbl)).length;
 
       totalSeats += cap;
       seatedGuests += assigned;
@@ -4630,8 +4722,8 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
               role: d.role || "Delegate",
               relation: d.cluster || "Guests",
               table:
-                typeof d.table === "object"
-                  ? d.table?.name
+                d.table && typeof d.table === "object"
+                  ? d.table.name
                   : d.table || "Unassigned",
               revoked: d.status === "CANCELLED",
               status: d.status,
@@ -5506,9 +5598,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                         style={{ fontFamily: "Lato,sans-serif" }}
                       >
                         {tables.map((t: any) => {
-                          const seated = dbGuests.filter(
-                            (d: any) => d.tableId === t.id || d.table?.id === t.id,
-                          ).length;
+                          const seated = dbGuests.filter((d: any) => isSeatedAtTable(d, t)).length;
                           return (
                             <option key={t.id} value={t.id}>
                               Switch Table: {t.name} ({seated}/{t.capacity || 10} Seats)
@@ -5520,11 +5610,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
 
                     <p className="text-xs text-primary-foreground/60 mt-1 font-mono">
                       Current Occupancy: {
-                        dbGuests.filter(
-                          (d: any) =>
-                            d.tableId === selectedAssignmentTable.id ||
-                            d.table?.id === selectedAssignmentTable.id,
-                        ).length
+                        dbGuests.filter((d: any) => isSeatedAtTable(d, selectedAssignmentTable)).length
                       } / {selectedAssignmentTable.capacity || 10} Seats
                     </p>
                   </div>
@@ -5540,11 +5626,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
 
                 {/* CURRENTLY SEATED GUESTS AT THIS TABLE SECTION */}
                 {(() => {
-                  const currentSeated = dbGuests.filter(
-                    (d: any) =>
-                      d.tableId === selectedAssignmentTable.id ||
-                      d.table?.id === selectedAssignmentTable.id,
-                  );
+                  const currentSeated = dbGuests.filter((d: any) => isSeatedAtTable(d, selectedAssignmentTable));
                   const capacity = selectedAssignmentTable.capacity || 10;
                   const isFull = currentSeated.length >= capacity;
 
@@ -5624,11 +5706,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
 
                 {/* PICK A CLUSTER & ASSIGNMENT SECTION (HIDDEN WHEN TABLE IS FULL) */}
                 {(() => {
-                  const currentSeated = dbGuests.filter(
-                    (d: any) =>
-                      d.tableId === selectedAssignmentTable.id ||
-                      d.table?.id === selectedAssignmentTable.id,
-                  );
+                  const currentSeated = dbGuests.filter((d: any) => isSeatedAtTable(d, selectedAssignmentTable));
                   const capacity = selectedAssignmentTable.capacity || 10;
                   const isFull = currentSeated.length >= capacity;
 
@@ -5911,9 +5989,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                   const assignedCount =
                     tbl.delegates && Array.isArray(tbl.delegates)
                       ? tbl.delegates.length
-                      : dbGuests.filter(
-                        (d: any) => d.tableId === tbl.id || d.table?.id === tbl.id,
-                      ).length;
+                      : dbGuests.filter((d: any) => isSeatedAtTable(d, tbl)).length;
                   const capacity = tbl.capacity || 10;
                   const isCardFull = assignedCount >= capacity;
                   const isSelected = selectedAssignmentTable?.id === tbl.id;
