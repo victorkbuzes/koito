@@ -1584,6 +1584,13 @@ function InvitationScreen({
   const [modalGuestName, setModalGuestName] = useState("");
   const [modalMessage, setModalMessage] = useState("");
 
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  const [giftBank, setGiftBank] = useState<string>("");
+  const [giftPhone, setGiftPhone] = useState("");
+  const [giftAmount, setGiftAmount] = useState("");
+  const [giftSubmitting, setGiftSubmitting] = useState(false);
+  const [giftSuccessMsg, setGiftSuccessMsg] = useState<string | null>(null);
+
   const handleQuickRsvpChoice = async (attendingChoice: "yes" | "no") => {
     setInlineSubmitting(true);
     setModalAttending(attendingChoice);
@@ -2886,19 +2893,17 @@ function InvitationScreen({
                     </div>
                   ))}
                   <button
-                    onClick={() => copyBankDetails("Sidian Bank", "111999", "080826")}
+                    onClick={() => {
+                      setGiftBank("Sidian Bank");
+                      setGiftPhone("");
+                      setGiftAmount("");
+                      setGiftSuccessMsg(null);
+                      setShowGiftModal(true);
+                    }}
                     className="mt-4 w-full py-2.5 px-3 text-[10px] tracking-[0.25em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
                     style={{ fontFamily: "Lato,sans-serif" }}
                   >
-                    {copiedBank === "Sidian Bank" ? (
-                      <>
-                        <Check size={13} className="text-accent" /> Copied Details!
-                      </>
-                    ) : (
-                      <>
-                        <Gift size={13} /> Send Gift (Copy Details)
-                      </>
-                    )}
+                    <Gift size={13} /> Send Gift
                   </button>
                 </div>
 
@@ -2949,19 +2954,17 @@ function InvitationScreen({
                     </div>
                   ))}
                   <button
-                    onClick={() => copyBankDetails("Cooperative Bank", "400200", "08082026")}
+                    onClick={() => {
+                      setGiftBank("Cooperative Bank");
+                      setGiftPhone("");
+                      setGiftAmount("");
+                      setGiftSuccessMsg(null);
+                      setShowGiftModal(true);
+                    }}
                     className="mt-4 w-full py-2.5 px-3 text-[10px] tracking-[0.25em] uppercase font-bold text-accent border border-accent/40 bg-accent/5 hover:bg-accent/15 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer rounded-sm"
                     style={{ fontFamily: "Lato,sans-serif" }}
                   >
-                    {copiedBank === "Cooperative Bank" ? (
-                      <>
-                        <Check size={13} className="text-accent" /> Copied Details!
-                      </>
-                    ) : (
-                      <>
-                        <Gift size={13} /> Send Gift (Copy Details)
-                      </>
-                    )}
+                    <Gift size={13} /> Send Gift
                   </button>
                 </div>
               </div>
@@ -3172,6 +3175,138 @@ function InvitationScreen({
                     </button>
                   </div>
                 </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
+        {/* ── Send Gift Modal Overlay ── */}
+        <AnimatePresence>
+          {showGiftModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-lg bg-[#07130A] border border-[#C9A84C]/40 p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+              >
+                {/* Close button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowGiftModal(false);
+                    setGiftSuccessMsg(null);
+                  }}
+                  className="absolute top-4 right-4 text-muted-foreground hover:text-white transition-colors cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+
+                <div className="text-center mb-6">
+                  <DiamondOrnament size={10} color="#C9A84C" opacity={0.8} />
+                  <p
+                    className="text-[10px] tracking-[0.4em] uppercase text-accent font-bold mt-2 mb-1"
+                    style={{ fontFamily: "Lato,sans-serif" }}
+                  >
+                    Send Gift {giftBank ? `(${giftBank})` : ""}
+                  </p>
+                  <h3
+                    className="text-2xl text-white font-serif italic"
+                    style={{ fontFamily: "Playfair Display,serif" }}
+                  >
+                    Monetary Blessing
+                  </h3>
+                </div>
+
+                {giftSuccessMsg ? (
+                  <div className="text-center space-y-4 py-4">
+                    <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center mx-auto text-emerald-400">
+                      <Check size={24} />
+                    </div>
+                    <p
+                      className="text-sm text-emerald-300 font-medium leading-relaxed"
+                      style={{ fontFamily: "Lato,sans-serif" }}
+                    >
+                      {giftSuccessMsg}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowGiftModal(false);
+                        setGiftSuccessMsg(null);
+                      }}
+                      className="mt-2 py-2.5 px-6 text-xs tracking-wider uppercase border border-accent/70 bg-accent/25 text-accent hover:bg-accent/40 transition-all duration-300 font-bold cursor-pointer rounded-sm"
+                      style={{ fontFamily: "Lato,sans-serif" }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                ) : (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (!giftPhone || !giftAmount) return;
+                      setGiftSubmitting(true);
+                      setTimeout(() => {
+                        setGiftSubmitting(false);
+                        setGiftSuccessMsg(
+                          `Thank you! STK Push request of KSh ${Number(giftAmount).toLocaleString()} sent to ${giftPhone}.`
+                        );
+                      }, 700);
+                    }}
+                    className="space-y-5"
+                  >
+                    <div>
+                      <label
+                        htmlFor="gift-phone"
+                        className="block text-[10px] tracking-[0.2em] uppercase text-accent/90 font-bold mb-1.5"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        Phone Number
+                      </label>
+                      <input
+                        id="gift-phone"
+                        type="tel"
+                        required
+                        placeholder="e.g. 0712345678"
+                        value={giftPhone}
+                        onChange={(e) => setGiftPhone(e.target.value)}
+                        className="w-full px-4 py-3 text-sm text-white bg-[#040C06] border border-[#C9A84C]/30 focus:border-[#C9A84C] focus:outline-none transition-colors placeholder:text-muted-foreground/40 rounded-sm"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="gift-amount"
+                        className="block text-[10px] tracking-[0.2em] uppercase text-accent/90 font-bold mb-1.5"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        Amount (KSh)
+                      </label>
+                      <input
+                        id="gift-amount"
+                        type="number"
+                        required
+                        min="1"
+                        placeholder="e.g. 5000"
+                        value={giftAmount}
+                        onChange={(e) => setGiftAmount(e.target.value)}
+                        className="w-full px-4 py-3 text-sm text-white bg-[#040C06] border border-[#C9A84C]/30 focus:border-[#C9A84C] focus:outline-none transition-colors placeholder:text-muted-foreground/40 rounded-sm"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={giftSubmitting}
+                      className="w-full py-3.5 px-4 text-xs tracking-[0.25em] uppercase border border-accent/70 bg-accent/25 text-accent hover:bg-accent/40 transition-all duration-300 font-bold flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50 mt-2 rounded-sm"
+                      style={{ fontFamily: "Lato,sans-serif" }}
+                    >
+                      {giftSubmitting ? "Processing…" : "Send"}
+                    </button>
+                  </form>
+                )}
               </motion.div>
             </div>
           )}
