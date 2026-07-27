@@ -1636,9 +1636,10 @@ function InvitationScreen({
 
           {/* Right Action & Mobile Toggle */}
           <div className="flex items-center gap-3">
+            {/* Exit — visible on desktop only; on mobile it lives inside the drawer */}
             <button
               onClick={onExit}
-              className="flex items-center gap-1.5 text-[10px] text-muted-foreground hover:text-foreground transition-colors tracking-widest uppercase border border-border/80 px-3 py-1.5 rounded-sm cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 text-[10px] text-muted-foreground hover:text-foreground transition-colors tracking-widest uppercase border border-border/80 px-3 py-1.5 rounded-sm cursor-pointer"
               style={{ fontFamily: "Lato,sans-serif" }}
             >
               <LogOut size={12} /> Exit
@@ -1680,6 +1681,18 @@ function InvitationScreen({
                   </button>
                 );
               })}
+
+              {/* Exit — mobile only, visually distinct from nav items */}
+              <div className="pt-2 mt-1 border-t border-rose-500/20">
+                <button
+                  onClick={() => { setMobileMenuOpen(false); onExit(); }}
+                  className="flex items-center gap-2 w-full text-xs tracking-[0.25em] uppercase font-semibold py-2.5 px-3 rounded-sm text-rose-400 hover:text-rose-200 hover:bg-rose-500/10 border border-rose-500/30 transition-all cursor-pointer"
+                  style={{ fontFamily: "Lato,sans-serif" }}
+                >
+                  <LogOut size={13} />
+                  <span>Exit Invitation</span>
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
