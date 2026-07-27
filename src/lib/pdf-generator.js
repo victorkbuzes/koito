@@ -11,7 +11,7 @@ const DEFAULT_EVENT = {
   date: "8TH AUGUST 2026",
   time: "10.00 A.M",
   venueLines: [
-    "INTONA HERITAGE FARM (INTONA RANCH),",
+    "INTONNA HERITAGE FARM ,",
     "KILGORIS TOWN, NASERIAN VILLAGE",
     "NAROK COUNTY, KENYA",
   ],

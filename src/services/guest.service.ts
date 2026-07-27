@@ -26,6 +26,7 @@ const includeRelations = {
   checkIn: true,
   rsvp: true,
   cluster: true,
+  title: true,
   seatingAssignment: {
     include: {
       seat: {
