@@ -1293,7 +1293,7 @@ function AccommodationTabsSection() {
                         className="text-[10px] text-accent font-bold px-3 py-1.5 bg-accent/10 border border-accent/30 hover:bg-accent/20 transition-colors rounded-sm inline-flex items-center gap-1.5"
                         style={{ fontFamily: "Lato,sans-serif" }}
                       >
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
                         TripAdvisor
                       </a>
                     )}
@@ -1305,7 +1305,7 @@ function AccommodationTabsSection() {
                         className="text-[10px] text-accent/90 font-bold px-3 py-1.5 bg-card border border-border hover:border-accent/50 hover:text-accent transition-colors rounded-sm inline-flex items-center gap-1.5"
                         style={{ fontFamily: "Lato,sans-serif" }}
                       >
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
                         Booking.com
                       </a>
                     )}
@@ -1397,7 +1397,7 @@ function AccommodationTabsSection() {
                   >
                     Airbnbs & Private Stays
                   </p>
-                  
+
                   <span
                     className="text-[9px] text-accent/80 tracking-wider uppercase bg-accent/10 px-2 py-0.5 border border-accent/20 rounded-xs"
                     style={{ fontFamily: "Lato,sans-serif" }}
@@ -1423,7 +1423,7 @@ function AccommodationTabsSection() {
                                 style={{ fontFamily: "Playfair Display,serif" }}
                               >
                                 <span>{name}</span>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
                               </a>
                             ) : (
                               <p
@@ -1455,7 +1455,7 @@ function AccommodationTabsSection() {
                                 className="text-[10px] text-accent font-bold px-3 py-1 bg-accent/15 border border-accent/50 hover:bg-accent/30 transition-colors rounded-sm inline-flex items-center gap-1.5"
                                 style={{ fontFamily: "Lato,sans-serif" }}
                               >
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
                                 View on Airbnb
                               </a>
                             )}
@@ -1903,14 +1903,14 @@ function InvitationScreen({
               </p>
 
               <div
-                className="inline-flex items-center justify-center border px-4 py-2.5 mb-6 max-w-[70%] w-full min-h-[56px] mx-auto overflow-hidden"
+                className="inline-flex items-center justify-center border px-4 py-2.5 mb-6 max-w-[50%] w-full min-h-[46px] mx-auto overflow-hidden"
                 style={{
                   borderColor: "rgba(201,168,76,0.55)",
                   background: "rgba(4,12,6,0.65)",
                 }}
               >
                 <p
-                  className="text-xs sm:text-base md:text-2xl lg:text-3xl truncate max-w-full text-center"
+                  className="text-lg sm:text-base md:text-2xl lg:text-3xl truncate max-w-full text-center"
                   style={{
                     fontFamily: "Playfair Display,serif",
                     fontStyle: "italic",
@@ -4454,8 +4454,8 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
         const tableName = isObj
           ? g.table.name
           : typeof g.table === "string"
-          ? g.table
-          : g.tableName || "Unassigned";
+            ? g.table
+            : g.tableName || "Unassigned";
 
         const isChecked = g.status === "CHECKED_IN";
         const rsvpStatus = g.rsvpStatus || (g.status === "CANCELLED" ? "DECLINED" : "PENDING");
