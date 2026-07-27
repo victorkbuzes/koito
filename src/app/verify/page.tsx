@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Check, AlertCircle, RefreshCw, ArrowLeft, Armchair } from "lucide-react";
 
+
 function OrnamentalRule({ wide = false }: { wide?: boolean }) {
   const w = wide ? 320 : 220;
   return (

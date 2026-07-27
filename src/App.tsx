@@ -37,7 +37,6 @@ const g5078 = "/imports/051A5078.jpg";
 const g5030 = "/imports/051A4708-2.jpg.jpeg";
 const g5035 = "/imports/051A4356 - Copy.jpeg";
 const g5036 = "/imports/051A4356 - Copy - Copy.jpeg";
-const g5037 = "/imports/051A4355.jpg - Copy.jpeg";
 const chelaVideo = "/imports/CHELA_50MB.mp4";
 const chalVideo = "/imports/Charlene3.mp4";
 
@@ -1640,10 +1639,10 @@ function InvitationScreen({
           {/* Photo background */}
           {/* Mobile image */}
           <img
-            src={g5037}
+            src={g5036}
             alt="Miss Charlene Chelagat Ruto"
             className="absolute inset-0 w-full h-full object-cover md:hidden"
-            style={{ objectPosition: "center 50%" }}
+            style={{ objectPosition: "center 15%" }}
           />
 
           {/* Tablet & Desktop image */}
@@ -1753,144 +1752,158 @@ function InvitationScreen({
               <OrnamentalRule wide />
             </div> */}
 
-            <div className="w-full max-w-xl flex flex-col items-center text-center mx-auto">
-              {/* WE, THE FAMILY OF */}
-              <p
-                className="text-xs tracking-[0.45em] uppercase mb-4"
-                style={{
-                  fontFamily: "Lato,sans-serif",
-                  color: "rgba(201,168,76,0.95)",
-                }}
-              >
-                We, The Family Of
-              </p>
+            <div className="flex justify-between w-full bg-yellow-400/0">
+              <div className="w-35 bg-green-300/0"></div>
 
-              <p
-                className="text-2xl md:text-3xl leading-snug"
-                style={{
-                  fontFamily: "Playfair Display,serif",
-                  color: "#FFFFFF",
-                  textShadow: "0 2px 12px rgba(0,0,0,0.8)",
-                }}
-              >
-                Dr William Samoei Ruto
-              </p>
-
-              <p
-                className="text-2xl my-3"
-                style={{
-                  fontFamily: "Playfair Display,serif",
-                  fontStyle: "italic",
-                  color: "#C9A84C",
-                }}
-              >
-                &amp;
-              </p>
-
-              <p
-                className="text-2xl md:text-3xl leading-snug mb-6"
-                style={{
-                  fontFamily: "Playfair Display,serif",
-                  color: "#FFFFFF",
-                  textShadow: "0 2px 12px rgba(0,0,0,0.8)",
-                }}
-              >
-                Mrs Rachel Chebet Ruto
-              </p>
-
-              {/* WARMLY INVITE */}
-              <p
-                className="text-xs tracking-[0.45em] uppercase mb-5"
-                style={{
-                  fontFamily: "Lato,sans-serif",
-                  color: "rgba(201,168,76,0.95)",
-                }}
-              >
-                Warmly Invite
-              </p>
-
-              <div
-                className="inline-block border px-4 py-2 mb-6 max-w-[80%] md:max-w-[100%]"
-                style={{
-                  borderColor: "rgba(201,168,76,0.55)",
-                  background: "rgba(4,12,6,0.65)",
-                }}
-              >
+              <div className="w-65 bg-pink-600/0 pr-5">
+                {/* WE, THE FAMILY OF */}
                 <p
-                  className="text-lg md:text-3xl whitespace-nowrap overflow-x-auto w-full"
+                  className="text-xs tracking-[0.45em] uppercase mb-4"
+                  style={{
+                    fontFamily: "Lato,sans-serif",
+                    color: "rgba(201,168,76,0.95)",
+                  }}
+                >
+                  We, The Family Of
+                </p>
+
+                <p
+                  className="text-2xl md:text-3xl leading-snug"
+                  style={{
+                    fontFamily: "Playfair Display,serif",
+                    color: "#FFFFFF",
+                    textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                  }}
+                >
+                  Dr William Samoei Ruto
+                </p>
+
+                <p
+                  className="text-2xl my-3"
                   style={{
                     fontFamily: "Playfair Display,serif",
                     fontStyle: "italic",
-                    color: "#FFFFFF",
-                    textShadow: "0 2px 8px rgba(0,0,0,0.5)",
+                    color: "#C9A84C",
                   }}
                 >
-                  Prof Hon {guest.name}
+                  &amp;
+                </p>
+
+                <p
+                  className="text-2xl md:text-3xl leading-snug mb-6"
+                  style={{
+                    fontFamily: "Playfair Display,serif",
+                    color: "#FFFFFF",
+                    textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                  }}
+                >
+                  Mrs Rachel Chebet Ruto
+                </p>
+
+                {/* WARMLY INVITE */}
+                <p
+                  className="text-xs tracking-[0.45em] uppercase mb-5"
+                  style={{
+                    fontFamily: "Lato,sans-serif",
+                    color: "rgba(201,168,76,0.95)",
+                  }}
+                >
+                  Warmly Invite
+                </p>
+
+                {/* Honoured Guest + guest name */}
+                {/* <p
+                  className="text-xs tracking-[0.35em] uppercase mb-3"
+                  style={{
+                    fontFamily: "Lato,sans-serif",
+                    color: "rgba(201,168,76,0.95)",
+                  }}
+                >
+                  Honoured Guest
+                </p> */}
+                <div
+                  className="inline-block border px-2 py-2 mb-6 max-w-[80%] md:max-w-[100%]"
+                  style={{
+                    borderColor: "rgba(201,168,76,0.55)",
+                    background: "rgba(4,12,6,0.65)",
+                  }}
+                >
+                  <p
+                    className="text-lg md:text-3xl whitespace-nowrap overflow-x-auto w-full"
+                    style={{
+                      fontFamily: "Playfair Display,serif",
+                      fontStyle: "italic",
+                      color: "#FFFFFF",
+                      textShadow: "0 2px 8px rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    Prof Hon {guest.name}
+                  </p>
+                </div>
+
+                {/* TO THE */}
+                <p
+                  className="text-xs tracking-[0.45em] uppercase mb-4"
+                  style={{
+                    fontFamily: "Lato,sans-serif",
+                    color: "rgba(201,168,76,0.95)",
+                  }}
+                >
+                  To The
+                </p>
+
+                {/* Koito ak Chaik */}
+                <h1
+                  className="text-5xl md:text-6xl leading-none mb-3"
+                  style={{
+                    fontFamily: "Great Vibes,cursive",
+                    color: "#FFFFFF",
+                    textShadow: "0 2px 20px rgba(0,0,0,0.8)",
+                    fontSize: "40px"
+                  }}
+                >
+                  Koito ak Chaik
+                </h1>
+
+                {/* ENGAGEMENT AND FAREWELL */}
+                <p
+                  className="text-xs tracking-[0.45em] uppercase mb-2"
+                  style={{
+                    fontFamily: "Lato,sans-serif",
+                    color: "rgba(201,168,76,0.95)",
+                    fontSize: "9px"
+                  }}
+                >
+                  (Engagement & Farewell)
+                </p>
+
+                <div className="flex justify-center mb-2">
+                  <OrnamentalRule wide />
+                </div>
+
+                {/* OF THEIR DAUGHTER */}
+                <p
+                  className="text-xs tracking-[0.45em] uppercase mb-4"
+                  style={{
+                    fontFamily: "Lato,sans-serif",
+                    color: "rgba(201,168,76,0.95)",
+                  }}
+                >
+                  Of Their Daughter
+                </p>
+
+                {/* Charlene Chelagat Ruto */}
+                <p
+                  className="text-2xl md:text-3xl leading-snug mb-6"
+                  style={{
+                    fontFamily: "Playfair Display,serif",
+                    color: "#FFFFFF",
+                    textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                  }}
+                >
+                  Charlene Chelagat Ruto
                 </p>
               </div>
-
-              {/* TO THE */}
-              <p
-                className="text-xs tracking-[0.45em] uppercase mb-4"
-                style={{
-                  fontFamily: "Lato,sans-serif",
-                  color: "rgba(201,168,76,0.95)",
-                }}
-              >
-                To The
-              </p>
-
-              {/* Koito ak Chaik */}
-              <h1
-                className="text-5xl md:text-6xl leading-none mb-3"
-                style={{
-                  fontFamily: "Great Vibes,cursive",
-                  color: "#FFFFFF",
-                  textShadow: "0 2px 20px rgba(0,0,0,0.8)",
-                  fontSize: "40px"
-                }}
-              >
-                Koito ak Chaik
-              </h1>
-
-              {/* ENGAGEMENT AND FAREWELL */}
-              <p
-                className="text-xs tracking-[0.45em] uppercase mb-2"
-                style={{
-                  fontFamily: "Lato,sans-serif",
-                  color: "rgba(201,168,76,0.95)",
-                  fontSize: "9px"
-                }}
-              >
-                (Engagement & Farewell)
-              </p>
-
-              <div className="flex justify-center mb-2">
-                <OrnamentalRule wide />
-              </div>
-
-              {/* OF THEIR DAUGHTER */}
-              <p
-                className="text-xs tracking-[0.45em] uppercase mb-4"
-                style={{
-                  fontFamily: "Lato,sans-serif",
-                  color: "rgba(201,168,76,0.95)",
-                }}
-              >
-                Of Their Daughter
-              </p>
-
-              {/* Charlene Chelagat Ruto */}
-              <p
-                className="text-2xl md:text-3xl leading-snug mb-6"
-                style={{
-                  fontFamily: "Playfair Display,serif",
-                  color: "#FFFFFF",
-                  textShadow: "0 2px 12px rgba(0,0,0,0.8)",
-                }}
-              >
-                Charlene Chelagat Ruto
-              </p>
             </div>
             <div className="flex justify-center mb-4">
               <OrnamentalRule wide />
@@ -3627,25 +3640,8 @@ function InvitationScreen({
             </div>
           </div>
         </motion.div>
-
-        {/* ── Footer ── */}
-        <Footer />
       </div>
     </div>
-  );
-}
-
-function Footer() {
-  return (
-    <footer
-      className="py-8 bg-[#040C06] border-t border-[#C9A84C]/20 text-center text-xs text-muted-foreground/70 flex flex-col items-center justify-center gap-1.5 w-full relative z-20"
-      style={{ fontFamily: "Lato, sans-serif" }}
-    >
-      <p className="tracking-widest uppercase text-muted-foreground">Copyright @KittyEvents</p>
-      <p className="text-[10px] tracking-wider text-[#C9A84C] font-medium">
-        Powered by GOODSAM Technologies
-      </p>
-    </footer>
   );
 }
 
@@ -4029,7 +4025,9 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
       ? dbGuests.map((d) => ({
         pin: d.code,
         name: d.name,
-        relation: d.role || "Guest",
+        cluster: d.cluster || "Guests",
+        role: d.role || "Delegate",
+        relation: d.cluster || "Guests",
         table:
           d.table && typeof d.table === "object"
             ? d.table.name
@@ -4080,6 +4078,78 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const tableFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Seating & Table Assignment State
+  const [selectedAssignmentTable, setSelectedAssignmentTable] = useState<any | null>(null);
+  const [assignmentClusterId, setAssignmentClusterId] = useState<string>("ALL");
+  const [assignmentSearch, setAssignmentSearch] = useState<string>("");
+  const [tableSearch, setTableSearch] = useState<string>("");
+  const [assigningGuestId, setAssigningGuestId] = useState<string | null>(null);
+  const assignmentPanelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedAssignmentTable && assignmentPanelRef.current) {
+      assignmentPanelRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [selectedAssignmentTable]);
+
+  const handleAssignGuestToTable = async (
+    guestId: string,
+    targetTableId: string | null,
+    seatNumber?: number | null,
+  ) => {
+    setAssigningGuestId(guestId);
+    try {
+      const res = await fetch("/api/seating/assign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          guestId,
+          tableId: targetTableId,
+          seatNumber: seatNumber ?? null,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Failed to update guest seating assignment.");
+        return;
+      }
+
+      // Refresh tables, guests & clusters synchronously
+      const [tRes, gRes, cRes] = await Promise.all([
+        fetch("/api/tables"),
+        fetch("/api/delegates?limit=ALL"),
+        fetch("/api/clusters"),
+      ]);
+
+      const tData = await tRes.json();
+      const gData = await gRes.json();
+      const cData = await cRes.json();
+
+      if (tData.tables) {
+        setTables(tData.tables);
+        if (selectedAssignmentTable) {
+          const updatedTable = tData.tables.find(
+            (tbl: any) => tbl.id === selectedAssignmentTable.id,
+          );
+          if (updatedTable) setSelectedAssignmentTable(updatedTable);
+        }
+      }
+      if (gData.delegates) setDbGuests(gData.delegates);
+      if (cData.clusters) {
+        setClusters(cData.clusters);
+        if (selectedCluster) {
+          const updatedCls = cData.clusters.find((c: any) => c.id === selectedCluster.id);
+          if (updatedCls) setSelectedCluster(updatedCls);
+        }
+      }
+    } catch (err) {
+      console.error("🔴 [ASSIGN SEATING ERROR]:", err);
+      alert("Error assigning guest to table.");
+    } finally {
+      setAssigningGuestId(null);
+    }
+  };
 
   const tableStats = useMemo(() => {
     const totalTables = tables.length;
@@ -4552,8 +4622,9 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
             data.delegates.map((d: any) => ({
               pin: d.code,
               name: d.name,
-              cluster: d.cluster || "General",
-              relation: d.cluster || "General",
+              cluster: d.cluster || "Guests",
+              role: d.role || "Delegate",
+              relation: d.cluster || "Guests",
               table:
                 typeof d.table === "object"
                   ? d.table?.name
@@ -4678,7 +4749,8 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
         body: JSON.stringify({
           name: newGuest.name,
           code: newGuest.pin || undefined,
-          role: newGuest.relation || "Delegate",
+          role: (newGuest as any).role || "Delegate",
+          cluster: (newGuest as any).cluster || "Guests",
           tableId: newGuest.table || undefined,
         }),
       });
@@ -5177,8 +5249,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                         className="text-[9px] text-primary-foreground/40 mt-0.5"
                         style={{ fontFamily: "Lato,sans-serif" }}
                       >
-                        Cluster: {g.cluster || g.relation || "General"} ·{" "}
-                        {g.table}
+                        Cluster: <span className="text-accent font-semibold">{g.cluster || "Guests"}</span> · {g.table}
                       </p>
                     </div>
 
@@ -5242,17 +5313,18 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                       </span>
                     )}
                     <div className="flex gap-4 items-center flex-shrink-0">
-                      <button
-                        onClick={() => {
-                          const targetId = g.id || g.pin || (g as any).code || encodeURIComponent(g.name);
-                          window.open(`/api/delegates/${targetId}/pdf`, "_blank");
-                        }}
-                        className="flex items-center gap-1 text-[9px] text-accent hover:underline uppercase tracking-wider cursor-pointer font-semibold"
-                        style={{ fontFamily: "Lato,sans-serif" }}
-                        title="Print PDF Badge"
-                      >
-                        <Download size={11} /> Print PDF Badge
-                      </button>
+                      {g.id && (
+                        <button
+                          onClick={() =>
+                            window.open(`/api/delegates/${g.id}/pdf`, "_blank")
+                          }
+                          className="flex items-center gap-1 text-[9px] text-accent hover:underline uppercase tracking-wider cursor-pointer"
+                          style={{ fontFamily: "Lato,sans-serif" }}
+                          title="Print PDF Badge"
+                        >
+                          <Download size={11} /> PDF
+                        </button>
+                      )}
                       <button
                         onClick={() =>
                           setGuests(
@@ -5336,7 +5408,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
             <div className="flex justify-between items-center bg-primary/30 p-6 border border-sidebar-border flex-wrap gap-4">
               <div>
                 <p
-                  className="text-[9px] tracking-[0.35em] text-accent uppercase"
+                  className="text-[9px] tracking-[0.35em] text-accent uppercase font-extrabold"
                   style={{ fontFamily: "Lato,sans-serif" }}
                 >
                   Venue Seating Management
@@ -5345,11 +5417,21 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                   className="text-sm text-primary-foreground/60 mt-1"
                   style={{ fontFamily: "Lato,sans-serif" }}
                 >
-                  {tables.length} Venue Tables Registered
+                  {tables.length} Tables Registered · {tableStats.seatedGuests} / {tableStats.totalSeats} Guests Seated ({tableStats.vacantSeats} Vacant Seats)
                 </p>
               </div>
 
               <div className="flex gap-3 items-center flex-wrap">
+                {/* Table Search Input */}
+                <input
+                  type="text"
+                  placeholder="🔍 Search tables by number or zone (e.g. 10, Table 100)..."
+                  value={tableSearch}
+                  onChange={(e) => setTableSearch(e.target.value)}
+                  className="bg-primary/80 border border-sidebar-border px-4 py-2.5 text-xs text-primary-foreground placeholder:text-primary-foreground/40 focus:outline-none focus:border-accent rounded w-full md:w-80"
+                  style={{ fontFamily: "Lato,sans-serif" }}
+                />
+
                 <input
                   type="file"
                   accept=".csv,.xlsx,.xls"
@@ -5379,23 +5461,477 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
               </div>
             </div>
 
+            {/* Dedicated Table Seating & Cluster Assignment Panel */}
+            {selectedAssignmentTable && (
+              <div
+                ref={assignmentPanelRef}
+                className="p-6 border-2 border-accent/60 bg-primary/40 space-y-6 rounded-xl shadow-2xl transition-all"
+              >
+                {/* Panel Header */}
+                <div className="flex justify-between items-start border-b border-sidebar-border pb-4 flex-wrap gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-2.5 py-0.5 bg-accent text-accent-foreground text-[9px] font-extrabold uppercase tracking-widest rounded">
+                        Active Assignment Mode
+                      </span>
+                      <span className="text-xs text-primary-foreground/60 font-mono">
+                        Zone: {selectedAssignmentTable.zone || "Main Zone"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-2 flex-wrap">
+                      <h3
+                        className="text-2xl text-primary-foreground font-bold"
+                        style={{ fontFamily: "Playfair Display,serif" }}
+                      >
+                        {selectedAssignmentTable.name} Seating Assignment
+                      </h3>
+
+                      {/* Quick Table Switcher */}
+                      <select
+                        value={selectedAssignmentTable.id}
+                        onChange={(e) => {
+                          const target = tables.find((t: any) => t.id === e.target.value);
+                          if (target) {
+                            setSelectedAssignmentTable(target);
+                            setAssignmentClusterId("ALL");
+                            setAssignmentSearch("");
+                          }
+                        }}
+                        className="bg-primary/90 border border-accent/60 text-xs text-accent font-bold px-3 py-1.5 rounded focus:outline-none focus:border-accent cursor-pointer"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        {tables.map((t: any) => {
+                          const seated = dbGuests.filter(
+                            (d: any) => d.tableId === t.id || d.table?.id === t.id,
+                          ).length;
+                          return (
+                            <option key={t.id} value={t.id}>
+                              Switch Table: {t.name} ({seated}/{t.capacity || 10} Seats)
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    <p className="text-xs text-primary-foreground/60 mt-1 font-mono">
+                      Current Occupancy: {
+                        dbGuests.filter(
+                          (d: any) =>
+                            d.tableId === selectedAssignmentTable.id ||
+                            d.table?.id === selectedAssignmentTable.id,
+                        ).length
+                      } / {selectedAssignmentTable.capacity || 10} Seats
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setSelectedAssignmentTable(null)}
+                    className="px-5 py-2.5 bg-rose-500/20 text-rose-300 border-2 border-rose-500/60 hover:bg-rose-500 hover:text-white text-xs font-extrabold uppercase tracking-widest cursor-pointer rounded-lg transition-all shadow-lg flex items-center gap-2"
+                    style={{ fontFamily: "Lato,sans-serif" }}
+                  >
+                    Close Seating Panel ✕
+                  </button>
+                </div>
+
+                {/* CURRENTLY SEATED GUESTS AT THIS TABLE SECTION */}
+                {(() => {
+                  const currentSeated = dbGuests.filter(
+                    (d: any) =>
+                      d.tableId === selectedAssignmentTable.id ||
+                      d.table?.id === selectedAssignmentTable.id,
+                  );
+                  const capacity = selectedAssignmentTable.capacity || 10;
+                  const isFull = currentSeated.length >= capacity;
+
+                  return (
+                    <div className="space-y-3 bg-emerald-950/20 p-5 border border-emerald-500/30 rounded-lg">
+                      <div className="flex justify-between items-center flex-wrap gap-2">
+                        <div>
+                          <p
+                            className="text-[10px] text-emerald-400 font-extrabold uppercase tracking-widest flex items-center gap-2"
+                            style={{ fontFamily: "Lato,sans-serif" }}
+                          >
+                            <span>Guests Seated at {selectedAssignmentTable.name}</span>
+                            {isFull && (
+                              <span className="bg-rose-500/30 text-rose-300 border border-rose-500/50 text-[9px] px-2 py-0.5 rounded font-black">
+                                TABLE FULL ({currentSeated.length}/{capacity})
+                              </span>
+                            )}
+                          </p>
+                          <p className="text-xs text-primary-foreground/60 mt-0.5">
+                            {currentSeated.length > 0
+                              ? `Showing all ${currentSeated.length} seated guest(s). Click "Remove from Table" to free up seats.`
+                              : "No guests are currently seated at this table."}
+                          </p>
+                        </div>
+                        <span className="text-xs font-mono text-emerald-300 font-bold bg-emerald-500/10 px-3 py-1 border border-emerald-500/30 rounded">
+                          {currentSeated.length} / {capacity} Occupied
+                        </span>
+                      </div>
+
+                      {currentSeated.length > 0 ? (
+                        <div className="space-y-2 max-h-60 overflow-y-auto pr-1 pt-1">
+                          {currentSeated.map((g: any) => (
+                            <div
+                              key={g.id || g.code || g.pin}
+                              className="flex items-center justify-between p-3 bg-primary/40 border border-emerald-500/40 rounded-lg flex-wrap gap-3"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="text-accent font-mono text-xs font-bold bg-accent/10 px-2 py-1 border border-accent/20 rounded">
+                                  #{g.code || g.pin || "----"}
+                                </span>
+                                <div>
+                                  <p
+                                    className="text-sm text-primary-foreground font-bold"
+                                    style={{ fontFamily: "Playfair Display,serif" }}
+                                  >
+                                    {g.name || g.fullName}
+                                  </p>
+                                  <p
+                                    className="text-[9px] text-primary-foreground/50 mt-0.5"
+                                    style={{ fontFamily: "Lato,sans-serif" }}
+                                  >
+                                    Cluster: <span className="text-accent font-semibold">{g.cluster || "Guests"}</span>
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-3">
+                                <span className="text-[9px] font-extrabold uppercase px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded">
+                                  ✓ Seated Here
+                                </span>
+                                <button
+                                  onClick={() => handleAssignGuestToTable(g.id, null)}
+                                  disabled={assigningGuestId === g.id}
+                                  className="px-3.5 py-1.5 bg-rose-500/20 text-rose-300 border border-rose-500/50 text-[10px] font-extrabold uppercase rounded hover:bg-rose-500 hover:text-white cursor-pointer transition-all shadow-sm"
+                                  style={{ fontFamily: "Lato,sans-serif" }}
+                                >
+                                  {assigningGuestId === g.id ? "Removing..." : "Remove from Table ✕"}
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })()}
+
+                {/* PICK A CLUSTER & ASSIGNMENT SECTION (HIDDEN WHEN TABLE IS FULL) */}
+                {(() => {
+                  const currentSeated = dbGuests.filter(
+                    (d: any) =>
+                      d.tableId === selectedAssignmentTable.id ||
+                      d.table?.id === selectedAssignmentTable.id,
+                  );
+                  const capacity = selectedAssignmentTable.capacity || 10;
+                  const isFull = currentSeated.length >= capacity;
+
+                  if (isFull) {
+                    return (
+                      <div className="p-5 bg-rose-500/10 border border-rose-500/40 rounded-lg text-rose-300 text-xs font-semibold text-center space-y-1">
+                        <p className="text-sm font-bold text-rose-200">
+                          🔒 {selectedAssignmentTable.name} is fully occupied ({currentSeated.length} / {capacity} seats).
+                        </p>
+                        <p className="text-rose-300/80">
+                          Showing assigned guests only. Click "Remove from Table ✕" above on any guest to free up a seat.
+                        </p>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="space-y-6">
+                      {/* PICK A CLUSTER SECTION */}
+                      <div className="space-y-3 bg-secondary/30 p-5 border border-sidebar-border rounded-lg">
+                        <div className="flex items-center justify-between flex-wrap gap-3">
+                          <div>
+                            <p
+                              className="text-[10px] text-accent font-extrabold uppercase tracking-widest"
+                              style={{ fontFamily: "Lato,sans-serif" }}
+                            >
+                              1. Pick a Cluster to Filter Guests
+                            </p>
+                            <p
+                              className="text-xs text-primary-foreground/60 mt-0.5"
+                              style={{ fontFamily: "Lato,sans-serif" }}
+                            >
+                              Select a cluster below or search guests by Name or Code (#)
+                            </p>
+                          </div>
+
+                          {/* Guest Name or Code (#) Search Bar in Cluster Panel */}
+                          <div className="relative w-full md:w-80">
+                            <input
+                              type="text"
+                              placeholder="🔍 Search by Name or Code (#6950)..."
+                              value={assignmentSearch}
+                              onChange={(e) => setAssignmentSearch(e.target.value)}
+                              className="bg-primary border border-sidebar-border px-3.5 py-2 text-xs text-primary-foreground placeholder:text-primary-foreground/40 focus:outline-none focus:border-accent rounded w-full pr-8"
+                              style={{ fontFamily: "Lato,sans-serif" }}
+                            />
+                            {assignmentSearch && (
+                              <button
+                                onClick={() => setAssignmentSearch("")}
+                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-primary-foreground/40 hover:text-primary-foreground cursor-pointer"
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Cluster Pills */}
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          <button
+                            onClick={() => setAssignmentClusterId("ALL")}
+                            className={`px-3.5 py-2 text-[10px] uppercase font-bold tracking-wider rounded border transition-all cursor-pointer flex items-center gap-2 ${
+                              assignmentClusterId === "ALL"
+                                ? "bg-accent text-accent-foreground border-accent shadow-md"
+                                : "bg-primary/40 text-primary-foreground/70 border-sidebar-border hover:border-accent/40"
+                            }`}
+                            style={{ fontFamily: "Lato,sans-serif" }}
+                          >
+                            <span>All Clusters</span>
+                            <span className="px-1.5 py-0.5 text-[9px] bg-primary/30 rounded font-mono">
+                              {dbGuests.length}
+                            </span>
+                          </button>
+
+                          {clusters.map((cls: any) => {
+                            const isActive = assignmentClusterId === cls.id || assignmentClusterId === cls.name;
+                            const clusterGuestsCount = dbGuests.filter(
+                              (g: any) =>
+                                g.clusterId === cls.id ||
+                                (g.cluster || "").toLowerCase() === cls.name.toLowerCase()
+                            ).length;
+
+                            return (
+                              <button
+                                key={cls.id}
+                                onClick={() => setAssignmentClusterId(cls.id)}
+                                className={`px-3.5 py-2 text-[10px] uppercase font-bold tracking-wider rounded border transition-all cursor-pointer flex items-center gap-2 ${
+                                  isActive
+                                    ? "bg-accent text-accent-foreground border-accent shadow-md"
+                                    : "bg-primary/40 text-primary-foreground/70 border-sidebar-border hover:border-accent/40"
+                                }`}
+                                style={{ fontFamily: "Lato,sans-serif" }}
+                              >
+                                <span>{cls.name}</span>
+                                <span className="px-1.5 py-0.5 text-[9px] bg-primary/30 rounded font-mono font-bold">
+                                  {clusterGuestsCount}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* GUEST ASSIGNMENT LIST */}
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center border-b border-sidebar-border/50 pb-2 flex-wrap gap-2">
+                          <p
+                            className="text-[10px] text-primary-foreground/60 uppercase font-extrabold tracking-wider"
+                            style={{ fontFamily: "Lato,sans-serif" }}
+                          >
+                            2. Guests in Picked Cluster (1 Guest per Table Invariant)
+                          </p>
+                          <span className="text-[10px] text-accent font-mono font-bold">
+                            {assignmentSearch.trim() ? `Filter: "${assignmentSearch.trim()}"` : "Each guest can only be assigned to 1 table"}
+                          </span>
+                        </div>
+
+                        <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                          {(() => {
+                            // Filter guests by picked cluster & search term
+                            const filteredGuests = dbGuests.filter((g: any) => {
+                              // Cluster filter
+                              if (assignmentClusterId !== "ALL") {
+                                const clsObj = clusters.find((c: any) => c.id === assignmentClusterId);
+                                const clsName = clsObj ? clsObj.name.toLowerCase() : "";
+                                const matchesClusterId = g.clusterId === assignmentClusterId;
+                                const matchesClusterName = (g.cluster || "").toLowerCase() === clsName;
+                                if (!matchesClusterId && !matchesClusterName) return false;
+                              }
+
+                              // Search filter by Name or Code (#)
+                              if (assignmentSearch.trim()) {
+                                const q = assignmentSearch.trim().toLowerCase().replace("#", "");
+                                const nameMatch = (g.name || g.fullName || "").toLowerCase().includes(q);
+                                const codeMatch = String(g.code || g.pin || "").toLowerCase().includes(q);
+                                const phoneMatch = String(g.phone || "").toLowerCase().includes(q);
+                                if (!nameMatch && !codeMatch && !phoneMatch) return false;
+                              }
+
+                              return true;
+                            });
+
+                            if (filteredGuests.length === 0) {
+                              return (
+                                <div className="p-8 text-center text-primary-foreground/40 border border-sidebar-border rounded-lg text-xs">
+                                  No guests found matching search "{assignmentSearch}". Try picking another cluster or clearing search.
+                                </div>
+                              );
+                            }
+
+                            const targetTblId = selectedAssignmentTable.id;
+                            const targetTblName = selectedAssignmentTable.name;
+
+                            return filteredGuests.map((g: any) => {
+                              const currentTableId = g.tableId || g.table?.id;
+                              const currentTableName = g.table?.name || (typeof g.table === "string" ? g.table : null);
+                              const isAssignedHere = currentTableId === targetTblId || currentTableName === targetTblName;
+                              const isAssignedElsewhere = Boolean(currentTableId || (currentTableName && currentTableName !== "Unassigned")) && !isAssignedHere;
+                              const isUnassigned = !isAssignedHere && !isAssignedElsewhere;
+
+                              return (
+                                <div
+                                  key={g.id || g.code || g.pin}
+                                  className={`flex items-center justify-between p-3.5 border rounded-lg transition-all flex-wrap gap-3 ${
+                                    isAssignedHere
+                                      ? "bg-emerald-950/20 border-emerald-500/40"
+                                      : isAssignedElsewhere
+                                      ? "bg-amber-950/10 border-amber-500/30 opacity-90"
+                                      : "bg-primary/30 border-sidebar-border hover:border-sidebar-border/80"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <span className="text-accent font-mono text-xs font-bold bg-accent/10 px-2 py-1 border border-accent/20 rounded">
+                                      #{g.code || g.pin || "----"}
+                                    </span>
+                                    <div>
+                                      <p
+                                        className="text-sm text-primary-foreground font-bold"
+                                        style={{ fontFamily: "Playfair Display,serif" }}
+                                      >
+                                        {g.name || g.fullName}
+                                      </p>
+                                      <p
+                                        className="text-[9px] text-primary-foreground/50 mt-0.5"
+                                        style={{ fontFamily: "Lato,sans-serif" }}
+                                      >
+                                        Cluster: <span className="text-accent font-semibold">{g.cluster || "Guests"}</span>
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-3">
+                                    {/* Assignment Status Badge */}
+                                    {isAssignedHere && (
+                                      <span className="text-[9px] font-extrabold uppercase px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded">
+                                        ✓ Seated Here {g.seatNumber ? `(Seat ${g.seatNumber})` : ""}
+                                      </span>
+                                    )}
+
+                                    {isAssignedElsewhere && (
+                                      <span className="text-[9px] font-semibold uppercase px-2 py-1 bg-slate-800 text-amber-300 border border-amber-500/30 rounded">
+                                        Currently at: {currentTableName || "Other Table"}
+                                      </span>
+                                    )}
+
+                                    {isUnassigned && (
+                                      <span className="text-[9px] font-semibold uppercase px-2 py-1 bg-primary/40 text-primary-foreground/40 border border-sidebar-border rounded">
+                                        Unassigned
+                                      </span>
+                                    )}
+
+                                    {/* Action Buttons */}
+                                    {isAssignedHere ? (
+                                      <button
+                                        onClick={() => handleAssignGuestToTable(g.id, null)}
+                                        disabled={assigningGuestId === g.id}
+                                        className="px-3.5 py-1.5 border border-rose-500/40 text-rose-400 text-[10px] font-bold uppercase rounded hover:bg-rose-500/10 cursor-pointer transition-colors"
+                                        style={{ fontFamily: "Lato,sans-serif" }}
+                                      >
+                                        {assigningGuestId === g.id ? "Updating..." : "Unassign"}
+                                      </button>
+                                    ) : isAssignedElsewhere ? (
+                                      <button
+                                        onClick={() => handleAssignGuestToTable(g.id, targetTblId)}
+                                        disabled={assigningGuestId === g.id}
+                                        className="px-3.5 py-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold uppercase rounded hover:bg-amber-500/30 cursor-pointer transition-colors"
+                                        style={{ fontFamily: "Lato,sans-serif" }}
+                                        title={`Move guest from ${currentTableName} to ${targetTblName}`}
+                                      >
+                                        {assigningGuestId === g.id ? "Moving..." : `Move to ${targetTblName}`}
+                                      </button>
+                                    ) : (
+                                      <button
+                                        onClick={() => handleAssignGuestToTable(g.id, targetTblId)}
+                                        disabled={assigningGuestId === g.id}
+                                        className="px-4 py-1.5 bg-accent text-accent-foreground text-[10px] font-bold uppercase tracking-wider rounded hover:bg-accent/80 cursor-pointer transition-colors shadow-sm"
+                                        style={{ fontFamily: "Lato,sans-serif" }}
+                                      >
+                                        {assigningGuestId === g.id ? "Assigning..." : `Assign to ${targetTblName}`}
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            });
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Bottom Close Button */}
+                <div className="pt-3 border-t border-sidebar-border/50 flex justify-end">
+                  <button
+                    onClick={() => setSelectedAssignmentTable(null)}
+                    className="px-5 py-2 bg-rose-500/20 text-rose-300 border border-rose-500/60 hover:bg-rose-500 hover:text-white text-xs font-extrabold uppercase tracking-widest cursor-pointer rounded-lg transition-all shadow"
+                    style={{ fontFamily: "Lato,sans-serif" }}
+                  >
+                    Close Seating Panel ✕
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {tables.map((tbl) => {
-                const assigned =
+              {tables
+                .filter((tbl: any) => {
+                  if (!tableSearch.trim()) return true;
+                  const q = tableSearch.trim().toLowerCase();
+                  const tblName = (tbl.name || "").toLowerCase();
+                  const tblZone = (tbl.zone || "").toLowerCase();
+                  const tblNum = tblName.replace(/[^0-9]/g, "");
+                  const qNum = q.replace(/[^0-9]/g, "");
+                  return (
+                    tblName.includes(q) ||
+                    tblZone.includes(q) ||
+                    (qNum && tblNum === qNum) ||
+                    (qNum && tblNum.includes(qNum))
+                  );
+                })
+                .map((tbl) => {
+                const assignedCount =
                   tbl.delegates && Array.isArray(tbl.delegates)
                     ? tbl.delegates.length
                     : dbGuests.filter(
-                      (d) => d.tableId === tbl.id || d.table?.id === tbl.id,
+                      (d: any) => d.tableId === tbl.id || d.table?.id === tbl.id,
                     ).length;
+                const capacity = tbl.capacity || 10;
+                const isCardFull = assignedCount >= capacity;
+                const isSelected = selectedAssignmentTable?.id === tbl.id;
+
                 return (
                   <div
                     key={tbl.id}
-                    className="p-5 border border-sidebar-border bg-primary/20 space-y-3"
+                    className={`p-5 border transition-all space-y-4 ${
+                      isSelected
+                        ? "bg-accent/15 border-accent shadow-[0_0_15px_rgba(201,168,76,0.2)]"
+                        : isCardFull
+                        ? "bg-primary/30 border-rose-500/30 hover:border-rose-500/60"
+                        : "bg-primary/20 border-sidebar-border hover:border-sidebar-border/80"
+                    }`}
                   >
                     <div className="flex justify-between items-start">
                       <div>
                         <h4
-                          className="text-base text-primary-foreground"
+                          className="text-base text-primary-foreground font-bold"
                           style={{ fontFamily: "Playfair Display,serif" }}
                         >
                           {tbl.name}
@@ -5408,19 +5944,54 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                         </p>
                       </div>
                       <span
-                        className="text-xs text-primary-foreground/50 font-mono"
+                        className={`text-xs font-mono px-2.5 py-1 border font-bold ${
+                          isCardFull
+                            ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                            : "bg-primary/40 text-primary-foreground/70 border-sidebar-border"
+                        }`}
                         style={{ fontFamily: "DM Mono,monospace" }}
                       >
-                        {assigned} / {tbl.capacity || 10} Seats
+                        {assignedCount} / {capacity} Seats {isCardFull ? "(FULL)" : ""}
                       </span>
                     </div>
-                    <div className="w-full bg-sidebar-border h-1.5 rounded-full overflow-hidden">
+
+                    <div className="w-full bg-sidebar-border h-2 rounded-full overflow-hidden">
                       <div
-                        className="bg-accent h-full transition-all"
+                        className={`h-full transition-all ${
+                          isCardFull ? "bg-rose-500" : "bg-accent"
+                        }`}
                         style={{
-                          width: `${Math.min(100, Math.round((assigned / (tbl.capacity || 10)) * 100))}%`,
+                          width: `${Math.min(100, Math.round((assignedCount / capacity) * 100))}%`,
                         }}
                       />
+                    </div>
+
+                    <div className="pt-2 border-t border-sidebar-border/50">
+                      <button
+                        onClick={() => {
+                          if (isSelected) {
+                            setSelectedAssignmentTable(null);
+                          } else {
+                            setSelectedAssignmentTable(tbl);
+                            setAssignmentClusterId("ALL");
+                            setAssignmentSearch("");
+                          }
+                        }}
+                        className={`w-full py-2.5 px-4 text-[10px] tracking-wider uppercase font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                          isSelected
+                            ? "bg-accent text-accent-foreground shadow-md"
+                            : isCardFull
+                            ? "bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500 hover:text-white"
+                            : "bg-accent/20 text-accent border border-accent/40 hover:bg-accent hover:text-accent-foreground"
+                        }`}
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        {isSelected
+                          ? "Close Panel ✕"
+                          : isCardFull
+                          ? "View Assigned Guests (Full) →"
+                          : "Assign Guests to Table →"}
+                      </button>
                     </div>
                   </div>
                 );
@@ -5623,17 +6194,41 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                             Code #{g.code} · {g.role || "Delegate"}
                           </p>
                         </div>
-                        <span
-                          className={`text-[8px] tracking-widest uppercase px-2.5 py-1 border font-bold ${g.status === "CHECKED_IN"
-                            ? "bg-emerald-500 text-slate-950 border-emerald-400"
-                            : "border-sidebar-border text-primary-foreground/40"
-                            }`}
-                          style={{ fontFamily: "Lato,sans-serif" }}
-                        >
-                          {g.status === "CHECKED_IN"
-                            ? "✓ CHECKED IN"
-                            : "INVITED"}
-                        </span>
+                        <div className="flex items-center gap-3">
+                          <select
+                            value={
+                              g.tableId ||
+                              (typeof g.table === "object" ? g.table?.id : "") ||
+                              ""
+                            }
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              handleAssignGuestToTable(g.id, val ? val : null);
+                            }}
+                            disabled={assigningGuestId === g.id}
+                            className="bg-primary border border-sidebar-border text-[10px] text-primary-foreground px-2.5 py-1 rounded focus:border-accent focus:outline-none cursor-pointer"
+                            style={{ fontFamily: "Lato,sans-serif" }}
+                          >
+                            <option value="">-- No Table Assigned --</option>
+                            {tables.map((t: any) => (
+                              <option key={t.id} value={t.id}>
+                                {t.name} ({t.zone || "Main"})
+                              </option>
+                            ))}
+                          </select>
+
+                          <span
+                            className={`text-[8px] tracking-widest uppercase px-2.5 py-1 border font-bold ${g.status === "CHECKED_IN"
+                              ? "bg-emerald-500 text-slate-950 border-emerald-400"
+                              : "border-sidebar-border text-primary-foreground/40"
+                              }`}
+                            style={{ fontFamily: "Lato,sans-serif" }}
+                          >
+                            {g.status === "CHECKED_IN"
+                              ? "✓ CHECKED IN"
+                              : "INVITED"}
+                          </span>
+                        </div>
                       </div>
                     ))
                   ) : (
@@ -5879,8 +6474,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                           Code #{g.code || g.pin} · Cluster:{" "}
                           {g.cluster?.name ||
                             g.cluster ||
-                            g.relation ||
-                            "General"}{" "}
+                            "Guests"}{" "}
                           · Table:{" "}
                           {typeof g.table === "object"
                             ? g.table?.name
