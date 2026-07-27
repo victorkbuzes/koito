@@ -37,6 +37,7 @@ const g5078 = "/imports/051A5078.jpg";
 const g5030 = "/imports/051A4708-2.jpg.jpeg";
 const g5035 = "/imports/051A4356 - Copy.jpeg";
 const g5036 = "/imports/051A4356 - Copy - Copy.jpeg";
+const g5037 = "/imports/051A4355.jpg - Copy.jpeg";
 const chelaVideo = "/imports/CHELA_50MB.mp4";
 const chalVideo = "/imports/Charlene3.mp4";
 
@@ -1639,7 +1640,7 @@ function InvitationScreen({
           {/* Photo background */}
           {/* Mobile image */}
           <img
-            src={g5036}
+            src={g5037}
             alt="Miss Charlene Chelagat Ruto"
             className="absolute inset-0 w-full h-full object-cover md:hidden"
             style={{ objectPosition: "center 15%" }}
@@ -1752,158 +1753,144 @@ function InvitationScreen({
               <OrnamentalRule wide />
             </div> */}
 
-            <div className="flex justify-between w-full bg-yellow-400/0">
-              <div className="w-35 bg-green-300/0"></div>
+            <div className="w-full max-w-xl flex flex-col items-center text-center mx-auto">
+              {/* WE, THE FAMILY OF */}
+              <p
+                className="text-xs tracking-[0.45em] uppercase mb-4"
+                style={{
+                  fontFamily: "Lato,sans-serif",
+                  color: "rgba(201,168,76,0.95)",
+                }}
+              >
+                We, The Family Of
+              </p>
 
-              <div className="w-65 bg-pink-600/0 pr-5">
-                {/* WE, THE FAMILY OF */}
-                <p
-                  className="text-xs tracking-[0.45em] uppercase mb-4"
-                  style={{
-                    fontFamily: "Lato,sans-serif",
-                    color: "rgba(201,168,76,0.95)",
-                  }}
-                >
-                  We, The Family Of
-                </p>
+              <p
+                className="text-2xl md:text-3xl leading-snug"
+                style={{
+                  fontFamily: "Playfair Display,serif",
+                  color: "#FFFFFF",
+                  textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                }}
+              >
+                Dr William Samoei Ruto
+              </p>
 
-                <p
-                  className="text-2xl md:text-3xl leading-snug"
-                  style={{
-                    fontFamily: "Playfair Display,serif",
-                    color: "#FFFFFF",
-                    textShadow: "0 2px 12px rgba(0,0,0,0.8)",
-                  }}
-                >
-                  Dr William Samoei Ruto
-                </p>
+              <p
+                className="text-2xl my-3"
+                style={{
+                  fontFamily: "Playfair Display,serif",
+                  fontStyle: "italic",
+                  color: "#C9A84C",
+                }}
+              >
+                &amp;
+              </p>
 
+              <p
+                className="text-2xl md:text-3xl leading-snug mb-6"
+                style={{
+                  fontFamily: "Playfair Display,serif",
+                  color: "#FFFFFF",
+                  textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                }}
+              >
+                Mrs Rachel Chebet Ruto
+              </p>
+
+              {/* WARMLY INVITE */}
+              <p
+                className="text-xs tracking-[0.45em] uppercase mb-5"
+                style={{
+                  fontFamily: "Lato,sans-serif",
+                  color: "rgba(201,168,76,0.95)",
+                }}
+              >
+                Warmly Invite
+              </p>
+
+              <div
+                className="inline-block border px-4 py-2 mb-6 max-w-[80%] md:max-w-[100%]"
+                style={{
+                  borderColor: "rgba(201,168,76,0.55)",
+                  background: "rgba(4,12,6,0.65)",
+                }}
+              >
                 <p
-                  className="text-2xl my-3"
+                  className="text-lg md:text-3xl whitespace-nowrap overflow-x-auto w-full"
                   style={{
                     fontFamily: "Playfair Display,serif",
                     fontStyle: "italic",
-                    color: "#C9A84C",
-                  }}
-                >
-                  &amp;
-                </p>
-
-                <p
-                  className="text-2xl md:text-3xl leading-snug mb-6"
-                  style={{
-                    fontFamily: "Playfair Display,serif",
                     color: "#FFFFFF",
-                    textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                    textShadow: "0 2px 8px rgba(0,0,0,0.5)",
                   }}
                 >
-                  Mrs Rachel Chebet Ruto
-                </p>
-
-                {/* WARMLY INVITE */}
-                <p
-                  className="text-xs tracking-[0.45em] uppercase mb-5"
-                  style={{
-                    fontFamily: "Lato,sans-serif",
-                    color: "rgba(201,168,76,0.95)",
-                  }}
-                >
-                  Warmly Invite
-                </p>
-
-                {/* Honoured Guest + guest name */}
-                {/* <p
-                  className="text-xs tracking-[0.35em] uppercase mb-3"
-                  style={{
-                    fontFamily: "Lato,sans-serif",
-                    color: "rgba(201,168,76,0.95)",
-                  }}
-                >
-                  Honoured Guest
-                </p> */}
-                <div
-                  className="inline-block border px-2 py-2 mb-6 max-w-[80%] md:max-w-[100%]"
-                  style={{
-                    borderColor: "rgba(201,168,76,0.55)",
-                    background: "rgba(4,12,6,0.65)",
-                  }}
-                >
-                  <p
-                    className="text-lg md:text-3xl whitespace-nowrap overflow-x-auto w-full"
-                    style={{
-                      fontFamily: "Playfair Display,serif",
-                      fontStyle: "italic",
-                      color: "#FFFFFF",
-                      textShadow: "0 2px 8px rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    Prof Hon {guest.name}
-                  </p>
-                </div>
-
-                {/* TO THE */}
-                <p
-                  className="text-xs tracking-[0.45em] uppercase mb-4"
-                  style={{
-                    fontFamily: "Lato,sans-serif",
-                    color: "rgba(201,168,76,0.95)",
-                  }}
-                >
-                  To The
-                </p>
-
-                {/* Koito ak Chaik */}
-                <h1
-                  className="text-5xl md:text-6xl leading-none mb-3"
-                  style={{
-                    fontFamily: "Great Vibes,cursive",
-                    color: "#FFFFFF",
-                    textShadow: "0 2px 20px rgba(0,0,0,0.8)",
-                    fontSize: "40px"
-                  }}
-                >
-                  Koito ak Chaik
-                </h1>
-
-                {/* ENGAGEMENT AND FAREWELL */}
-                <p
-                  className="text-xs tracking-[0.45em] uppercase mb-2"
-                  style={{
-                    fontFamily: "Lato,sans-serif",
-                    color: "rgba(201,168,76,0.95)",
-                    fontSize: "9px"
-                  }}
-                >
-                  (Engagement & Farewell)
-                </p>
-
-                <div className="flex justify-center mb-2">
-                  <OrnamentalRule wide />
-                </div>
-
-                {/* OF THEIR DAUGHTER */}
-                <p
-                  className="text-xs tracking-[0.45em] uppercase mb-4"
-                  style={{
-                    fontFamily: "Lato,sans-serif",
-                    color: "rgba(201,168,76,0.95)",
-                  }}
-                >
-                  Of Their Daughter
-                </p>
-
-                {/* Charlene Chelagat Ruto */}
-                <p
-                  className="text-2xl md:text-3xl leading-snug mb-6"
-                  style={{
-                    fontFamily: "Playfair Display,serif",
-                    color: "#FFFFFF",
-                    textShadow: "0 2px 12px rgba(0,0,0,0.8)",
-                  }}
-                >
-                  Charlene Chelagat Ruto
+                  Prof Hon {guest.name}
                 </p>
               </div>
+
+              {/* TO THE */}
+              <p
+                className="text-xs tracking-[0.45em] uppercase mb-4"
+                style={{
+                  fontFamily: "Lato,sans-serif",
+                  color: "rgba(201,168,76,0.95)",
+                }}
+              >
+                To The
+              </p>
+
+              {/* Koito ak Chaik */}
+              <h1
+                className="text-5xl md:text-6xl leading-none mb-3"
+                style={{
+                  fontFamily: "Great Vibes,cursive",
+                  color: "#FFFFFF",
+                  textShadow: "0 2px 20px rgba(0,0,0,0.8)",
+                  fontSize: "40px"
+                }}
+              >
+                Koito ak Chaik
+              </h1>
+
+              {/* ENGAGEMENT AND FAREWELL */}
+              <p
+                className="text-xs tracking-[0.45em] uppercase mb-2"
+                style={{
+                  fontFamily: "Lato,sans-serif",
+                  color: "rgba(201,168,76,0.95)",
+                  fontSize: "9px"
+                }}
+              >
+                (Engagement & Farewell)
+              </p>
+
+              <div className="flex justify-center mb-2">
+                <OrnamentalRule wide />
+              </div>
+
+              {/* OF THEIR DAUGHTER */}
+              <p
+                className="text-xs tracking-[0.45em] uppercase mb-4"
+                style={{
+                  fontFamily: "Lato,sans-serif",
+                  color: "rgba(201,168,76,0.95)",
+                }}
+              >
+                Of Their Daughter
+              </p>
+
+              {/* Charlene Chelagat Ruto */}
+              <p
+                className="text-2xl md:text-3xl leading-snug mb-6"
+                style={{
+                  fontFamily: "Playfair Display,serif",
+                  color: "#FFFFFF",
+                  textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+                }}
+              >
+                Charlene Chelagat Ruto
+              </p>
             </div>
             <div className="flex justify-center mb-4">
               <OrnamentalRule wide />
@@ -3640,8 +3627,25 @@ function InvitationScreen({
             </div>
           </div>
         </motion.div>
+
+        {/* ── Footer ── */}
+        <Footer />
       </div>
     </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer
+      className="py-8 bg-[#040C06] border-t border-[#C9A84C]/20 text-center text-xs text-muted-foreground/70 flex flex-col items-center justify-center gap-1.5 w-full relative z-20"
+      style={{ fontFamily: "Lato, sans-serif" }}
+    >
+      <p className="tracking-widest uppercase text-muted-foreground">Copyright @KittyEvents</p>
+      <p className="text-[10px] tracking-wider text-[#C9A84C] font-medium">
+        Powered by GOODSAM Technologies
+      </p>
+    </footer>
   );
 }
 
@@ -5686,11 +5690,10 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                         <div className="flex flex-wrap gap-2 pt-2">
                           <button
                             onClick={() => setAssignmentClusterId("ALL")}
-                            className={`px-3.5 py-2 text-[10px] uppercase font-bold tracking-wider rounded border transition-all cursor-pointer flex items-center gap-2 ${
-                              assignmentClusterId === "ALL"
-                                ? "bg-accent text-accent-foreground border-accent shadow-md"
-                                : "bg-primary/40 text-primary-foreground/70 border-sidebar-border hover:border-accent/40"
-                            }`}
+                            className={`px-3.5 py-2 text-[10px] uppercase font-bold tracking-wider rounded border transition-all cursor-pointer flex items-center gap-2 ${assignmentClusterId === "ALL"
+                              ? "bg-accent text-accent-foreground border-accent shadow-md"
+                              : "bg-primary/40 text-primary-foreground/70 border-sidebar-border hover:border-accent/40"
+                              }`}
                             style={{ fontFamily: "Lato,sans-serif" }}
                           >
                             <span>All Clusters</span>
@@ -5711,11 +5714,10 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                               <button
                                 key={cls.id}
                                 onClick={() => setAssignmentClusterId(cls.id)}
-                                className={`px-3.5 py-2 text-[10px] uppercase font-bold tracking-wider rounded border transition-all cursor-pointer flex items-center gap-2 ${
-                                  isActive
-                                    ? "bg-accent text-accent-foreground border-accent shadow-md"
-                                    : "bg-primary/40 text-primary-foreground/70 border-sidebar-border hover:border-accent/40"
-                                }`}
+                                className={`px-3.5 py-2 text-[10px] uppercase font-bold tracking-wider rounded border transition-all cursor-pointer flex items-center gap-2 ${isActive
+                                  ? "bg-accent text-accent-foreground border-accent shadow-md"
+                                  : "bg-primary/40 text-primary-foreground/70 border-sidebar-border hover:border-accent/40"
+                                  }`}
                                 style={{ fontFamily: "Lato,sans-serif" }}
                               >
                                 <span>{cls.name}</span>
@@ -5788,13 +5790,12 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                               return (
                                 <div
                                   key={g.id || g.code || g.pin}
-                                  className={`flex items-center justify-between p-3.5 border rounded-lg transition-all flex-wrap gap-3 ${
-                                    isAssignedHere
-                                      ? "bg-emerald-950/20 border-emerald-500/40"
-                                      : isAssignedElsewhere
+                                  className={`flex items-center justify-between p-3.5 border rounded-lg transition-all flex-wrap gap-3 ${isAssignedHere
+                                    ? "bg-emerald-950/20 border-emerald-500/40"
+                                    : isAssignedElsewhere
                                       ? "bg-amber-950/10 border-amber-500/30 opacity-90"
                                       : "bg-primary/30 border-sidebar-border hover:border-sidebar-border/80"
-                                  }`}
+                                    }`}
                                 >
                                   <div className="flex items-center gap-3">
                                     <span className="text-accent font-mono text-xs font-bold bg-accent/10 px-2 py-1 border border-accent/20 rounded">
@@ -5907,95 +5908,91 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                   );
                 })
                 .map((tbl) => {
-                const assignedCount =
-                  tbl.delegates && Array.isArray(tbl.delegates)
-                    ? tbl.delegates.length
-                    : dbGuests.filter(
-                      (d: any) => d.tableId === tbl.id || d.table?.id === tbl.id,
-                    ).length;
-                const capacity = tbl.capacity || 10;
-                const isCardFull = assignedCount >= capacity;
-                const isSelected = selectedAssignmentTable?.id === tbl.id;
+                  const assignedCount =
+                    tbl.delegates && Array.isArray(tbl.delegates)
+                      ? tbl.delegates.length
+                      : dbGuests.filter(
+                        (d: any) => d.tableId === tbl.id || d.table?.id === tbl.id,
+                      ).length;
+                  const capacity = tbl.capacity || 10;
+                  const isCardFull = assignedCount >= capacity;
+                  const isSelected = selectedAssignmentTable?.id === tbl.id;
 
-                return (
-                  <div
-                    key={tbl.id}
-                    className={`p-5 border transition-all space-y-4 ${
-                      isSelected
+                  return (
+                    <div
+                      key={tbl.id}
+                      className={`p-5 border transition-all space-y-4 ${isSelected
                         ? "bg-accent/15 border-accent shadow-[0_0_15px_rgba(201,168,76,0.2)]"
                         : isCardFull
-                        ? "bg-primary/30 border-rose-500/30 hover:border-rose-500/60"
-                        : "bg-primary/20 border-sidebar-border hover:border-sidebar-border/80"
-                    }`}
-                  >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4
-                          className="text-base text-primary-foreground font-bold"
-                          style={{ fontFamily: "Playfair Display,serif" }}
-                        >
-                          {tbl.name}
-                        </h4>
-                        <p
-                          className="text-[9px] text-accent uppercase tracking-widest mt-0.5"
-                          style={{ fontFamily: "Lato,sans-serif" }}
-                        >
-                          {tbl.zone || "Main Zone"}
-                        </p>
-                      </div>
-                      <span
-                        className={`text-xs font-mono px-2.5 py-1 border font-bold ${
-                          isCardFull
+                          ? "bg-primary/30 border-rose-500/30 hover:border-rose-500/60"
+                          : "bg-primary/20 border-sidebar-border hover:border-sidebar-border/80"
+                        }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4
+                            className="text-base text-primary-foreground font-bold"
+                            style={{ fontFamily: "Playfair Display,serif" }}
+                          >
+                            {tbl.name}
+                          </h4>
+                          <p
+                            className="text-[9px] text-accent uppercase tracking-widest mt-0.5"
+                            style={{ fontFamily: "Lato,sans-serif" }}
+                          >
+                            {tbl.zone || "Main Zone"}
+                          </p>
+                        </div>
+                        <span
+                          className={`text-xs font-mono px-2.5 py-1 border font-bold ${isCardFull
                             ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
                             : "bg-primary/40 text-primary-foreground/70 border-sidebar-border"
-                        }`}
-                        style={{ fontFamily: "DM Mono,monospace" }}
-                      >
-                        {assignedCount} / {capacity} Seats {isCardFull ? "(FULL)" : ""}
-                      </span>
-                    </div>
+                            }`}
+                          style={{ fontFamily: "DM Mono,monospace" }}
+                        >
+                          {assignedCount} / {capacity} Seats {isCardFull ? "(FULL)" : ""}
+                        </span>
+                      </div>
 
-                    <div className="w-full bg-sidebar-border h-2 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all ${
-                          isCardFull ? "bg-rose-500" : "bg-accent"
-                        }`}
-                        style={{
-                          width: `${Math.min(100, Math.round((assignedCount / capacity) * 100))}%`,
-                        }}
-                      />
-                    </div>
+                      <div className="w-full bg-sidebar-border h-2 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all ${isCardFull ? "bg-rose-500" : "bg-accent"
+                            }`}
+                          style={{
+                            width: `${Math.min(100, Math.round((assignedCount / capacity) * 100))}%`,
+                          }}
+                        />
+                      </div>
 
-                    <div className="pt-2 border-t border-sidebar-border/50">
-                      <button
-                        onClick={() => {
-                          if (isSelected) {
-                            setSelectedAssignmentTable(null);
-                          } else {
-                            setSelectedAssignmentTable(tbl);
-                            setAssignmentClusterId("ALL");
-                            setAssignmentSearch("");
-                          }
-                        }}
-                        className={`w-full py-2.5 px-4 text-[10px] tracking-wider uppercase font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
-                          isSelected
+                      <div className="pt-2 border-t border-sidebar-border/50">
+                        <button
+                          onClick={() => {
+                            if (isSelected) {
+                              setSelectedAssignmentTable(null);
+                            } else {
+                              setSelectedAssignmentTable(tbl);
+                              setAssignmentClusterId("ALL");
+                              setAssignmentSearch("");
+                            }
+                          }}
+                          className={`w-full py-2.5 px-4 text-[10px] tracking-wider uppercase font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${isSelected
                             ? "bg-accent text-accent-foreground shadow-md"
                             : isCardFull
-                            ? "bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500 hover:text-white"
-                            : "bg-accent/20 text-accent border border-accent/40 hover:bg-accent hover:text-accent-foreground"
-                        }`}
-                        style={{ fontFamily: "Lato,sans-serif" }}
-                      >
-                        {isSelected
-                          ? "Close Panel ✕"
-                          : isCardFull
-                          ? "View Assigned Guests (Full) →"
-                          : "Assign Guests to Table →"}
-                      </button>
+                              ? "bg-rose-500/20 text-rose-300 border border-rose-500/50 hover:bg-rose-500 hover:text-white"
+                              : "bg-accent/20 text-accent border border-accent/40 hover:bg-accent hover:text-accent-foreground"
+                            }`}
+                          style={{ fontFamily: "Lato,sans-serif" }}
+                        >
+                          {isSelected
+                            ? "Close Panel ✕"
+                            : isCardFull
+                              ? "View Assigned Guests (Full) →"
+                              : "Assign Guests to Table →"}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
         )}
