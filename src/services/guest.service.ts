@@ -203,12 +203,35 @@ export async function createGuest(params: CreateGuestParams) {
       }
     }
   } else if (tableId && tableId !== "none" && tableId !== "unassigned" && tableId !== "") {
-    const targetTable = await prisma.diningTable.findUnique({
+    let targetTable = await prisma.diningTable.findUnique({
       where: { id: String(tableId) },
       include: { seats: { include: { seatingAssignment: true } } },
     });
 
+    if (!targetTable) {
+      targetTable = await prisma.diningTable.findFirst({
+        where: {
+          eventId: event.id,
+          name: { equals: String(tableId).trim(), mode: "insensitive" },
+        },
+        include: { seats: { include: { seatingAssignment: true } } },
+      });
+    }
+
     if (targetTable) {
+      if (targetTable.seats.length === 0) {
+        const seatData = Array.from({ length: 10 }, (_, i) => ({
+          diningTableId: targetTable.id,
+          seatNumber: i + 1,
+        }));
+        await prisma.seat.createMany({ data: seatData });
+        const refreshed = await prisma.diningTable.findUnique({
+          where: { id: targetTable.id },
+          include: { seats: { include: { seatingAssignment: true } } },
+        });
+        if (refreshed) targetTable = refreshed;
+      }
+
       const openSeat = targetTable.seats.find((s: any) => !s.seatingAssignment);
       if (openSeat) {
         targetSeatId = openSeat.id;

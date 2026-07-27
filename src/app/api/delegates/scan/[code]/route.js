@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 const includeRelations = {
   qrCode: true,
   checkIn: true,
+  rsvp: true,
   seatingAssignment: {
     include: {
       seat: {
