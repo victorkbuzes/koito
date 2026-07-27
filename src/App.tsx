@@ -1015,27 +1015,27 @@ function AccommodationTabsSection() {
       ],
       airbnbs: [
         {
-          name: "Kisii Airbnbs & Private Stays",
+          name: "Kisii Airbnbs ",
           desc: "Explore private homes, self-catering apartments, and guest suites available on Airbnb in Kisii.",
           link: "https://www.airbnb.com/s/Kisii--Kisii-County/homes?date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&place_id=ChIJYUFfsuw7KxgRsS2Lx5BqUUQ&location_bb=vym490ILLpm%2FMqEJQgsJ0g%3D%3D&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&search_type=autocomplete_click",
         },
         {
-          name: "Bomet Airbnbs & Private Stays",
+          name: "Bomet Airbnbs",
           desc: "Browse house rentals, apartments, and guest homes available on Airbnb in Bomet.",
           link: "https://www.airbnb.com/s/BOMET/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
         {
-          name: "Nyamira Airbnbs & Private Stays",
+          name: "Nyamira Airbnbs",
           desc: "Browse Airbnb rentals, homestays, and private cottages available in Nyamira County.",
           link: "https://www.airbnb.com/s/NYAMIRA/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
         {
-          name: "Migori Airbnbs & Private Stays",
+          name: "Migori Airbnbs ",
           desc: "Explore private homes, self-catering apartments, and guest suites available on Airbnb in Migori.",
           link: "https://www.airbnb.com/s/MIGORI/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
         {
-          name: "Narok & Maasai Mara Airbnbs",
+          name: "Narok Airbnbs",
           desc: "Explore safari villas, private homestays, and house rentals available on Airbnb in Narok.",
           link: "https://www.airbnb.com/s/NAROK/homes?search_type=search_query&date_picker_type=calendar&refinement_paths%5B%5D=%2Fhomes&acp_id=d4420be9-5c45-4df8-9cc8-a37ea9fea2c0&checkin=2026-08-02&checkout=2026-08-09&flexible_trip_lengths%5B%5D=one_week&monthly_start_date=2026-08-01&monthly_length=3&monthly_end_date=2026-11-01&price_filter_input_type=2&price_filter_num_nights=7&channel=EXPLORE",
         },
@@ -2978,7 +2978,7 @@ function InvitationScreen({
                       </>
                     ) : (
                       <>
-                        <Gift size={13} /> Send Gift (Copy Details)
+                        <Gift size={13} /> Send Gift 
                       </>
                     )}
                   </button>
