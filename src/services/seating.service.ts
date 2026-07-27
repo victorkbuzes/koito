@@ -140,24 +140,7 @@ export async function assignGuestToTable(input: AssignGuestInput) {
       throw new Error("TABLE_NOT_FOUND");
     }
 
-    // 3. Auto-generate missing seat records if table has no seats created yet
-    if (targetTable.seats.length === 0) {
-      const defaultCapacity = 10;
-      const seatData = Array.from({ length: defaultCapacity }, (_, i) => ({
-        diningTableId: targetTable.id,
-        seatNumber: i + 1,
-      }));
-      await tx.seat.createMany({ data: seatData });
-
-      // Re-fetch table with created seats
-      const refreshedTable = await tx.diningTable.findUnique({
-        where: { id: targetTable.id },
-        include: { seats: { include: { seatingAssignment: true } } },
-      });
-      if (refreshedTable) targetTable = refreshedTable;
-    }
-
-    // 4. Find available seat
+    // 3. Find available seat
     let availableSeat = null;
     if (seatNumber) {
       availableSeat = targetTable.seats.find(

@@ -219,19 +219,6 @@ export async function createGuest(params: CreateGuestParams) {
     }
 
     if (targetTable) {
-      if (targetTable.seats.length === 0) {
-        const seatData = Array.from({ length: 10 }, (_, i) => ({
-          diningTableId: targetTable.id,
-          seatNumber: i + 1,
-        }));
-        await prisma.seat.createMany({ data: seatData });
-        const refreshed = await prisma.diningTable.findUnique({
-          where: { id: targetTable.id },
-          include: { seats: { include: { seatingAssignment: true } } },
-        });
-        if (refreshed) targetTable = refreshed;
-      }
-
       const openSeat = targetTable.seats.find((s: any) => !s.seatingAssignment);
       if (openSeat) {
         targetSeatId = openSeat.id;

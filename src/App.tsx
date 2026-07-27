@@ -17,6 +17,7 @@ import {
   X,
   Gift,
   Check,
+  FileSpreadsheet,
 } from "lucide-react";
 // const paletteImg = "/imports/WhatsApp_Image_2026-07-03_at_02.04.28.jpeg";
 // const dressImg = "/imports/WhatsApp_Image_2026-07-03_at_01.49.37.jpeg";
@@ -1012,6 +1013,14 @@ function AccommodationTabsSection() {
           phone: "+254 705 935 500",
         },
       ],
+      airbnbs: [
+        {
+          name: "Kisii Luxury Hilltop Airbnb (Sample Link)",
+          desc: "Furnished private apartment in Kisii. Click the name above to view or book on Airbnb.",
+          rates: "$35 – $65 / night",
+          link: "https://www.airbnb.com",
+        },
+      ],
     },
     bomet: {
       name: "Bomet County",
@@ -1031,6 +1040,14 @@ function AccommodationTabsSection() {
           rates: "$45 – $95",
           email: "famousgatesbmt@gmail.com",
           phone: "+254 706 782 828",
+        },
+      ],
+      airbnbs: [
+        {
+          name: "Bomet Modern Airbnb Suite (Sample Link)",
+          desc: "Private self-catering suite in Bomet town. Click the name to view the Airbnb listing.",
+          rates: "$30 – $55 / night",
+          link: "https://www.airbnb.com",
         },
       ],
     },
@@ -1066,6 +1083,14 @@ function AccommodationTabsSection() {
           phone: "+254 741 931 262",
         },
       ],
+      airbnbs: [
+        {
+          name: "Migori Town Airbnb Residency (Sample Link)",
+          desc: "Comfortable home rental in Migori. Click the title to open the Airbnb link.",
+          rates: "$25 – $50 / night",
+          link: "https://www.airbnb.com",
+        },
+      ],
     },
     nyamira: {
       name: "Nyamira County",
@@ -1085,11 +1110,19 @@ function AccommodationTabsSection() {
           phone: "+254 716 316 600",
         },
       ],
+      airbnbs: [
+        {
+          name: "Nyamira Countryside Airbnb (Sample Link)",
+          desc: "Private cottage and homestay in Nyamira. Click title to open link.",
+          rates: "$25 – $45 / night",
+          link: "https://www.airbnb.com",
+        },
+      ],
     },
     mara: {
-      name: "Maasai Mara Triangle",
+      name: "Maasai Mara Lodges & Camps",
       summary:
-        "43 km to Intona Heritage Farm (~1 hr 32 mins by road — murram route). Curated travel package (Aug 7th–9th) provided by Vistavoyage Travel Group.",
+        "43 km to Intona Heritage Farm (~1 hr 32 mins by road — murram route). Curated luxury safari lodges and tented camps.",
       isMara: true,
     },
   };
@@ -1133,7 +1166,7 @@ function AccommodationTabsSection() {
           <option value="bomet">2. Bomet County (109 km)</option>
           <option value="migori">3. Migori County (62 km)</option>
           <option value="nyamira">4. Nyamira County (93 km)</option>
-          <option value="mara">5. Maasai Mara Packages (43 km)</option>
+          <option value="mara">5. Maasai Mara Lodges (43 km)</option>
         </select>
       </div>
 
@@ -1144,12 +1177,12 @@ function AccommodationTabsSection() {
           { key: "bomet", label: "Bomet County" },
           { key: "migori", label: "Migori County" },
           { key: "nyamira", label: "Nyamira County" },
-          { key: "mara", label: "Maasai Mara Packages" },
+          { key: "mara", label: "Maasai Mara Lodges" },
         ].map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setActiveTab(key as any)}
-            className={`px-6 py-4 text-[10px] tracking-[0.2em] uppercase border-b-2 whitespace-nowrap transition-all duration-300 cursor-pointer flex-shrink-0 ${activeTab === key
+            className={`px-3 md:px-5 lg:px-6 py-3.5 md:py-4 text-[9px] md:text-[10px] tracking-[0.1em] md:tracking-[0.18em] uppercase border-b-2 whitespace-nowrap transition-all duration-300 cursor-pointer flex-shrink-0 ${activeTab === key
               ? "border-accent text-accent font-semibold bg-accent/10"
               : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
               }`}
@@ -1185,232 +1218,279 @@ function AccommodationTabsSection() {
               className="text-xs sm:text-sm text-muted-foreground mb-4 leading-5 sm:leading-6"
               style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
             >
-              A curated travel package (Aug 7–9) is available through Vistavoyage Travel Group.
-            </p>
-            <p
-              className="text-[9px] sm:text-[10px] tracking-[0.15em] text-accent/80 uppercase mb-1"
-              style={{ fontFamily: "Lato,sans-serif" }}
-            >
-              Travel Period: 7–9 Aug 2026
-            </p>
-            <p
-              className="text-[9px] sm:text-[10px] text-muted-foreground/60 mb-4"
-              style={{ fontFamily: "Lato,sans-serif" }}
-            >
-              Rates per person sharing · All packages include 2 nights full
-              board, game drives & conservation fees
+              Recommended safari lodges and tented camps in the Maasai Mara (~43 km / ~1 hr 32 mins by road from Intona Heritage Farm). Click TripAdvisor or Booking.com links below to explore reviews and reserve your stay.
             </p>
 
-            <div className="space-y-2 sm:space-y-px mb-5">
+            <div className="space-y-3 mb-6">
               {[
                 {
-                  name: "Mara Siria Tented Camp",
-                  type: "Luxury Tent",
-                  road: "USD 1,150",
-                  fly: "USD 1,830",
+                  name: "Angama Mara",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d8426025-Reviews-Angama_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
                 },
                 {
-                  name: "Kilima Camp",
-                  type: "Classic Tent",
-                  road: "USD 1,553",
-                  fly: "USD 2,281",
+                  name: "Mara Elatia",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g1026010-d25280925-Reviews-Mara_Elatia_Camp-Narok_Rift_Valley_Province.html",
+                  booking: "https://www.booking.com/hotel/ke/mara-elatia-camp-masai-mara.en-gb.html",
                 },
                 {
-                  name: "Mara West Camp",
-                  type: "Safari Camp",
-                  road: "USD 1,783",
-                  fly: "USD 2,538",
+                  name: "Sanctuary Olonana",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g23379736-d569566-Reviews-Olonana_Lodge_An_A_k_Sanctuary-Mara_Rianta_Rift_Valley_Province.html",
+                },
+                {
+                  name: "Saruni Mara",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g9807487-d600516-Reviews-Saruni_Mara-Mara_North_Conservancy_Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
+                  booking: "https://www.booking.com/hotel/ke/saruni-mara-narok.en-gb.html",
+                },
+                {
+                  name: "Karen Blixen Camp",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g9807487-d1051579-Reviews-Karen_Blixen_Camp-Mara_North_Conservancy_Maasai_Mara_National_Reserve_Rift_Valley_Pro.html",
                 },
                 {
                   name: "Mara Serena Safari Lodge",
-                  type: "Safari Lodge",
-                  road: "USD 2,108",
-                  fly: "USD 2,902",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d305101-Reviews-Mara_Serena_Safari_Lodge-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
+                  booking: "https://www.booking.com/hotel/ke/mara-serena-safari-lodge.en-gb.html",
                 },
                 {
-                  name: "&Beyond Kichwa Tembo",
-                  type: "Superior View Tent",
-                  road: "USD 2,995",
-                  fly: "USD 3,896",
+                  name: "Kilima Camp Masai Mara",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d638879-Reviews-Kilima_Camp_Masai_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
                 },
                 {
-                  name: "&Beyond Bateleur Camp",
-                  type: "Luxury Camp",
-                  road: "USD 4,980",
-                  fly: "USD 6,119",
+                  name: "Pearl Mara",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g23379736-d33982169-Reviews-Pearl_Mara-Mara_Rianta_Rift_Valley_Province.html",
+                  booking: "https://www.booking.com/hotel/ke/pearl-mara-expedition-53-tours-ltd.en-gb.html",
                 },
                 {
-                  name: "Angama Mara",
-                  type: "Luxury Lodge",
-                  road: "USD 5,080",
-                  fly: "USD 6,231",
+                  name: "Basecamp Maasai Mara",
+                  tripAdvisor: "https://www.tripadvisor.com/Hotel_Review-g294209-d472057-Reviews-Basecamp_Masai_Mara-Maasai_Mara_National_Reserve_Rift_Valley_Province.html",
+                  booking: "https://www.booking.com/hotel/ke/basecamp-masai-mara.en-gb.html",
                 },
-              ].map(({ name, type, road, fly }) => (
+              ].map(({ name, tripAdvisor, booking }) => (
                 <div
                   key={name}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 sm:px-5 sm:py-3.5 bg-card border border-border rounded-sm sm:rounded-none"
+                  className="p-4 sm:p-5 bg-card border border-border hover:border-accent/40 transition-colors rounded-sm sm:rounded-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
                 >
                   <div className="flex-1 min-w-0">
                     <p
-                      className="text-sm text-foreground font-semibold sm:font-normal"
+                      className="text-sm font-semibold text-foreground"
                       style={{ fontFamily: "Playfair Display,serif" }}
                     >
                       {name}
                     </p>
                     <p
-                      className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5"
+                      className="text-xs text-muted-foreground mt-0.5"
                       style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
                     >
-                      {type}
+                      Maasai Mara National Reserve & Conservancies
                     </p>
                   </div>
-                  <div className="flex items-center justify-between sm:justify-end gap-4 text-left sm:text-right border-t border-border/40 sm:border-t-0 pt-2 sm:pt-0 mt-1 sm:mt-0">
-                    <p
-                      className="text-[9px] sm:text-[10px] text-muted-foreground"
-                      style={{ fontFamily: "Lato,sans-serif" }}
-                    >
-                      Road:{" "}
-                      <span className="text-accent font-semibold">{road}</span>
-                    </p>
-                    <p
-                      className="text-[9px] sm:text-[10px] text-muted-foreground"
-                      style={{ fontFamily: "Lato,sans-serif" }}
-                    >
-                      Fly-in:{" "}
-                      <span className="text-accent font-semibold">{fly}</span>
-                    </p>
+
+                  <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
+                    {tripAdvisor && (
+                      <a
+                        href={tripAdvisor}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[10px] text-accent font-bold px-3 py-1.5 bg-accent/10 border border-accent/30 hover:bg-accent/20 transition-colors rounded-sm inline-flex items-center gap-1.5"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        TripAdvisor
+                      </a>
+                    )}
+                    {booking && (
+                      <a
+                        href={booking}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[10px] text-accent/90 font-bold px-3 py-1.5 bg-card border border-border hover:border-accent/50 hover:text-accent transition-colors rounded-sm inline-flex items-center gap-1.5"
+                        style={{ fontFamily: "Lato,sans-serif" }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        Booking.com
+                      </a>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
-
-            <div className="bg-card border border-border p-4 sm:p-5 mb-4">
-              <p
-                className="text-[9px] sm:text-[10px] tracking-[0.25em] text-accent uppercase mb-3 font-semibold"
-                style={{ fontFamily: "Lato,sans-serif" }}
-              >
-                Package Includes
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-                {[
-                  "2 nights luxury accommodation",
-                  "Full board meals (B, L & D)",
-                  "Mara Triangle conservation fees",
-                  "Game drives per lodge itinerary",
-                  "Return transport (4×4 package)",
-                  "Return flights (fly-in package)",
-                  "Professional driver-guide (4×4)",
-                  "Government taxes & levies",
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-2">
-                    <span
-                      style={{
-                        color: "#C9A84C",
-                        fontSize: 8,
-                        marginTop: 4,
-                        flexShrink: 0,
-                      }}
-                    >
-                      ◆
-                    </span>
-                    <p
-                      className="text-[10px] sm:text-[11px] text-muted-foreground leading-4"
-                      style={{ fontFamily: "Lato,sans-serif" }}
-                    >
-                      {item}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px]">
-              <a
-                href="mailto:info@vistavoyagetravel.group"
-                className="text-accent/90 hover:text-accent transition-colors underline underline-offset-2"
-                style={{ fontFamily: "Lato,sans-serif" }}
-              >
-                info@vistavoyagetravel.group
-              </a>
-              <span className="text-muted-foreground/30">·</span>
-              <a
-                href="tel:+254790644745"
-                className="text-muted-foreground hover:text-accent transition-colors"
-                style={{ fontFamily: "Lato,sans-serif" }}
-              >
-                +254 790 644 745
-              </a>
-              <span className="text-muted-foreground/30">·</span>
-              <a
-                href="https://vistavoyagetravel.group"
-                target="_blank"
-                rel="noreferrer"
-                className="text-accent/80 hover:text-accent transition-colors underline underline-offset-2"
-                style={{ fontFamily: "Lato,sans-serif" }}
-              >
-                vistavoyagetravel.group
-              </a>
-            </div>
           </div>
         ) : (
-          <div className="space-y-3">
-            {current.hotels?.map(({ name, desc, rates, email, phone }) => (
-              <div
-                key={name}
-                className="p-4 sm:p-5 bg-card border border-border hover:border-accent/40 transition-colors rounded-sm sm:rounded-none"
-              >
-                <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
-                  <div className="space-y-1.5 flex-1 min-w-0 w-full">
-                    <div className="flex items-start justify-between gap-2 sm:block">
-                      <p
-                        className="text-sm font-semibold text-foreground"
-                        style={{ fontFamily: "Playfair Display,serif" }}
-                      >
-                        {name}
-                      </p>
-                      <span
-                        className="inline-block sm:hidden text-[10px] text-accent font-bold px-2.5 py-1 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
-                        style={{ fontFamily: "Lato,sans-serif" }}
-                      >
-                        {rates}
-                      </span>
-                    </div>
-                    <p
-                      className="text-xs text-muted-foreground leading-5"
-                      style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
+          <div className="space-y-6">
+            {/* Hotels Section */}
+            {current.hotels && current.hotels.length > 0 && (
+              <div>
+                <p
+                  className="text-[10px] tracking-[0.25em] text-accent uppercase font-bold mb-3"
+                  style={{ fontFamily: "Lato,sans-serif" }}
+                >
+                  Hotels & Resorts
+                </p>
+                <div className="space-y-3">
+                  {current.hotels.map(({ name, desc, rates, email, phone }: any) => (
+                    <div
+                      key={name}
+                      className="p-4 sm:p-5 bg-card border border-border hover:border-accent/40 transition-colors rounded-sm sm:rounded-none"
                     >
-                      {desc}
-                    </p>
-                    <div className="flex flex-wrap gap-2.5 sm:gap-4 pt-2 items-center">
-                      {email && (
-                        <a
-                          href={`mailto:${email}`}
-                          className="text-[10px] text-accent/90 hover:text-accent transition-colors underline underline-offset-2 font-medium"
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+                        <div className="space-y-1.5 flex-1 min-w-0 w-full">
+                          <div className="flex items-start justify-between gap-2 sm:block">
+                            <p
+                              className="text-sm font-semibold text-foreground"
+                              style={{ fontFamily: "Playfair Display,serif" }}
+                            >
+                              {name}
+                            </p>
+                            <span
+                              className="inline-block sm:hidden text-[10px] text-accent font-bold px-2.5 py-1 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
+                              style={{ fontFamily: "Lato,sans-serif" }}
+                            >
+                              {rates}
+                            </span>
+                          </div>
+                          <p
+                            className="text-xs text-muted-foreground leading-5"
+                            style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
+                          >
+                            {desc}
+                          </p>
+                          <div className="flex flex-wrap gap-2.5 sm:gap-4 pt-2 items-center">
+                            {email && (
+                              <a
+                                href={`mailto:${email}`}
+                                className="text-[10px] text-accent/90 hover:text-accent transition-colors underline underline-offset-2 font-medium"
+                                style={{ fontFamily: "Lato,sans-serif" }}
+                              >
+                                ✉ {email}
+                              </a>
+                            )}
+                            {phone && (
+                              <a
+                                href={`tel:${phone.replace(/\s+/g, "")}`}
+                                className="text-[10px] text-muted-foreground hover:text-accent transition-colors font-medium border border-border/80 px-2.5 py-1 bg-card/60 rounded-sm"
+                                style={{ fontFamily: "Lato,sans-serif" }}
+                              >
+                                📞 {phone}
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                        <span
+                          className="hidden sm:inline-block text-xs text-accent font-semibold px-3 py-1.5 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
                           style={{ fontFamily: "Lato,sans-serif" }}
                         >
-                          ✉ {email}
-                        </a>
-                      )}
-                      {phone && (
-                        <a
-                          href={`tel:${phone.replace(/\s+/g, "")}`}
-                          className="text-[10px] text-muted-foreground hover:text-accent transition-colors font-medium border border-border/80 px-2.5 py-1 bg-card/60 rounded-sm"
-                          style={{ fontFamily: "Lato,sans-serif" }}
-                        >
-                          📞 {phone}
-                        </a>
-                      )}
+                          {rates}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <span
-                    className="hidden sm:inline-block text-xs text-accent font-semibold px-3 py-1.5 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
-                    style={{ fontFamily: "Lato,sans-serif" }}
-                  >
-                    {rates}
-                  </span>
+                  ))}
                 </div>
               </div>
-            ))}
+            )}
+
+            {/* Airbnbs Section */}
+            {current.airbnbs && current.airbnbs.length > 0 && (
+              <div className="pt-2 border-t border-border/40">
+                <div className="flex items-center justify-between mb-3">
+                  <p
+                    className="text-[10px] tracking-[0.25em] text-accent uppercase font-bold"
+                    style={{ fontFamily: "Lato,sans-serif" }}
+                  >
+                    Airbnbs & Private Stays
+                  </p>
+                  
+                  <span
+                    className="text-[9px] text-accent/80 tracking-wider uppercase bg-accent/10 px-2 py-0.5 border border-accent/20 rounded-xs"
+                    style={{ fontFamily: "Lato,sans-serif" }}
+                  >
+                    Hyperlinks
+                  </span>
+                </div>
+                <div className="space-y-3">
+                  {current.airbnbs.map(({ name, desc, rates, link, phone, email }: any) => (
+                    <div
+                      key={name}
+                      className="p-4 sm:p-5 bg-card border border-accent/30 hover:border-accent/70 transition-colors rounded-sm sm:rounded-none"
+                    >
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+                        <div className="space-y-1.5 flex-1 min-w-0 w-full">
+                          <div className="flex items-start justify-between gap-2 sm:block">
+                            {link ? (
+                              <a
+                                href={link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-sm sm:text-base font-semibold text-accent hover:text-accent/80 underline underline-offset-4 transition-colors inline-flex items-center gap-1.5"
+                                style={{ fontFamily: "Playfair Display,serif" }}
+                              >
+                                <span>{name}</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                              </a>
+                            ) : (
+                              <p
+                                className="text-sm font-semibold text-foreground"
+                                style={{ fontFamily: "Playfair Display,serif" }}
+                              >
+                                {name}
+                              </p>
+                            )}
+                            <span
+                              className="inline-block sm:hidden text-[10px] text-accent font-bold px-2.5 py-1 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
+                              style={{ fontFamily: "Lato,sans-serif" }}
+                            >
+                              {rates}
+                            </span>
+                          </div>
+                          <p
+                            className="text-xs text-muted-foreground leading-5"
+                            style={{ fontFamily: "Lato,sans-serif", fontWeight: 300 }}
+                          >
+                            {desc}
+                          </p>
+                          <div className="flex flex-wrap gap-2.5 sm:gap-4 pt-2 items-center">
+                            {link && (
+                              <a
+                                href={link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[10px] text-accent font-bold px-3 py-1 bg-accent/15 border border-accent/50 hover:bg-accent/30 transition-colors rounded-sm inline-flex items-center gap-1.5"
+                                style={{ fontFamily: "Lato,sans-serif" }}
+                              >
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                View on Airbnb
+                              </a>
+                            )}
+                            {email && (
+                              <a
+                                href={`mailto:${email}`}
+                                className="text-[10px] text-accent/90 hover:text-accent transition-colors underline underline-offset-2 font-medium"
+                                style={{ fontFamily: "Lato,sans-serif" }}
+                              >
+                                ✉ {email}
+                              </a>
+                            )}
+                            {phone && (
+                              <a
+                                href={`tel:${phone.replace(/\s+/g, "")}`}
+                                className="text-[10px] text-muted-foreground hover:text-accent transition-colors font-medium border border-border/80 px-2.5 py-1 bg-card/60 rounded-sm"
+                                style={{ fontFamily: "Lato,sans-serif" }}
+                              >
+                                📞 {phone}
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                        <span
+                          className="hidden sm:inline-block text-xs text-accent font-semibold px-3 py-1.5 bg-accent/10 border border-accent/30 whitespace-nowrap flex-shrink-0"
+                          style={{ fontFamily: "Lato,sans-serif" }}
+                        >
+                          {rates}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -1582,9 +1662,10 @@ function InvitationScreen({
 
           {/* Right Action & Mobile Toggle */}
           <div className="flex items-center gap-3">
+            {/* Exit — visible on desktop only; on mobile it lives inside the drawer */}
             <button
               onClick={onExit}
-              className="flex items-center gap-1.5 text-[10px] text-muted-foreground hover:text-foreground transition-colors tracking-widest uppercase border border-border/80 px-3 py-1.5 rounded-sm cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 text-[10px] text-muted-foreground hover:text-foreground transition-colors tracking-widest uppercase border border-border/80 px-3 py-1.5 rounded-sm cursor-pointer"
               style={{ fontFamily: "Lato,sans-serif" }}
             >
               <LogOut size={12} /> Exit
@@ -1626,6 +1707,18 @@ function InvitationScreen({
                   </button>
                 );
               })}
+
+              {/* Exit — mobile only, visually distinct from nav items */}
+              <div className="pt-2 mt-1 border-t border-rose-500/20">
+                <button
+                  onClick={() => { setMobileMenuOpen(false); onExit(); }}
+                  className="flex items-center gap-2 w-full text-xs tracking-[0.25em] uppercase font-semibold py-2.5 px-3 rounded-sm text-rose-400 hover:text-rose-200 hover:bg-rose-500/10 border border-rose-500/30 transition-all cursor-pointer"
+                  style={{ fontFamily: "Lato,sans-serif" }}
+                >
+                  <LogOut size={13} />
+                  <span>Exit Invitation</span>
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -1810,14 +1903,14 @@ function InvitationScreen({
               </p>
 
               <div
-                className="inline-block border px-4 py-2 mb-6 max-w-[80%] md:max-w-[100%]"
+                className="inline-flex items-center justify-center border px-4 py-2.5 mb-6 max-w-[70%] w-full min-h-[56px] mx-auto overflow-hidden"
                 style={{
                   borderColor: "rgba(201,168,76,0.55)",
                   background: "rgba(4,12,6,0.65)",
                 }}
               >
                 <p
-                  className="text-lg md:text-3xl whitespace-nowrap overflow-x-auto w-full"
+                  className="text-xs sm:text-base md:text-2xl lg:text-3xl truncate max-w-full text-center"
                   style={{
                     fontFamily: "Playfair Display,serif",
                     fontStyle: "italic",
@@ -1825,7 +1918,7 @@ function InvitationScreen({
                     textShadow: "0 2px 8px rgba(0,0,0,0.5)",
                   }}
                 >
-                  Prof Hon {guest.name}
+                  {guest.name}
                 </p>
               </div>
 
@@ -3608,15 +3701,36 @@ function InvitationScreen({
             </p>
 
             <button
-              onClick={() => {
-                const text = `Koito ak Chaik — Engagement and Farewell\n8th August 2026 · 11:00 AM\nIntona Heritage Farm, Kilgoris, Narok County, Kenya\nDress Code: Traditional Elegance`;
-                const blob = new Blob([text], { type: "text/plain" });
-                const a = document.createElement("a");
-                a.href = URL.createObjectURL(blob);
-                a.download = "koito-ak-chaik-2026.txt";
-                a.click();
+              onClick={async () => {
+                const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+                const imagePath = isMobile
+                  ? "/Potrait Orientation Save The date.png"
+                  : "/save_the_date_landscape (1).png";
+                const fileName = isMobile
+                  ? "Save_The_Date_Portrait.png"
+                  : "Save_The_Date_Landscape.png";
+
+                try {
+                  const res = await fetch(imagePath);
+                  const blob = await res.blob();
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = fileName;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                } catch {
+                  const a = document.createElement("a");
+                  a.href = imagePath;
+                  a.download = fileName;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                }
               }}
-              className="flex items-center gap-2 text-[10px] text-muted-foreground hover:text-accent transition-colors mx-auto justify-center tracking-wider uppercase"
+              className="flex items-center gap-2 text-[10px] text-muted-foreground hover:text-accent transition-colors mx-auto justify-center tracking-wider uppercase cursor-pointer"
               style={{ fontFamily: "Lato,sans-serif" }}
             >
               <Download size={12} /> Save Details
@@ -4318,6 +4432,104 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
       }
     } catch (err) {
       alert("Failed to delete cluster");
+    }
+  };
+
+  const handleExportGuestsToExcel = async () => {
+    try {
+      let exportData = dbGuests.length > 0 ? dbGuests : displayGuests;
+      if (!exportData || exportData.length === 0) {
+        const res = await fetch("/api/delegates?limit=ALL");
+        const data = await res.json();
+        if (data.delegates) exportData = data.delegates;
+      }
+
+      if (!exportData || exportData.length === 0) {
+        alert("No guest records available to export.");
+        return;
+      }
+
+      const rows = exportData.map((g: any, idx: number) => {
+        const isObj = Boolean(g.table && typeof g.table === "object");
+        const tableName = isObj
+          ? g.table.name
+          : typeof g.table === "string"
+          ? g.table
+          : g.tableName || "Unassigned";
+
+        const isChecked = g.status === "CHECKED_IN";
+        const rsvpStatus = g.rsvpStatus || (g.status === "CANCELLED" ? "DECLINED" : "PENDING");
+
+        return {
+          "No.": idx + 1,
+          "PIN / Code": g.code || g.pin || "",
+          "Guest Name": g.name || g.fullName || "",
+          "Cluster / Category": g.cluster || "Guests",
+          "Role": g.role || "Delegate",
+          "Table": tableName,
+          "Seat Number": g.seatNumber || "N/A",
+          "Attendance Status": isChecked ? "CHECKED IN" : (g.status || "INVITED"),
+          "RSVP Status": rsvpStatus,
+          "Dietary Requirements": g.dietary || "",
+          "Plus One Name": g.guestName || "",
+        };
+      });
+
+      const XLSX = await import("xlsx");
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+
+      worksheet["!cols"] = [
+        { wch: 6 },
+        { wch: 12 },
+        { wch: 28 },
+        { wch: 20 },
+        { wch: 16 },
+        { wch: 22 },
+        { wch: 12 },
+        { wch: 18 },
+        { wch: 15 },
+        { wch: 25 },
+        { wch: 22 },
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Guests List");
+
+      const dateStr = new Date().toISOString().split("T")[0];
+      XLSX.writeFile(workbook, `Guests_List_${dateStr}.xlsx`);
+    } catch (err) {
+      console.error("🔴 [EXPORT EXCEL ERROR]:", err);
+      const exportData = dbGuests.length > 0 ? dbGuests : displayGuests;
+      if (!exportData || exportData.length === 0) return;
+      const headers = ["No.", "PIN Code", "Guest Name", "Cluster", "Role", "Table", "Seat Number", "Attendance Status", "RSVP Status", "Dietary", "Plus One Name"];
+      const csvRows = [headers.join(",")];
+      exportData.forEach((g: any, idx: number) => {
+        const isObj = Boolean(g.table && typeof g.table === "object");
+        const tableName = isObj ? g.table.name : typeof g.table === "string" ? g.table : g.tableName || "Unassigned";
+        const isChecked = g.status === "CHECKED_IN";
+        const row = [
+          idx + 1,
+          `"${g.code || g.pin || ""}"`,
+          `"${(g.name || g.fullName || "").replace(/"/g, '""')}"`,
+          `"${(g.cluster || "Guests").replace(/"/g, '""')}"`,
+          `"${(g.role || "Delegate").replace(/"/g, '""')}"`,
+          `"${tableName.replace(/"/g, '""')}"`,
+          `"${g.seatNumber || "N/A"}"`,
+          `"${isChecked ? "CHECKED IN" : (g.status || "INVITED")}"`,
+          `"${g.rsvpStatus || "PENDING"}"`,
+          `"${(g.dietary || "").replace(/"/g, '""')}"`,
+          `"${(g.guestName || "").replace(/"/g, '""')}"`,
+        ];
+        csvRows.push(row.join(","));
+      });
+      const blob = new Blob([csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Guests_List_${new Date().toISOString().split("T")[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
@@ -5127,6 +5339,13 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
               </div>
 
               <div className="flex gap-3 items-center flex-wrap">
+                <button
+                  onClick={handleExportGuestsToExcel}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-emerald-800/90 hover:bg-emerald-700 text-white text-[10px] tracking-wider uppercase border border-emerald-500/50 transition-colors cursor-pointer font-bold shadow-sm"
+                  style={{ fontFamily: "Lato,sans-serif" }}
+                >
+                  <FileSpreadsheet size={13} /> Export Guests (Excel)
+                </button>
                 <input
                   type="file"
                   ref={fileInputRef}
