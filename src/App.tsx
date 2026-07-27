@@ -1470,12 +1470,7 @@ function AccommodationTabsSection() {
                     Airbnbs & Private Stays
                   </p>
 
-                  <span
-                    className="text-[9px] text-accent/80 tracking-wider uppercase bg-accent/10 px-2 py-0.5 border border-accent/20 rounded-xs"
-                    style={{ fontFamily: "Lato,sans-serif" }}
-                  >
-                    Hyperlinks
-                  </span>
+               
                 </div>
                 <div className="space-y-3">
                   {current.airbnbs.map(({ name, desc, rates, link, phone, email }: any) => (
