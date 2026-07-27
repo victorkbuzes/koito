@@ -12,10 +12,22 @@ export async function GET(request, { params }) {
       return Response.json({ error: "Invalid delegate ID" }, { status: 400 });
     }
 
-    const guest = await prisma.guest.findUnique({
+    let guest = await prisma.guest.findUnique({
       where: { id: String(delegateId) },
       include: { qrCode: true },
     });
+
+    if (!guest) {
+      guest = await prisma.guest.findFirst({
+        where: {
+          OR: [
+            { qrCode: { code: String(delegateId) } },
+            { fullName: { equals: String(delegateId), mode: "insensitive" } },
+          ],
+        },
+        include: { qrCode: true },
+      });
+    }
 
     if (!guest) {
       return Response.json({ error: "Delegate not found" }, { status: 404 });

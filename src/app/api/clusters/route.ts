@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getDefaultEvent, formatGuest } from "@/lib/utils";
+import { getDefaultEvent } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -15,26 +15,12 @@ export async function GET() {
           select: { guests: true },
         },
         guests: {
-          include: {
-            qrCode: true,
-            checkIn: true,
-            cluster: true,
-            seatingAssignment: {
-              include: {
-                seat: {
-                  include: {
-                    diningTable: true,
-                  },
-                },
-              },
-            },
-            guestRoles: {
-              include: {
-                role: true,
-              },
-            },
+          select: {
+            id: true,
+            fullName: true,
+            pin: true,
           },
-          orderBy: { fullName: "asc" },
+          take: 50,
         },
       },
       orderBy: { name: "asc" },
@@ -62,26 +48,12 @@ export async function GET() {
             select: { guests: true },
           },
           guests: {
-            include: {
-              qrCode: true,
-              checkIn: true,
-              cluster: true,
-              seatingAssignment: {
-                include: {
-                  seat: {
-                    include: {
-                      diningTable: true,
-                    },
-                  },
-                },
-              },
-              guestRoles: {
-                include: {
-                  role: true,
-                },
-              },
+            select: {
+              id: true,
+              fullName: true,
+              pin: true,
             },
-            orderBy: { fullName: "asc" },
+            take: 50,
           },
         },
         orderBy: { name: "asc" },
@@ -93,7 +65,7 @@ export async function GET() {
       name: c.name,
       description: c.description,
       guestCount: c._count.guests,
-      guests: c.guests.map(formatGuest),
+      guests: c.guests,
       createdAt: c.createdAt,
     }));
 

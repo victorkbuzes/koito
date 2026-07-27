@@ -42,31 +42,12 @@ export async function POST(request) {
       tablesMap.set(t.name.toLowerCase().trim(), t);
     }
 
-    const clean = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-
-    let clustersMap = new Map();
-    const dbClusters = await prisma.cluster.findMany({
-      where: { eventId: event.id },
-    });
-    for (const c of dbClusters) {
-      clustersMap.set(clean(c.name), c);
-    }
-    let defaultCluster = dbClusters.find((c) => clean(c.name) === "guests") || dbClusters[0] || null;
-    if (!defaultCluster) {
-      defaultCluster = await prisma.cluster.create({
-        data: {
-          eventId: event.id,
-          name: "Guests",
-          description: "Honored Guests and General Attendees",
-        },
-      });
-      clustersMap.set(clean("Guests"), defaultCluster);
-    }
-
     let addedCount = 0;
     let updatedCount = 0;
     let skippedCount = 0;
     const assignedSeatIds = new Set();
+
+    const clean = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
     for (let index = 0; index < rows.length; index++) {
       const row = rows[index];
@@ -107,7 +88,6 @@ export async function POST(request) {
 
       const rawPhone = getVal(["phone", "phone number", "mobile", "telephone", "contact"]);
       const role = getVal(["role", "title", "category"]);
-      const rawCluster = getVal(["cluster", "cluster name", "cluster_name", "delegation", "group"]);
       const specifiedTableName = getVal(["table", "table name", "assigned table", "seating", "table_name", "dining table", "table #"]);
       const rawSeat = getVal(["seat", "seat number", "seat_number", "chair"]);
 
@@ -120,16 +100,6 @@ export async function POST(request) {
       const customCode = getVal(["code", "pin", "passcode", "qr code"]);
       const phone = normalizePhone(rawPhone);
       const parsedSeatNumber = rawSeat ? parseInt(rawSeat) || null : null;
-
-      // Determine Cluster strictly against existing database clusters
-      let targetClusterId = defaultCluster ? defaultCluster.id : null;
-      if (rawCluster) {
-        const cleanRawCluster = clean(rawCluster);
-        const matchedCluster = clustersMap.get(cleanRawCluster);
-        if (matchedCluster) {
-          targetClusterId = matchedCluster.id;
-        }
-      }
 
       let targetSeatId = null;
 
@@ -185,7 +155,6 @@ export async function POST(request) {
       if (existingGuest) {
         const updateData = {};
         if (name) updateData.fullName = name;
-        if (targetClusterId) updateData.clusterId = targetClusterId;
 
         await prisma.guest.update({
           where: { id: existingGuest.id },
@@ -217,7 +186,6 @@ export async function POST(request) {
               eventId: event.id,
               fullName: name,
               phone: phone || null,
-              clusterId: targetClusterId,
               pin: code,
               pinHash: code,
               pinFingerprint: code,

@@ -227,7 +227,6 @@ export function formatGuest(guest: any) {
     name: guest.fullName,
     phone: guest.phone || null,
     cluster: clusterName,
-    clusterId: guest.clusterId || guest.cluster?.id || null,
     role: roleName || "Delegate",
     status: checkedIn ? "CHECKED_IN" : "INVITED",
     rsvpStatus,

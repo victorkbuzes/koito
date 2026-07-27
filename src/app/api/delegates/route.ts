@@ -25,9 +25,9 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, phone, role, cluster, tableId, notes, code } = body;
+    const { name, phone, role, tableId, notes, code } = body;
 
-    const delegate = await createGuest({ name, phone, role, cluster, tableId, notes, code });
+    const delegate = await createGuest({ name, phone, role, tableId, notes, code });
     return NextResponse.json(delegate, { status: 201 });
   } catch (error: any) {
     const msg: string = error.message || "";
