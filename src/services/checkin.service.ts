@@ -233,3 +233,68 @@ export async function processCheckIn(input: CheckInInput) {
     };
   });
 }
+
+/**
+ * Service function to revoke / undo a guest check-in.
+ */
+export async function revokeCheckIn(input: CheckInInput) {
+  const { code, delegateId } = input;
+  let guest: any = null;
+
+  if (delegateId) {
+    guest = await prisma.guest.findUnique({
+      where: { id: String(delegateId) },
+      include: includeGuestDetails,
+    });
+  } else if (code) {
+    const qrRecord = await prisma.qRCode.findUnique({
+      where: { code: String(code).trim() },
+      include: {
+        guest: {
+          include: includeGuestDetails,
+        },
+      },
+    });
+    guest = qrRecord?.guest || null;
+  }
+
+  if (!guest) {
+    throw new Error("INVALID_GUEST");
+  }
+
+  return await prisma.$transaction(async (tx) => {
+    // Delete check-in record
+    await tx.checkIn.deleteMany({
+      where: { guestId: guest.id },
+    });
+
+    const updatedGuest = await tx.guest.findUnique({
+      where: { id: guest.id },
+      include: includeGuestDetails,
+    });
+
+    const formattedDelegate = formatGuest(updatedGuest);
+
+    await createAuditLog(
+      {
+        actorType: "ADMIN",
+        actorId: guest.id,
+        action: "CHECK_IN_REVOKED",
+        entityType: "CHECK_IN",
+        entityId: guest.id,
+        metadata: { code, guestName: guest.fullName },
+      },
+      tx
+    );
+
+    return {
+      message: `Check-in revoked for ${guest.fullName}`,
+      id: updatedGuest?.id,
+      name: updatedGuest?.fullName,
+      code: updatedGuest?.qrCode?.code || code,
+      status: "INVITED",
+      checkedIn: false,
+      delegate: formattedDelegate,
+    };
+  });
+}

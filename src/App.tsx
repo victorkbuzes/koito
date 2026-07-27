@@ -1955,14 +1955,14 @@ function InvitationScreen({
               </p>
 
               <div
-                className="inline-flex items-center justify-center border px-4 py-2.5 mb-6 max-w-[50%] w-full min-h-[46px] mx-auto overflow-hidden"
+                className="inline-flex items-center justify-center border px-5 py-2.5 mb-6 max-w-[90%] sm:max-w-[80%] w-auto min-h-[46px] mx-auto"
                 style={{
                   borderColor: "rgba(201,168,76,0.55)",
                   background: "rgba(4,12,6,0.65)",
                 }}
               >
                 <p
-                  className="text-lg sm:text-base md:text-2xl lg:text-3xl truncate max-w-full text-center"
+                  className="text-sm sm:text-base md:text-xl lg:text-2xl leading-snug max-w-full text-center break-words"
                   style={{
                     fontFamily: "Playfair Display,serif",
                     fontStyle: "italic",
@@ -5008,6 +5008,68 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
     }
   };
 
+  const handleRevokeCheckin = async (delegate: any) => {
+    if (!delegate) return;
+    setVerifyLoading(true);
+    setVerifyMessage(null);
+    try {
+      const res = await fetch("/api/delegates/checkin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          delegateId: delegate.id,
+          code: delegate.code || delegate.pin,
+          action: "revoke",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setVerifyMessage({
+          type: "success",
+          text: `✓ Check-in revoked for ${delegate.name || delegate.fullName || "guest"}.`,
+        });
+        setVerifyCandidates((prev) =>
+          prev.map((d) =>
+            d.id === delegate.id || (d.code && d.code === (delegate.code || delegate.pin))
+              ? { ...d, status: "INVITED", checkedIn: false }
+              : d,
+          ),
+        );
+        setRegistryDelegates((prev) =>
+          prev.map((d) =>
+            d.id === delegate.id || d.pin === (delegate.code || delegate.pin)
+              ? { ...d, status: "INVITED", checkedIn: false }
+              : d,
+          ),
+        );
+        // Refresh db list & tables
+        fetch("/api/delegates?limit=ALL")
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.delegates) setDbGuests(d.delegates);
+            if (d.stats) setDbStats(d.stats);
+          });
+        fetch("/api/tables")
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.tables) setTables(d.tables);
+          });
+      } else {
+        setVerifyMessage({
+          type: "error",
+          text: data.error || "Failed to revoke check-in.",
+        });
+      }
+    } catch (err) {
+      setVerifyMessage({
+        type: "error",
+        text: "Network error revoking check-in.",
+      });
+    } finally {
+      setVerifyLoading(false);
+    }
+  };
+
   const handleAddGuestDirect = async () => {
     if (!newGuest.name) return;
     try {
@@ -5313,12 +5375,22 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                           · Cluster: {d.cluster || "General"}
                         </span>
                       </div>
-                      <span
-                        className="text-[9px] tracking-widest uppercase px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold flex-shrink-0"
-                        style={{ fontFamily: "Lato,sans-serif" }}
-                      >
-                        ✓ CONFIRMED
-                      </span>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span
+                          className="text-[9px] tracking-widest uppercase px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold"
+                          style={{ fontFamily: "Lato,sans-serif" }}
+                        >
+                          ✓ CONFIRMED
+                        </span>
+                        <button
+                          onClick={() => handleRevokeCheckin(d)}
+                          disabled={verifyLoading}
+                          className="px-2 py-1 text-[9px] text-amber-300/80 hover:text-amber-200 bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 uppercase tracking-wider transition-colors cursor-pointer"
+                          style={{ fontFamily: "Lato,sans-serif" }}
+                        >
+                          Revoke
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <div
@@ -5601,20 +5673,28 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                         </button>
                       )}
                       <button
-                        onClick={() =>
-                          setGuests(
-                            guests.map((x) =>
-                              guestKey(x.pin, x.name) ===
-                                guestKey(g.pin, g.name)
-                                ? { ...x, revoked: !x.revoked }
-                                : x,
-                            ),
-                          )
-                        }
+                        onClick={() => {
+                          if (isChecked) {
+                            handleRevokeCheckin({
+                              id: g.id,
+                              code: g.pin,
+                              name: g.name,
+                            });
+                          } else {
+                            setGuests(
+                              guests.map((x) =>
+                                guestKey(x.pin, x.name) ===
+                                  guestKey(g.pin, g.name)
+                                  ? { ...x, revoked: !x.revoked }
+                                  : x,
+                              ),
+                            );
+                          }
+                        }}
                         className="text-[9px] text-primary-foreground/35 hover:text-accent transition-colors uppercase tracking-wider cursor-pointer"
                         style={{ fontFamily: "Lato,sans-serif" }}
                       >
-                        {g.revoked ? "Restore" : "Revoke"}
+                        {isChecked ? "Revoke Check-in" : g.revoked ? "Restore" : "Revoke"}
                       </button>
                       <button
                         onClick={() =>
