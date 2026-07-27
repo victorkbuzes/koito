@@ -2175,13 +2175,13 @@ function InvitationScreen({
             {/* ----------------------------------------------------------------------------- */}
 
             {/* Closing ornament */}
-            <div className="flex justify-center mt-8 mb-3">
+            <div className="flex justify-center mt-8 mb-5">
               <OrnamentalRule wide />
             </div>
             <DiamondOrnament size={10} color="#C9A84C" opacity={0.5} />
 
             {/* Scroll prompt */}
-            <motion.div
+            {/* <motion.div
               className="mt-10 flex flex-col items-center gap-2 opacity-50"
               animate={{ y: [0, 6, 0] }}
               transition={{
@@ -2208,7 +2208,7 @@ function InvitationScreen({
                   strokeLinejoin="round"
                 />
               </svg>
-            </motion.div>
+            </motion.div> */}
           </div>
         </motion.div>
 
