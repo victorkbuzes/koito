@@ -129,6 +129,30 @@ export async function POST(request) {
       code: -1,
     };
 
+    // Direct exact-match map for the expected column names
+    // Keys are cleaned (lowercase, alphanumeric only), values are colMap field names
+    const EXACT_COL_ALIASES = {
+      // name
+      name: "name", fullname: "name", fullname2: "name", guestname: "name",
+      delegatename: "name", membername: "name", attendeename: "name", personname: "name", names: "name",
+      // title
+      title: "title", salutation: "title", honorific: "title", prefix: "title",
+      // phone
+      phone: "phone", phonenumber: "phone", mobile: "phone", telephone: "phone", contact: "phone", cellphone: "phone", contacts: "phone",
+      // cluster
+      cluster: "cluster", delegation: "cluster", group: "cluster", team: "cluster", department: "cluster", designation: "cluster",
+      // country
+      country: "country", county: "country", location: "country", residence: "country", nationality: "country", region: "country",
+      // table
+      table: "table", seating: "table", tablenumber: "table", tablename: "table",
+      // seat
+      seat: "seat", seatnumber: "seat", chair: "seat", chairnumber: "seat",
+      // role
+      role: "role", category: "role", type: "role",
+      // code
+      code: "code", pin: "code", accesscode: "code", guestcode: "code", invitecode: "code",
+    };
+
     const HEADER_KEYWORDS = [
       "fullname", "full name", "guest name", "delegate name", "member name", "attendee name",
       "person name", "names", "name", "phone", "phone number", "mobile", "telephone", "contact",
@@ -143,35 +167,59 @@ export async function POST(request) {
       rowCells.forEach((cell) => {
         const cClean = clean(cell);
         if (!cClean) return;
-        if (HEADER_KEYWORDS.some((kw) => clean(kw) === cClean || (cClean.includes(clean(kw)) && !cClean.includes("samoei") && !cClean.includes("ruto")))) {
+        if (
+          EXACT_COL_ALIASES[cClean] ||
+          HEADER_KEYWORDS.some((kw) => clean(kw) === cClean || (cClean.includes(clean(kw)) && !cClean.includes("samoei") && !cClean.includes("ruto")))
+        ) {
           matchCount++;
         }
       });
 
       if (matchCount >= 2 || (matchCount >= 1 && rowCells.some(c => clean(c) === "name" || clean(c) === "fullname"))) {
         headerRowIndex = r;
+
+        // Pass 1: exact alias match (handles Title, Name, Cluster, Phone, Country directly)
         rowCells.forEach((cell, idx) => {
           const cClean = clean(cell);
+          const field = EXACT_COL_ALIASES[cClean];
+          if (field && colMap[field] === -1) {
+            colMap[field] = idx;
+          }
+        });
+
+        // Pass 2: fuzzy fallback for anything not yet mapped
+        rowCells.forEach((cell, idx) => {
+          const cClean = clean(cell);
+          if (!cClean) return;
           if (colMap.name === -1 && (cClean.includes("name") || cClean.includes("member") || cClean.includes("guest") || cClean.includes("delegate") || cClean.includes("person"))) {
             colMap.name = idx;
-          } else if (colMap.title === -1 && (cClean.includes("title") || cClean.includes("salutation") || cClean.includes("prefix") || cClean.includes("honorific"))) {
+          }
+          if (colMap.title === -1 && (cClean.includes("title") || cClean.includes("salutation") || cClean.includes("prefix") || cClean.includes("honorific"))) {
             colMap.title = idx;
-          } else if (colMap.phone === -1 && (cClean.includes("phone") || cClean.includes("mobile") || cClean.includes("telephone") || cClean.includes("contact"))) {
+          }
+          if (colMap.phone === -1 && (cClean.includes("phone") || cClean.includes("mobile") || cClean.includes("telephone") || cClean.includes("contact"))) {
             colMap.phone = idx;
-          } else if (colMap.cluster === -1 && (cClean.includes("cluster") || cClean.includes("delegation") || cClean.includes("group"))) {
+          }
+          if (colMap.cluster === -1 && (cClean.includes("cluster") || cClean.includes("delegation") || cClean.includes("group") || cClean.includes("designation"))) {
             colMap.cluster = idx;
-          } else if (colMap.country === -1 && (cClean.includes("country") || cClean.includes("county") || cClean.includes("location") || cClean.includes("residence"))) {
+          }
+          if (colMap.country === -1 && (cClean.includes("country") || cClean.includes("county") || cClean.includes("location") || cClean.includes("residence"))) {
             colMap.country = idx;
-          } else if (colMap.table === -1 && (cClean.includes("table") || cClean.includes("seating"))) {
+          }
+          if (colMap.table === -1 && (cClean.includes("table") || cClean.includes("seating"))) {
             colMap.table = idx;
-          } else if (colMap.seat === -1 && (cClean.includes("seat") || cClean.includes("chair"))) {
+          }
+          if (colMap.seat === -1 && (cClean.includes("seat") || cClean.includes("chair"))) {
             colMap.seat = idx;
-          } else if (colMap.role === -1 && (cClean.includes("role") || cClean.includes("category"))) {
+          }
+          if (colMap.role === -1 && (cClean.includes("role") || cClean.includes("category"))) {
             colMap.role = idx;
-          } else if (colMap.code === -1 && (cClean.includes("code") || cClean.includes("pin"))) {
+          }
+          if (colMap.code === -1 && (cClean.includes("code") || cClean.includes("pin"))) {
             colMap.code = idx;
           }
         });
+
         break;
       }
     }

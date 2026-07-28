@@ -405,15 +405,11 @@ function PinGate({
   };
 
   const handleChange = (i: number, val: string) => {
-    // Accept only characters from the unambiguous alphanumeric charset, uppercased
-    const ALLOWED = /[ACDEFGHJKMNPQRTUVWXY2346789]/;
+    // Accept any alphanumeric character, uppercased
     const cleaned = val
       .toUpperCase()
       .replace(/[^A-Z0-9]/g, "")  // strip non-alphanumeric
-      .split("")
-      .filter((ch) => ALLOWED.test(ch))
-      .slice(-1)
-      .join("");
+      .slice(-1);
     const c = cleaned;
     const next = [...digits];
     next[i] = c;
@@ -669,7 +665,7 @@ function PinGate({
                     ref={refs[i]}
                     type="text"
                     inputMode="text"
-                    pattern="[ACDEFGHJKMNPQRTUVWXY2346789]*"
+                    pattern="[A-Z0-9]*"
                     maxLength={1}
                     autoCapitalize="characters"
                     autoCorrect="off"
