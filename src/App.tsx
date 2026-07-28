@@ -2405,18 +2405,7 @@ function InvitationScreen({
                     </p>
                   )}
                
-                  {rsvpRecord.guestName && (
-                    <p
-                      className={`text-[10px] tracking-wider ${
-                        rsvpRecord.attending === "yes"
-                          ? "text-emerald-300/80"
-                          : "text-rose-300/80"
-                      }`}
-                      style={{ fontFamily: "Lato,sans-serif" }}
-                    >
-                      Plus-One: {rsvpRecord.guestName}
-                    </p>
-                  )}
+
                   {rsvpRecord.dietary && (
                     <p
                       className={`text-[10px] tracking-wider ${
@@ -4278,30 +4267,7 @@ function RSVPForm({
             </div>
           </div>
 
-          <AnimatePresence>
-            {form.attending === "yes" && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-              >
-                <p
-                  className="text-[9px] tracking-[0.35em] text-muted-foreground uppercase mb-4"
-                  style={{ fontFamily: "Lato,sans-serif" }}
-                >
-                  Guest Name <span className="opacity-40">— optional</span>
-                </p>
-                <input
-                  type="text"
-                  value={form.guestName}
-                  onChange={(e) => set("guestName", e.target.value)}
-                  placeholder="Full name of your guest"
-                  className="w-full bg-card border border-border px-5 py-4 text-sm text-foreground focus:outline-none focus:border-accent transition-colors placeholder:text-muted-foreground/40"
-                  style={{ fontFamily: "Playfair Display,serif" }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+
 
           <div>
             <p
@@ -4846,7 +4812,6 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
           "Attendance Status": isChecked ? "CHECKED IN" : (g.status || "INVITED"),
           "RSVP Status": rsvpStatus,
           "Dietary Requirements": g.dietary || "",
-          "Plus One Name": g.guestName || "",
         };
       });
 
@@ -4876,7 +4841,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
       console.error("🔴 [EXPORT EXCEL ERROR]:", err);
       const exportData = dbGuests.length > 0 ? dbGuests : displayGuests;
       if (!exportData || exportData.length === 0) return;
-      const headers = ["No.", "PIN Code", "Guest Name", "Cluster", "Role", "Table", "Seat Number", "Attendance Status", "RSVP Status", "Dietary", "Plus One Name"];
+      const headers = ["No.", "PIN Code", "Guest Name", "Cluster", "Role", "Table", "Seat Number", "Attendance Status", "RSVP Status", "Dietary"];
       const csvRows = [headers.join(",")];
       exportData.forEach((g: any, idx: number) => {
         const isObj = Boolean(g.table && typeof g.table === "object");
@@ -4893,7 +4858,6 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
           `"${isChecked ? "CHECKED IN" : (g.status || "INVITED")}"`,
           `"${g.rsvpStatus || "PENDING"}"`,
           `"${(g.dietary || "").replace(/"/g, '""')}"`,
-          `"${(g.guestName || "").replace(/"/g, '""')}"`,
         ];
         csvRows.push(row.join(","));
       });
@@ -5793,13 +5757,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                 >
                   <Download size={12} /> Download PDF Badges (ZIP)
                 </button>
-                <button
-                  onClick={() => setShowAdd(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-accent text-accent-foreground text-[10px] tracking-wider uppercase hover:bg-accent/80 transition-colors cursor-pointer font-semibold"
-                  style={{ fontFamily: "Lato,sans-serif" }}
-                >
-                  <Plus size={12} /> Add Guest
-                </button>
+              
               </div>
             </div>
 
@@ -6980,17 +6938,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                           ✓ ATTENDING
                         </span>
                       </div>
-                      {r.guestName && (
-                        <p
-                          className="text-xs text-primary-foreground/60"
-                          style={{ fontFamily: "Lato,sans-serif" }}
-                        >
-                          Plus-One Guest:{" "}
-                          <span className="text-primary-foreground">
-                            {r.guestName}
-                          </span>
-                        </p>
-                      )}
+
                       {r.dietary && (
                         <p
                           className="text-xs text-primary-foreground/60"
