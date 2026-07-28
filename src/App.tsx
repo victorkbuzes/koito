@@ -47,6 +47,7 @@ const chalVideo = "/imports/Charlene3.mp4";
 
 interface GuestRecord {
   name: string;
+  title?: string;
   relation: string;
   table: string;
   pin?: string;
@@ -1966,7 +1967,9 @@ function InvitationScreen({
                     textShadow: "0 2px 8px rgba(0,0,0,0.5)",
                   }}
                 >
-                  {guest.name}
+                  {guest.title && !guest.name.toLowerCase().startsWith(guest.title.toLowerCase())
+                    ? `${guest.title} ${guest.name}`
+                    : guest.name}
                 </p>
               </div>
 
@@ -3190,7 +3193,9 @@ function InvitationScreen({
                   className="text-lg text-foreground"
                   style={{ fontFamily: "Playfair Display,serif" }}
                 >
-                  {guest.name}
+                  {guest.title && !guest.name.toLowerCase().startsWith(guest.title.toLowerCase())
+                    ? `${guest.title} ${guest.name}`
+                    : guest.name}
                 </p>
               </div>
             </div>
@@ -3228,7 +3233,9 @@ function InvitationScreen({
                     className="text-2xl text-white font-serif italic"
                     style={{ fontFamily: "Playfair Display,serif" }}
                   >
-                    {guest.name}
+                    {guest.title && !guest.name.toLowerCase().startsWith(guest.title.toLowerCase())
+                      ? `${guest.title} ${guest.name}`
+                      : guest.name}
                   </h3>
                 </div>
 

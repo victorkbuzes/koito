@@ -117,7 +117,11 @@ export async function renderPage1(pdfDoc, fonts, event, guest) {
   // Warmly Invite & Guest Name
   drawInColumn("warmly invite", 555, serifItalic, 14);
 
-  const guestName = (guest?.name || "Jane Doe").trim();
+  const rawGuestName = (guest?.name || guest?.fullName || "Jane Doe").trim();
+  const guestTitle = (guest?.title || guest?.honorific || "").trim();
+  const guestName = guestTitle && !rawGuestName.toLowerCase().startsWith(guestTitle.toLowerCase())
+    ? `${guestTitle} ${rawGuestName}`
+    : rawGuestName;
   drawInColumn(guestName, 520, serifBold, 23);
 
   // Centered Horizontal Rule under guest name
