@@ -6,6 +6,7 @@ import type { CheckInScanResult } from "@prisma/client";
 export interface VerifyCodeResult {
   id: string;
   name: string;
+  title?: string;
   code: string;
   role: string;
   table: string;
@@ -18,6 +19,7 @@ const includeGuestDetails = {
   qrCode: true,
   checkIn: true,
   cluster: true,
+  title: true,
   seatingAssignment: {
     include: {
       seat: {
@@ -83,6 +85,7 @@ export async function verifyGuestCode(code: string): Promise<VerifyCodeResult> {
   return {
     id: guest.id,
     name: guest.fullName,
+    title: guest.title?.name || undefined,
     code: guest.pin || guest.qrCode?.code || queryCode,
     role: roleName,
     table: tableName,

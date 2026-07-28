@@ -413,6 +413,7 @@ function PinGate({
           const mapped: StoredGuest = {
             pin: dbGuest.code || pin,
             name: dbGuest.name,
+            title: dbGuest.title || undefined,
             relation: dbGuest.role || "Honored Guest",
             table:
               typeof dbGuest.table === "object"
@@ -863,7 +864,9 @@ function GuestSelector({
                     color: "#FFFFFF",
                   }}
                 >
-                  {g.name}
+                  {g.title && !g.name.toLowerCase().startsWith(g.title.toLowerCase())
+                    ? `${g.title} ${g.name}`
+                    : g.name}
                 </p>
                 <p
                   className="text-[9px] tracking-wider mt-0.5"
@@ -1581,8 +1584,8 @@ function InvitationScreen({
           setCardStatus(found.attending === "yes" ? "yes" : "no");
         }
       })
-      .catch((err) => {
-        console.error("🔴 [RSVP FETCH ERROR] Failed to load guest RSVP from database:", err);
+      .catch(() => {
+        // Silently default to unanswered/empty RSVP state if fetch fails or no RSVP exists
       });
 
     return () => {
@@ -4102,8 +4105,8 @@ function RSVPForm({
           });
         }
       })
-      .catch((err) => {
-        console.error("🔴 [RSVP FORM FETCH ERROR] Failed to load guest RSVP from database:", err);
+      .catch(() => {
+        // Silently default to empty form if fetch fails or no RSVP exists
       });
 
     return () => {
@@ -4192,7 +4195,9 @@ function RSVPForm({
             className="text-[9px] tracking-[0.4em] text-accent uppercase mt-5 mb-3"
             style={{ fontFamily: "Lato,sans-serif" }}
           >
-            Dear {guest.name.split(" ")[0]}
+            Dear {guest.title && !guest.name.toLowerCase().startsWith(guest.title.toLowerCase())
+              ? `${guest.title} ${guest.name}`
+              : guest.name}
           </p>
           <h2
             className="text-4xl text-foreground"
@@ -4401,7 +4406,9 @@ function ConfirmedScreen({
             className="text-4xl text-foreground mb-3"
             style={{ fontFamily: "Great Vibes,cursive" }}
           >
-            Thank you, {guest.name.split(" ")[0]}
+            Thank you, {guest.title && !guest.name.toLowerCase().startsWith(guest.title.toLowerCase())
+              ? `${guest.title} ${guest.name}`
+              : guest.name}
           </h2>
           <OrnamentalRule className="mx-auto mb-6" />
           <p
