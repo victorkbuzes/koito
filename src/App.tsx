@@ -650,7 +650,7 @@ function PinGate({
                   fontWeight: 300,
                 }}
               >
-                Enter Your Code
+                Enter Your Pin
               </p>
 
               {/* PIN boxes */}
