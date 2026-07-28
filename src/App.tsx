@@ -70,10 +70,48 @@ interface RSVPRecord {
 // Composite key used for revoke: "pin::name"
 const guestKey = (pin: string, name: string) => `${pin}::${name}`;
 
-// const INITIAL_GUESTS: StoredGuest[] = [];
-
 const MAX_ATTEMPTS = 5;
 type Screen = "pin" | "select" | "invitation" | "rsvp" | "confirmed" | "admin";
+
+// ─── Session persistence helpers ───────────────────────────────────────────────
+const SESSION_KEY = "koito_guest_session";
+const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+
+interface PersistedSession {
+  screen: Screen;
+  guest: GuestRecord | null;
+  pin: string;
+  pendingGuests: StoredGuest[];
+  lastActivity: number;
+}
+
+function saveSession(data: PersistedSession) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+  } catch {}
+}
+
+function loadSession(): PersistedSession | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const data: PersistedSession = JSON.parse(raw);
+    // Invalidate if inactive for more than 5 minutes
+    if (Date.now() - data.lastActivity > INACTIVITY_TIMEOUT_MS) {
+      sessionStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function clearSession() {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+}
+
+
 
 // // Gallery
 // const GALLERY = [
@@ -326,7 +364,6 @@ function PinGate({
   const [shaking, setShaking] = useState(false);
   const [cracking, setCracking] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [keypadMode, setKeypadMode] = useState<"numeric" | "text">("numeric");
   const refs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -368,17 +405,12 @@ function PinGate({
   };
 
   const handleChange = (i: number, val: string) => {
-    // First box accepts one letter (A-Z) or one digit; rest are digits only
-    let c: string;
-    if (i === 0) {
-      const cleaned = val
-        .replace(/[^a-zA-Z\d]/g, "")
-        .slice(-1)
-        .toUpperCase();
-      c = cleaned;
-    } else {
-      c = val.replace(/\D/g, "").slice(-1);
-    }
+    // Accept any alphanumeric character, uppercased
+    const cleaned = val
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, "")  // strip non-alphanumeric
+      .slice(-1);
+    const c = cleaned;
     const next = [...digits];
     next[i] = c;
     setDigits(next);
@@ -513,11 +545,7 @@ function PinGate({
         className="relative z-10 flex flex-col items-center pt-8 px-10 pb-1"
       >
         <p
-          onClick={() => {
-            setKeypadMode((prev) => (prev === "numeric" ? "text" : "numeric"));
-            refs[0].current?.focus();
-          }}
-          className="text-[10px] tracking-[0.55em] uppercase mb-3 cursor-pointer select-none"
+          className="text-[10px] tracking-[0.55em] uppercase mb-3 cursor-default select-none"
           style={{
             fontFamily: "Lato,sans-serif",
             color: "rgba(201,168,76,0.9)",
@@ -622,7 +650,7 @@ function PinGate({
                   fontWeight: 300,
                 }}
               >
-                Enter Your PIN
+                Enter Your Code
               </p>
 
               {/* PIN boxes */}
@@ -636,10 +664,13 @@ function PinGate({
                     key={i}
                     ref={refs[i]}
                     type="text"
-                    inputMode={i === 0 ? keypadMode : "numeric"}
-                    pattern={i > 0 ? "[0-9]*" : undefined}
+                    inputMode="text"
+                    pattern="[A-Z0-9]*"
                     maxLength={1}
                     autoCapitalize="characters"
+                    autoCorrect="off"
+                    autoComplete="off"
+                    spellCheck={false}
                     value={d}
                     disabled={locked || cracking}
                     onChange={(e) => handleChange(i, e.target.value)}
@@ -1213,14 +1244,15 @@ function AccommodationTabsSection() {
 
         {/* Category Sub-Filter Navigation Buttons (For counties with Hotels & Airbnbs) */}
         {!current.isMara && (
-          <div className="flex items-center gap-2 mb-6 flex-wrap border-b border-border/40 pb-3">
+          <div className="flex items-center gap-2 mb-6 border-b border-border/40 pb-3">
             <button
               type="button"
               onClick={() => setSubCategory("hotels")}
-              className={`px-4 py-2 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${subCategory === "hotels"
-                ? "bg-accent text-accent-foreground shadow-sm"
-                : "bg-card text-muted-foreground hover:text-foreground border border-border"
-                }`}
+              className={`flex-1 py-2.5 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${
+                subCategory === "hotels"
+                  ? "bg-accent text-accent-foreground shadow-sm"
+                  : "bg-card text-muted-foreground hover:text-foreground border border-border"
+              }`}
               style={{ fontFamily: "Lato,sans-serif" }}
             >
               Hotels & Resorts
@@ -1228,10 +1260,11 @@ function AccommodationTabsSection() {
             <button
               type="button"
               onClick={() => setSubCategory("airbnbs")}
-              className={`px-4 py-2 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${subCategory === "airbnbs"
-                ? "bg-accent text-accent-foreground shadow-sm"
-                : "bg-card text-muted-foreground hover:text-foreground border border-border"
-                }`}
+              className={`flex-1 py-2.5 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${
+                subCategory === "airbnbs"
+                  ? "bg-accent text-accent-foreground shadow-sm"
+                  : "bg-card text-muted-foreground hover:text-foreground border border-border"
+              }`}
               style={{ fontFamily: "Lato,sans-serif" }}
             >
               Airbnbs & Private Stays
@@ -2363,18 +2396,8 @@ function InvitationScreen({
                       Please note: Your table will be assigned 24 hours to the event.
                     </p>
                   )}
+               
 
-                  {rsvpRecord.guestName && (
-                    <p
-                      className={`text-[10px] tracking-wider ${rsvpRecord.attending === "yes"
-                        ? "text-emerald-300/80"
-                        : "text-rose-300/80"
-                        }`}
-                      style={{ fontFamily: "Lato,sans-serif" }}
-                    >
-                      Plus-One: {rsvpRecord.guestName}
-                    </p>
-                  )}
                   {rsvpRecord.dietary && (
                     <p
                       className={`text-[10px] tracking-wider ${rsvpRecord.attending === "yes"
@@ -4235,30 +4258,7 @@ function RSVPForm({
             </div>
           </div>
 
-          <AnimatePresence>
-            {form.attending === "yes" && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-              >
-                <p
-                  className="text-[9px] tracking-[0.35em] text-muted-foreground uppercase mb-4"
-                  style={{ fontFamily: "Lato,sans-serif" }}
-                >
-                  Guest Name <span className="opacity-40">— optional</span>
-                </p>
-                <input
-                  type="text"
-                  value={form.guestName}
-                  onChange={(e) => set("guestName", e.target.value)}
-                  placeholder="Full name of your guest"
-                  className="w-full bg-card border border-border px-5 py-4 text-sm text-foreground focus:outline-none focus:border-accent transition-colors placeholder:text-muted-foreground/40"
-                  style={{ fontFamily: "Playfair Display,serif" }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+
 
           <div>
             <p
@@ -4813,7 +4813,6 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
           "Attendance Status": isChecked ? "CHECKED IN" : (g.status || "INVITED"),
           "RSVP Status": rsvpStatus,
           "Dietary Requirements": g.dietary || "",
-          "Plus One Name": g.guestName || "",
         };
       });
 
@@ -4843,7 +4842,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
       console.error("🔴 [EXPORT EXCEL ERROR]:", err);
       const exportData = dbGuests.length > 0 ? dbGuests : displayGuests;
       if (!exportData || exportData.length === 0) return;
-      const headers = ["No.", "PIN Code", "Guest Name", "Cluster", "Role", "Table", "Seat Number", "Attendance Status", "RSVP Status", "Dietary", "Plus One Name"];
+      const headers = ["No.", "PIN Code", "Guest Name", "Cluster", "Role", "Table", "Seat Number", "Attendance Status", "RSVP Status", "Dietary"];
       const csvRows = [headers.join(",")];
       exportData.forEach((g: any, idx: number) => {
         const isObj = Boolean(g.table && typeof g.table === "object");
@@ -4860,7 +4859,6 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
           `"${isChecked ? "CHECKED IN" : (g.status || "INVITED")}"`,
           `"${g.rsvpStatus || "PENDING"}"`,
           `"${(g.dietary || "").replace(/"/g, '""')}"`,
-          `"${(g.guestName || "").replace(/"/g, '""')}"`,
         ];
         csvRows.push(row.join(","));
       });
@@ -5761,13 +5759,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                 >
                   <Download size={12} /> Download PDF Badges (ZIP)
                 </button>
-                <button
-                  onClick={() => setShowAdd(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-accent text-accent-foreground text-[10px] tracking-wider uppercase hover:bg-accent/80 transition-colors cursor-pointer font-semibold"
-                  style={{ fontFamily: "Lato,sans-serif" }}
-                >
-                  <Plus size={12} /> Add Guest
-                </button>
+              
               </div>
             </div>
 
@@ -6948,17 +6940,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
                           ✓ ATTENDING
                         </span>
                       </div>
-                      {r.guestName && (
-                        <p
-                          className="text-xs text-primary-foreground/60"
-                          style={{ fontFamily: "Lato,sans-serif" }}
-                        >
-                          Plus-One Guest:{" "}
-                          <span className="text-primary-foreground">
-                            {r.guestName}
-                          </span>
-                        </p>
-                      )}
+
                       {r.dietary && (
                         <p
                           className="text-xs text-primary-foreground/60"
@@ -7453,10 +7435,76 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
 // ─── App Root ──────────────────────────────────────────────────────────────────
 
 export default function App() {
+  // Always start with defaults — sessionStorage is client-only so must be
+  // deferred to avoid SSR/hydration mismatch.
   const [screen, setScreen] = useState<Screen>("pin");
   const [guest, setGuest] = useState<GuestRecord | null>(null);
   const [pin, setPin] = useState("");
   const [pendingGuests, setPendingGuests] = useState<StoredGuest[]>([]);
+  const [sessionRestored, setSessionRestored] = useState(false);
+
+  const inactivityTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Restore session from sessionStorage after client mount (avoids SSR mismatch)
+  useEffect(() => {
+    const saved = loadSession();
+    if (saved) {
+      setScreen(saved.screen);
+      setGuest(saved.guest);
+      setPin(saved.pin);
+      setPendingGuests(saved.pendingGuests);
+    }
+    setSessionRestored(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist session whenever state changes (only after initial restore)
+  useEffect(() => {
+    if (!sessionRestored) return;
+    if (screen === "pin") {
+      clearSession();
+    } else {
+      saveSession({ screen, guest, pin, pendingGuests, lastActivity: Date.now() });
+    }
+  }, [screen, guest, pin, pendingGuests, sessionRestored]);
+
+
+  // Inactivity timer — reset on any user interaction
+  const resetInactivity = () => {
+    if (screen === "pin" || screen === "admin") return;
+    if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+    // Update lastActivity in session storage
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      if (raw) {
+        const data: PersistedSession = JSON.parse(raw);
+        data.lastActivity = Date.now();
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+      }
+    } catch {}
+    inactivityTimer.current = setTimeout(() => {
+      clearSession();
+      setGuest(null);
+      setPin("");
+      setPendingGuests([]);
+      setScreen("pin");
+    }, INACTIVITY_TIMEOUT_MS);
+  };
+
+  useEffect(() => {
+    if (screen === "pin" || screen === "admin") {
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      return;
+    }
+    const events = ["mousemove", "keydown", "touchstart", "click", "scroll"];
+    events.forEach((e) => window.addEventListener(e, resetInactivity, { passive: true }));
+    resetInactivity(); // start timer immediately
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, resetInactivity));
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screen]);
 
   const handlePinSuccess = (
     p: string,

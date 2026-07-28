@@ -139,14 +139,21 @@ export async function getDefaultEvent() {
   return event;
 }
 
-// Generate a unique 4-digit all-numeric code for guests (1000–9999)
+// Unambiguous alphanumeric charset — removes characters that look alike in different cases:
+// Removed letters: B (like 8), I (like 1/l), L (like 1/I), O (like 0), S (like 5)
+// Removed digits:  0 (like O), 1 (like I/l), 5 (like S)
+const GUEST_CODE_CHARS = "ACDEFGHJKMNPQRTUVWXY2346789";
+
+// Generate a unique 4-character unambiguous alphanumeric code for guests
 export async function generateUnique4DigitCode() {
   let code = "";
   let isUnique = false;
   let attempts = 0;
 
   while (!isUnique && attempts < 10000) {
-    code = Math.floor(1000 + Math.random() * 9000).toString();
+    code = Array.from({ length: 4 }, () =>
+      GUEST_CODE_CHARS[Math.floor(Math.random() * GUEST_CODE_CHARS.length)]
+    ).join("");
 
     // Check if code already exists in PostgreSQL database
     const existing = await prisma.qRCode.findUnique({
@@ -161,7 +168,7 @@ export async function generateUnique4DigitCode() {
 
   if (!isUnique) {
     throw new Error(
-      "Unable to generate a unique 4-digit code. All 4-digit codes are in use.",
+      "Unable to generate a unique alphanumeric code. Please try again.",
     );
   }
 
