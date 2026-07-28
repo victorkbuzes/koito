@@ -70,10 +70,48 @@ interface RSVPRecord {
 // Composite key used for revoke: "pin::name"
 const guestKey = (pin: string, name: string) => `${pin}::${name}`;
 
-// const INITIAL_GUESTS: StoredGuest[] = [];
-
 const MAX_ATTEMPTS = 5;
 type Screen = "pin" | "select" | "invitation" | "rsvp" | "confirmed" | "admin";
+
+// ─── Session persistence helpers ───────────────────────────────────────────────
+const SESSION_KEY = "koito_guest_session";
+const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+
+interface PersistedSession {
+  screen: Screen;
+  guest: GuestRecord | null;
+  pin: string;
+  pendingGuests: StoredGuest[];
+  lastActivity: number;
+}
+
+function saveSession(data: PersistedSession) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+  } catch {}
+}
+
+function loadSession(): PersistedSession | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const data: PersistedSession = JSON.parse(raw);
+    // Invalidate if inactive for more than 5 minutes
+    if (Date.now() - data.lastActivity > INACTIVITY_TIMEOUT_MS) {
+      sessionStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function clearSession() {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+}
+
+
 
 // // Gallery
 // const GALLERY = [
@@ -7104,10 +7142,76 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
 // ─── App Root ──────────────────────────────────────────────────────────────────
 
 export default function App() {
+  // Always start with defaults — sessionStorage is client-only so must be
+  // deferred to avoid SSR/hydration mismatch.
   const [screen, setScreen] = useState<Screen>("pin");
   const [guest, setGuest] = useState<GuestRecord | null>(null);
   const [pin, setPin] = useState("");
   const [pendingGuests, setPendingGuests] = useState<StoredGuest[]>([]);
+  const [sessionRestored, setSessionRestored] = useState(false);
+
+  const inactivityTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Restore session from sessionStorage after client mount (avoids SSR mismatch)
+  useEffect(() => {
+    const saved = loadSession();
+    if (saved) {
+      setScreen(saved.screen);
+      setGuest(saved.guest);
+      setPin(saved.pin);
+      setPendingGuests(saved.pendingGuests);
+    }
+    setSessionRestored(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist session whenever state changes (only after initial restore)
+  useEffect(() => {
+    if (!sessionRestored) return;
+    if (screen === "pin") {
+      clearSession();
+    } else {
+      saveSession({ screen, guest, pin, pendingGuests, lastActivity: Date.now() });
+    }
+  }, [screen, guest, pin, pendingGuests, sessionRestored]);
+
+
+  // Inactivity timer — reset on any user interaction
+  const resetInactivity = () => {
+    if (screen === "pin" || screen === "admin") return;
+    if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+    // Update lastActivity in session storage
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      if (raw) {
+        const data: PersistedSession = JSON.parse(raw);
+        data.lastActivity = Date.now();
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+      }
+    } catch {}
+    inactivityTimer.current = setTimeout(() => {
+      clearSession();
+      setGuest(null);
+      setPin("");
+      setPendingGuests([]);
+      setScreen("pin");
+    }, INACTIVITY_TIMEOUT_MS);
+  };
+
+  useEffect(() => {
+    if (screen === "pin" || screen === "admin") {
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      return;
+    }
+    const events = ["mousemove", "keydown", "touchstart", "click", "scroll"];
+    events.forEach((e) => window.addEventListener(e, resetInactivity, { passive: true }));
+    resetInactivity(); // start timer immediately
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, resetInactivity));
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screen]);
 
   const handlePinSuccess = (
     p: string,
