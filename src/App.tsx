@@ -364,7 +364,6 @@ function PinGate({
   const [shaking, setShaking] = useState(false);
   const [cracking, setCracking] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [keypadMode, setKeypadMode] = useState<"numeric" | "text">("numeric");
   const refs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -406,17 +405,16 @@ function PinGate({
   };
 
   const handleChange = (i: number, val: string) => {
-    // First box accepts one letter (A-Z) or one digit; rest are digits only
-    let c: string;
-    if (i === 0) {
-      const cleaned = val
-        .replace(/[^a-zA-Z\d]/g, "")
-        .slice(-1)
-        .toUpperCase();
-      c = cleaned;
-    } else {
-      c = val.replace(/\D/g, "").slice(-1);
-    }
+    // Accept only characters from the unambiguous alphanumeric charset, uppercased
+    const ALLOWED = /[ACDEFGHJKMNPQRTUVWXY2346789]/;
+    const cleaned = val
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, "")  // strip non-alphanumeric
+      .split("")
+      .filter((ch) => ALLOWED.test(ch))
+      .slice(-1)
+      .join("");
+    const c = cleaned;
     const next = [...digits];
     next[i] = c;
     setDigits(next);
@@ -551,11 +549,7 @@ function PinGate({
         className="relative z-10 flex flex-col items-center pt-8 px-10 pb-1"
       >
         <p
-          onClick={() => {
-            setKeypadMode((prev) => (prev === "numeric" ? "text" : "numeric"));
-            refs[0].current?.focus();
-          }}
-          className="text-[10px] tracking-[0.55em] uppercase mb-3 cursor-pointer select-none"
+          className="text-[10px] tracking-[0.55em] uppercase mb-3 cursor-default select-none"
           style={{
             fontFamily: "Lato,sans-serif",
             color: "rgba(201,168,76,0.9)",
@@ -660,7 +654,7 @@ function PinGate({
                   fontWeight: 300,
                 }}
               >
-                Enter Your PIN
+                Enter Your Code
               </p>
 
               {/* PIN boxes */}
@@ -674,10 +668,13 @@ function PinGate({
                     key={i}
                     ref={refs[i]}
                     type="text"
-                    inputMode={i === 0 ? keypadMode : "numeric"}
-                    pattern={i > 0 ? "[0-9]*" : undefined}
+                    inputMode="text"
+                    pattern="[ACDEFGHJKMNPQRTUVWXY2346789]*"
                     maxLength={1}
                     autoCapitalize="characters"
+                    autoCorrect="off"
+                    autoComplete="off"
+                    spellCheck={false}
                     value={d}
                     disabled={locked || cracking}
                     onChange={(e) => handleChange(i, e.target.value)}
@@ -1251,11 +1248,11 @@ function AccommodationTabsSection() {
 
         {/* Category Sub-Filter Navigation Buttons (For counties with Hotels & Airbnbs) */}
         {!current.isMara && (
-          <div className="flex items-center gap-2 mb-6 flex-wrap border-b border-border/40 pb-3">
+          <div className="flex items-center gap-2 mb-6 border-b border-border/40 pb-3">
             <button
               type="button"
               onClick={() => setSubCategory("hotels")}
-              className={`px-4 py-2 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${
+              className={`flex-1 py-2.5 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${
                 subCategory === "hotels"
                   ? "bg-accent text-accent-foreground shadow-sm"
                   : "bg-card text-muted-foreground hover:text-foreground border border-border"
@@ -1267,7 +1264,7 @@ function AccommodationTabsSection() {
             <button
               type="button"
               onClick={() => setSubCategory("airbnbs")}
-              className={`px-4 py-2 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${
+              className={`flex-1 py-2.5 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold rounded-sm transition-all duration-200 cursor-pointer ${
                 subCategory === "airbnbs"
                   ? "bg-accent text-accent-foreground shadow-sm"
                   : "bg-card text-muted-foreground hover:text-foreground border border-border"
