@@ -1548,6 +1548,48 @@ function InvitationScreen({
   const [inlineSubmitting, setInlineSubmitting] = useState(false);
   const [copiedBank, setCopiedBank] = useState<string | null>(null);
 
+  // Fetch existing guest RSVP directly from PostgreSQL database whenever guest logs in / screen mounts
+  useEffect(() => {
+    let isMounted = true;
+    const guestPin = (guest.pin || (guest as any).code || (guest as any).pin || "").toString().trim();
+    const guestName = (guest.name || (guest as any).fullName || "").toString().trim().toLowerCase();
+    const guestId = (guest as any).id || "";
+
+    fetch("/api/rsvp")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!isMounted || !data?.rsvps) return;
+        const found = data.rsvps.find((r: any) => {
+          if (guestId && r.guestId && r.guestId === guestId) return true;
+          if (guestPin && r.pin && r.pin.toString().trim() === guestPin) return true;
+          if (guestName && r.name && r.name.toString().trim().toLowerCase() === guestName) return true;
+          if (guestName && r.guestName && r.guestName.toString().trim().toLowerCase() === guestName) return true;
+          return false;
+        });
+
+        if (found) {
+          setRsvpRecord({
+            id: found.id || Date.now().toString(),
+            pin: found.pin || guestPin,
+            name: found.name || guest.name,
+            attending: found.attending === "yes" ? "yes" : "no",
+            guestName: found.guestName || "",
+            dietary: found.dietary || "",
+            message: found.message || "",
+            timestamp: found.timestamp || new Date().toISOString(),
+          });
+          setCardStatus(found.attending === "yes" ? "yes" : "no");
+        }
+      })
+      .catch((err) => {
+        console.error("🔴 [RSVP FETCH ERROR] Failed to load guest RSVP from database:", err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [guest]);
+
   const copyBankDetails = (bankName: string, paybill: string, account: string) => {
     const text = `${bankName} — Paybill: ${paybill}, Account No: ${account}`;
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -4032,6 +4074,43 @@ function RSVPForm({
   const [submitting, setSubmitting] = useState(false);
   const set = (k: string, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
 
+  // Fetch existing guest RSVP directly from PostgreSQL database to pre-fill form
+  useEffect(() => {
+    let isMounted = true;
+    const guestPin = (pin || guest.pin || (guest as any).code || "").toString().trim();
+    const guestName = (guest.name || (guest as any).fullName || "").toString().trim().toLowerCase();
+    const guestId = (guest as any).id || "";
+
+    fetch("/api/rsvp")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!isMounted || !data?.rsvps) return;
+        const found = data.rsvps.find((r: any) => {
+          if (guestId && r.guestId && r.guestId === guestId) return true;
+          if (guestPin && r.pin && r.pin.toString().trim() === guestPin) return true;
+          if (guestName && r.name && r.name.toString().trim().toLowerCase() === guestName) return true;
+          if (guestName && r.guestName && r.guestName.toString().trim().toLowerCase() === guestName) return true;
+          return false;
+        });
+
+        if (found) {
+          setForm({
+            attending: found.attending === "yes" ? "yes" : "no",
+            guestName: found.guestName || "",
+            dietary: found.dietary || "",
+            message: found.message || "",
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("🔴 [RSVP FORM FETCH ERROR] Failed to load guest RSVP from database:", err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [guest, pin]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -4586,62 +4665,64 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
     });
   }, [rsvps, dbGuests, displayGuests]);
 
-  // Fetch live PostgreSQL database delegates, tables, clusters & RSVPs on mount
-  useEffect(() => {
-    fetch("/api/delegates?limit=ALL")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.delegates && data.delegates.length > 0) {
-          setDbGuests(data.delegates);
-          if (data.stats) {
-            setDbStats(data.stats);
-          }
-        }
-      })
-      .catch((err) =>
-        console.error(
-          "🔴 [DATABASE ERROR] Error loading guests from database:",
-          err,
-        ),
-      );
+  // Fetch live PostgreSQL database delegates, tables, clusters & RSVPs
+  const refreshAllData = async () => {
+    try {
+      const limitStr = pageSize >= 99999 ? "ALL" : pageSize.toString();
+      const [dRes, tRes, cRes, rRes, regRes] = await Promise.all([
+        fetch("/api/delegates?limit=ALL"),
+        fetch("/api/tables"),
+        fetch("/api/clusters"),
+        fetch("/api/rsvp"),
+        fetch(`/api/delegates?search=${encodeURIComponent(registrySearch.trim())}&page=${currentPage}&limit=${limitStr}`),
+      ]);
 
-    fetch("/api/tables")
-      .then((res) => res.json())
-      .then((data) => {
-        const list = Array.isArray(data) ? data : data.tables || [];
+      const [dData, tData, cData, rData, regData] = await Promise.all([
+        dRes.json(),
+        tRes.json(),
+        cRes.json(),
+        rRes.json(),
+        regRes.json(),
+      ]);
+
+      if (dData.delegates) {
+        setDbGuests(dData.delegates);
+        if (dData.stats) setDbStats(dData.stats);
+      }
+      if (tData) {
+        const list = Array.isArray(tData) ? tData : tData.tables || [];
         setTables(list);
-      })
-      .catch((err) =>
-        console.error(
-          "🔴 [DATABASE TABLES ERROR] Failed to fetch tables:",
-          err,
-        ),
-      );
+      }
+      if (cData.clusters) setClusters(cData.clusters);
+      if (rData.rsvps && Array.isArray(rData.rsvps)) setRsvps(rData.rsvps);
 
-    fetch("/api/clusters")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.clusters) {
-          setClusters(data.clusters);
-        }
-      })
-      .catch((err) =>
-        console.error(
-          "🔴 [DATABASE CLUSTERS ERROR] Failed to fetch clusters:",
-          err,
-        ),
-      );
+      if (regData.delegates) {
+        setRegistryDelegates(
+          regData.delegates.map((d: any) => ({
+            pin: d.code,
+            name: d.name,
+            cluster: d.cluster || "Guests",
+            role: d.role || "Delegate",
+            relation: d.cluster || "Guests",
+            table:
+              typeof d.table === "object"
+                ? d.table?.name
+                : d.table || "Unassigned",
+            revoked: d.status === "CANCELLED",
+            status: d.status,
+            id: d.id,
+          })),
+        );
+        setRegistryTotalPages(regData.totalPages || 1);
+        setRegistryTotalCount(regData.total || regData.delegates.length);
+      }
+    } catch (err) {
+      console.error("🔴 [DATABASE REFRESH ERROR] Error refreshing data:", err);
+    }
+  };
 
-    fetch("/api/rsvp")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.rsvps && Array.isArray(data.rsvps)) {
-          setRsvps(data.rsvps);
-        }
-      })
-      .catch((err) =>
-        console.error("🔴 [DATABASE RSVPS ERROR] Failed to fetch RSVPs:", err),
-      );
+  useEffect(() => {
+    refreshAllData();
   }, []);
 
   const handleAddCluster = async () => {
@@ -4795,34 +4876,11 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
       });
       const data = await res.json();
       if (res.ok) {
+        await refreshAllData();
         alert(
           data.message ||
           `Successfully imported ${data.addedCount || data.count || "delegates"}!`,
         );
-        const limitStr = pageSize >= 99999 ? "ALL" : pageSize.toString();
-        fetch(
-          `/api/delegates?search=${encodeURIComponent(registrySearch.trim())}&page=${currentPage}&limit=${limitStr}`,
-        )
-          .then((r) => r.json())
-          .then((d) => {
-            if (d.delegates) {
-              setDbGuests(d.delegates);
-              setRegistryDelegates(
-                d.delegates.map((del: any) => ({
-                  pin: del.code,
-                  name: del.name,
-                  relation: del.role || "Guest",
-                  table:
-                    typeof del.table === "object"
-                      ? del.table?.name
-                      : del.table || "Unassigned",
-                  revoked: del.status === "CANCELLED",
-                  status: del.status,
-                  id: del.id,
-                })),
-              );
-            }
-          });
       } else {
         alert(data.error || "Failed to import file.");
       }
@@ -4850,13 +4908,8 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
       });
       const data = await res.json();
       if (res.ok) {
+        await refreshAllData();
         alert(data.message || "Successfully imported venue tables!");
-        fetch("/api/tables")
-          .then((r) => r.json())
-          .then((d) => {
-            const list = Array.isArray(d) ? d : d.tables || [];
-            setTables(list);
-          });
       } else {
         alert(data.error || "Failed to import tables file.");
       }
@@ -5308,15 +5361,8 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
         method: "DELETE",
       });
       if (res.ok) {
+        await refreshAllData();
         alert("Registry cleared. You can now re-import your clean Excel file!");
-        fetch("/api/delegates?limit=ALL")
-          .then((r) => r.json())
-          .then((d) => {
-            if (d.delegates) setDbGuests(d.delegates);
-            if (d.stats) setDbStats(d.stats);
-          });
-        setRegistryDelegates([]);
-        setRegistryTotalCount(0);
       }
     } catch (err) {
       alert("Failed to clear registry");
@@ -5331,7 +5377,7 @@ function AdminDashboard({ onExit }: { onExit: () => void }) {
         method: "DELETE",
       });
       if (res.ok) {
-        setTables([]);
+        await refreshAllData();
         alert(
           "All venue tables cleared! You can now re-import your Table_Chair_Capacity file.",
         );
