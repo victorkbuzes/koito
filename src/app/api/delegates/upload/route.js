@@ -78,11 +78,14 @@ export async function POST(request) {
       ) || workbook.SheetNames[0];
 
     const worksheet = workbook.Sheets[guestsSheetName];
-    const rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+    // Read raw 2D array matrix [ [row0_col0, row0_col1, ...], [row1_col0, ...] ]
+    const rawMatrix = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
 
-    if (rows.length === 0) {
+    if (!rawMatrix || rawMatrix.length === 0) {
       return Response.json({ error: "Uploaded sheet is empty" }, { status: 400 });
     }
+
+    const clean = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
     let tablesMap = new Map();
     const dbTables = await prisma.diningTable.findMany({
@@ -92,8 +95,6 @@ export async function POST(request) {
     for (const t of dbTables) {
       tablesMap.set(t.name.toLowerCase().trim(), t);
     }
-
-    const clean = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
     let clustersMap = new Map();
     const dbClusters = await prisma.cluster.findMany({
@@ -114,59 +115,176 @@ export async function POST(request) {
       clustersMap.set(clean("Guests"), defaultCluster);
     }
 
+    // 1. Detect if any of the first 5 rows is a Header Row
+    let headerRowIndex = -1;
+    const colMap = {
+      name: -1,
+      title: -1,
+      phone: -1,
+      cluster: -1,
+      country: -1,
+      table: -1,
+      seat: -1,
+      role: -1,
+      code: -1,
+    };
+
+    const HEADER_KEYWORDS = [
+      "fullname", "full name", "guest name", "delegate name", "member name", "attendee name",
+      "person name", "names", "name", "phone", "phone number", "mobile", "telephone", "contact",
+      "title", "salutation", "honorific", "cluster", "delegation", "group", "country", "county"
+    ];
+
+    for (let r = 0; r < Math.min(5, rawMatrix.length); r++) {
+      const rowCells = rawMatrix[r];
+      if (!Array.isArray(rowCells)) continue;
+
+      let matchCount = 0;
+      rowCells.forEach((cell) => {
+        const cClean = clean(cell);
+        if (!cClean) return;
+        if (HEADER_KEYWORDS.some((kw) => clean(kw) === cClean || (cClean.includes(clean(kw)) && !cClean.includes("samoei") && !cClean.includes("ruto")))) {
+          matchCount++;
+        }
+      });
+
+      if (matchCount >= 2 || (matchCount >= 1 && rowCells.some(c => clean(c) === "name" || clean(c) === "fullname"))) {
+        headerRowIndex = r;
+        rowCells.forEach((cell, idx) => {
+          const cClean = clean(cell);
+          if (colMap.name === -1 && (cClean.includes("name") || cClean.includes("member") || cClean.includes("guest") || cClean.includes("delegate") || cClean.includes("person"))) {
+            colMap.name = idx;
+          } else if (colMap.title === -1 && (cClean.includes("title") || cClean.includes("salutation") || cClean.includes("prefix") || cClean.includes("honorific"))) {
+            colMap.title = idx;
+          } else if (colMap.phone === -1 && (cClean.includes("phone") || cClean.includes("mobile") || cClean.includes("telephone") || cClean.includes("contact"))) {
+            colMap.phone = idx;
+          } else if (colMap.cluster === -1 && (cClean.includes("cluster") || cClean.includes("delegation") || cClean.includes("group"))) {
+            colMap.cluster = idx;
+          } else if (colMap.country === -1 && (cClean.includes("country") || cClean.includes("county") || cClean.includes("location") || cClean.includes("residence"))) {
+            colMap.country = idx;
+          } else if (colMap.table === -1 && (cClean.includes("table") || cClean.includes("seating"))) {
+            colMap.table = idx;
+          } else if (colMap.seat === -1 && (cClean.includes("seat") || cClean.includes("chair"))) {
+            colMap.seat = idx;
+          } else if (colMap.role === -1 && (cClean.includes("role") || cClean.includes("category"))) {
+            colMap.role = idx;
+          } else if (colMap.code === -1 && (cClean.includes("code") || cClean.includes("pin"))) {
+            colMap.code = idx;
+          }
+        });
+        break;
+      }
+    }
+
+    const startRow = headerRowIndex >= 0 ? headerRowIndex + 1 : 0;
+    const hasHeaderMapping = colMap.name !== -1;
+
+    console.log(`📊 [EXCEL IMPORT START] Total raw rows: ${rawMatrix.length}, Has Headers: ${hasHeaderMapping}, Start Row Index: ${startRow}`);
+
+    const KNOWN_TITLES = [
+      "mr", "mrs", "ms", "miss", "dr", "doctor", "hon", "honorable", "honourable",
+      "prof", "professor", "eng", "engineer", "rev", "reverend", "pst", "pastor",
+      "amb", "ambassador", "he", "gen", "general", "capt", "captain", "col", "colonel",
+      "chief", "elder"
+    ];
+
     let addedCount = 0;
     let updatedCount = 0;
     let skippedCount = 0;
     const assignedSeatIds = new Set();
+    const recordLogs = [];
 
-    for (let index = 0; index < rows.length; index++) {
-      const row = rows[index];
+    for (let r = startRow; r < rawMatrix.length; r++) {
+      const rowCells = rawMatrix[r];
+      if (!Array.isArray(rowCells) || rowCells.every(c => String(c || "").trim() === "")) {
+        continue;
+      }
 
-      const getVal = (keys) => {
-        // First pass: exact clean match
-        for (const k of keys) {
-          const targetClean = clean(k);
-          const match = Object.keys(row).find((rk) => clean(rk) === targetClean);
-          if (match && row[match] !== undefined && row[match] !== null && String(row[match]).trim() !== "") {
-            return String(row[match]).trim();
+      let name = "";
+      let rawTitle = "";
+      let rawPhone = "";
+      let rawCluster = "";
+      let rawCountry = "";
+      let specifiedTableName = "";
+      let rawSeat = "";
+      let role = "";
+      let customCode = "";
+
+      if (hasHeaderMapping) {
+        name = colMap.name !== -1 ? String(rowCells[colMap.name] || "").trim() : "";
+        rawTitle = colMap.title !== -1 ? String(rowCells[colMap.title] || "").trim() : "";
+        rawPhone = colMap.phone !== -1 ? String(rowCells[colMap.phone] || "").trim() : "";
+        rawCluster = colMap.cluster !== -1 ? String(rowCells[colMap.cluster] || "").trim() : "";
+        rawCountry = colMap.country !== -1 ? String(rowCells[colMap.country] || "").trim() : "";
+        specifiedTableName = colMap.table !== -1 ? String(rowCells[colMap.table] || "").trim() : "";
+        rawSeat = colMap.seat !== -1 ? String(rowCells[colMap.seat] || "").trim() : "";
+        role = colMap.role !== -1 ? String(rowCells[colMap.role] || "").trim() : "";
+        customCode = colMap.code !== -1 ? String(rowCells[colMap.code] || "").trim() : "";
+      } else {
+        // Positional extraction for headerless rows
+        let posTitle = "";
+        let posPhone = "";
+        let posCluster = "";
+        let posCountry = "";
+        const candidateNames = [];
+
+        for (const cell of rowCells) {
+          const str = String(cell || "").trim();
+          if (!str) continue;
+
+          const lower = str.toLowerCase().replace(/\.$/, "");
+
+          if (!posTitle && KNOWN_TITLES.includes(lower)) {
+            posTitle = str;
+            continue;
           }
-        }
-        // Second pass: contains / alias match
-        for (const k of keys) {
-          const targetClean = clean(k);
-          const match = Object.keys(row).find((rk) => {
-            const rkClean = clean(rk);
-            if (targetClean === "name" && rkClean.includes("table")) return false;
-            return rkClean.includes(targetClean);
-          });
-          if (match && row[match] !== undefined && row[match] !== null && String(row[match]).trim() !== "") {
-            return String(row[match]).trim();
+
+          const digitCount = (str.match(/\d/g) || []).length;
+          if (!posPhone && digitCount >= 8 && str.replace(/[^0-9+]/g, "").length >= 8) {
+            posPhone = str;
+            continue;
           }
+
+          if (/^\d{1,3}$/.test(str)) {
+            continue;
+          }
+
+          const cleanedToken = clean(str);
+          if (!posCluster && clustersMap.has(cleanedToken)) {
+            posCluster = str;
+            continue;
+          }
+
+          candidateNames.push(str);
         }
-        return "";
-      };
 
-      let name = getVal(['full name', 'fullname', 'guest name', 'delegate name', 'member', 'Name*', 'guest', 'guests', 'delegate', 'attendee', 'person', 'names', 'name']);
-
-      if (!name) {
-        const firstName = getVal(['first name', 'firstname', 'given name']);
-        const lastName = getVal(['last name', 'lastname', 'surname', 'family name']);
-        if (firstName || lastName) {
-          name = `${firstName} ${lastName}`.trim();
+        if (candidateNames.length > 0) name = candidateNames[0];
+        rawTitle = posTitle;
+        rawPhone = posPhone;
+        rawCluster = posCluster;
+        if (candidateNames.length > 1) {
+          if (!rawCluster) rawCluster = candidateNames[1];
+          else if (!rawCountry) rawCountry = candidateNames[1];
+        }
+        if (candidateNames.length > 2 && !rawCountry) {
+          rawCountry = candidateNames[2];
         }
       }
 
-      const rawPhone = getVal(["phone", "phone number", "mobile", "telephone", "contact"]);
-      const role = getVal(["role", "category"]);
-      const rawTitle = getVal(["title", "salutation", "honorific", "prefix"]);
-      const rawCountry = getVal(["country", "county", "location", "residence", "region", "state", "city", "origin"]);
-      const rawCluster = getVal(["cluster", "cluster name", "cluster_name", "delegation", "group"]);
-      const specifiedTableName = getVal(["table", "table name", "assigned table", "seating", "table_name", "dining table", "table #"]);
-      const rawSeat = getVal(["seat", "seat number", "seat_number", "chair"]);
+      const displayRowNum = r + 1;
 
       if (!name) {
         skippedCount++;
-        console.warn(`⚠️ [EXCEL IMPORT] Row ${index + 1} skipped because no valid name column was matched. Keys in row:`, Object.keys(row));
+        const reason = "No valid guest name found in row cells.";
+        console.warn(`⚠️ [EXCEL IMPORT] Row ${displayRowNum} SKIPPED: ${reason} Row Cells:`, rowCells);
+        recordLogs.push({
+          row: displayRowNum,
+          status: "SKIPPED",
+          name: "N/A",
+          title: rawTitle || null,
+          phone: rawPhone || null,
+          reason,
+        });
         continue;
       }
 
@@ -182,11 +300,9 @@ export async function POST(request) {
         });
       }
 
-      const customCode = getVal(["code", "pin", "passcode", "qr code"]);
       const phone = normalizePhone(rawPhone);
       const parsedSeatNumber = rawSeat ? parseInt(rawSeat) || null : null;
 
-      // Determine Cluster strictly against existing database clusters
       let targetClusterId = defaultCluster ? defaultCluster.id : null;
       if (rawCluster) {
         const cleanRawCluster = clean(rawCluster);
@@ -273,6 +389,17 @@ export async function POST(request) {
           }
         }
         updatedCount++;
+        const logDetail = `Row ${displayRowNum} UPDATED: ${name} (Title: ${title || "N/A"}, Phone: ${phone || "N/A"}, PIN: ${existingGuest.pin})`;
+        console.log(`ℹ️ [EXCEL IMPORT] ${logDetail}`);
+        recordLogs.push({
+          row: displayRowNum,
+          status: "UPDATED",
+          name: name,
+          title: title || null,
+          phone: phone || null,
+          pin: existingGuest.pin,
+          reason: `Updated existing guest ID ${existingGuest.id}.`,
+        });
       } else {
         const isAdminRole = role?.toUpperCase() === "ADMIN";
         const code = customCode ||
@@ -310,22 +437,50 @@ export async function POST(request) {
             }
           }
 
-          if (role) {
-            const roleRecord = await tx.role.upsert({
-              where: { name: role },
+          // Default role must ALWAYS be "GUEST" from the roles table
+          const defaultGuestRole = await tx.role.upsert({
+            where: { name: "GUEST" },
+            update: { description: "Default Guest Role" },
+            create: { name: "GUEST", description: "Default Guest Role" },
+          });
+
+          await tx.guestRole.create({
+            data: {
+              guestId: createdGuest.id,
+              roleId: defaultGuestRole.id,
+              eventId: event.id,
+            },
+          });
+
+          // If an additional specific role was provided (and it's not GUEST), assign that too
+          if (role && role.toUpperCase().trim() !== "GUEST") {
+            const extraRoleName = role.toUpperCase().trim();
+            const extraRoleRecord = await tx.role.upsert({
+              where: { name: extraRoleName },
               update: {},
-              create: { name: role },
+              create: { name: extraRoleName, description: `${extraRoleName} Role` },
             });
             await tx.guestRole.create({
               data: {
                 guestId: createdGuest.id,
-                roleId: roleRecord.id,
+                roleId: extraRoleRecord.id,
                 eventId: event.id,
               },
-            });
+            }).catch(() => {});
           }
         });
         addedCount++;
+        const logDetail = `Row ${displayRowNum} ADDED: ${name} (Title: ${title || "N/A"}, Phone: ${phone || "N/A"}, PIN: ${code})`;
+        console.log(`✅ [EXCEL IMPORT] ${logDetail}`);
+        recordLogs.push({
+          row: displayRowNum,
+          status: "ADDED",
+          name: name,
+          title: title || null,
+          phone: phone || null,
+          pin: code,
+          reason: `Created new delegate record with PIN #${code}.`,
+        });
       }
     }
 
@@ -335,8 +490,10 @@ export async function POST(request) {
       action: "IMPORT",
       entityType: "GUEST",
       entityId: event.id,
-      metadata: { fileName: file.name, addedCount, updatedCount, skippedCount, totalProcessed: rows.length },
+      metadata: { fileName: file.name, addedCount, updatedCount, skippedCount, totalProcessed: rawMatrix.length },
     });
+
+    console.log(`🎉 [EXCEL IMPORT COMPLETE] Added: ${addedCount}, Updated: ${updatedCount}, Skipped: ${skippedCount}`);
 
     return Response.json({
       success: true,
@@ -344,9 +501,11 @@ export async function POST(request) {
       addedCount,
       updatedCount,
       skippedCount,
-      totalProcessed: rows.length,
+      totalProcessed: rawMatrix.length,
+      records: recordLogs,
     });
   } catch (error) {
+    console.error("🔴 [EXCEL IMPORT ERROR]:", error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 }

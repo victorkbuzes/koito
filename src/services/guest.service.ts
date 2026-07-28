@@ -260,20 +260,36 @@ export async function createGuest(params: CreateGuestParams) {
       }
     }
 
-    if (role) {
-      const roleRecord = await tx.role.upsert({
-        where: { name: role },
-        update: {},
-        create: { name: role },
-      });
+    // Default role must ALWAYS be "GUEST" from the roles table
+    const defaultGuestRole = await tx.role.upsert({
+      where: { name: "GUEST" },
+      update: { description: "Default Guest Role" },
+      create: { name: "GUEST", description: "Default Guest Role" },
+    });
 
+    await tx.guestRole.create({
+      data: {
+        guestId: guest.id,
+        roleId: defaultGuestRole.id,
+        eventId: event.id,
+      },
+    });
+
+    // If an additional specific role was provided (and it's not GUEST), assign that too
+    if (role && role.toUpperCase().trim() !== "GUEST") {
+      const extraRoleName = role.toUpperCase().trim();
+      const extraRoleRecord = await tx.role.upsert({
+        where: { name: extraRoleName },
+        update: {},
+        create: { name: extraRoleName, description: `${extraRoleName} Role` },
+      });
       await tx.guestRole.create({
         data: {
           guestId: guest.id,
-          roleId: roleRecord.id,
+          roleId: extraRoleRecord.id,
           eventId: event.id,
         },
-      });
+      }).catch(() => {});
     }
 
     const createdGuest = await tx.guest.findUnique({

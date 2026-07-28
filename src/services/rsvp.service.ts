@@ -109,6 +109,12 @@ export async function submitRsvp(input: SubmitRsvpInput) {
   // If guest still doesn't exist in DB, auto-create Guest so RSVP is permanently stored in PostgreSQL
   if (!guest && queryCode) {
     const event = await getDefaultEvent();
+    const defaultGuestRole = await prisma.role.upsert({
+      where: { name: "GUEST" },
+      update: { description: "Default Guest Role" },
+      create: { name: "GUEST", description: "Default Guest Role" },
+    });
+
     guest = await prisma.guest.create({
       data: {
         eventId: event.id,
@@ -118,6 +124,12 @@ export async function submitRsvp(input: SubmitRsvpInput) {
         pinFingerprint: queryCode,
         qrCode: {
           create: { code: queryCode },
+        },
+        guestRoles: {
+          create: {
+            roleId: defaultGuestRole.id,
+            eventId: event.id,
+          },
         },
       },
       include: {

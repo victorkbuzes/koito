@@ -32,15 +32,11 @@ async function main() {
   });
   console.log(`✅ Event ready: ${event.name} (${event.id})`);
 
-  // 2. Roles
+  // 2. Roles (Strictly GUEST, ADMIN, EDITOR)
   const defaultRoles = [
+    { name: "GUEST", description: "Default Guest Role" },
     { name: "ADMIN", description: "Full system administration & desk management" },
-    { name: "VIP", description: "Very Important Person / Dignitary" },
-    { name: "Speaker", description: "Keynote & Panel Presenter" },
-    { name: "Delegate", description: "General Confirmed Delegate" },
-    { name: "Honored Guest", description: "Invited High-Level Guest" },
-    { name: "Organizer", description: "Event Coordination Team" },
-    { name: "Press", description: "Accredited Media & Press" },
+    { name: "EDITOR", description: "Content and event editor" },
   ];
 
   for (const r of defaultRoles) {
@@ -50,11 +46,11 @@ async function main() {
       create: r,
     });
   }
-  console.log(`✅ Seeded ${defaultRoles.length} standard Roles`);
+  console.log(`✅ Seeded ${defaultRoles.length} standard Roles: GUEST, ADMIN, EDITOR`);
 
   // 3. Titles (Honorifics)
   const defaultTitles = [
-    "H.E.", "Hon.", "Dr.", "Prof.", "Ambassador", "Eng.", "Gen.", "Mr.", "Ms.", "Mrs."
+    "H.E.", "Hon.", "Dr.", "Prof.", "Ambassador", "Amb.", "Eng.", "Gen.", "Mr.", "Ms.", "Mrs.", "Miss", "Rev.", "Pastor", "Capt.", "Col.", "Chief", "Elder"
   ];
 
   for (const name of defaultTitles) {
